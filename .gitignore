@@ -75,5 +75,13 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 
+
 ### JRebel ###
+
 rebel.xml
+
+
+### Vaadin ###
+
+src/main/resources/VAADIN/
+*.scss.cache
