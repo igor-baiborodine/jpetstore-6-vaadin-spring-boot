@@ -4,7 +4,7 @@ jpetstore-6-vaadin-spring-boot
 
 ######Software and technologies used:######
 * [Java SE 8](http://www.oracle.com/technetwork/java/javase/downloads/index-jsp-138363.html)
-* [Vaadin](https://vaadin.com/home) with add-ons: [Viritin](https://vaadin.com/directory#!addon/viritin)
+* [Vaadin 7](https://vaadin.com/home) with add-ons: [Viritin](https://vaadin.com/directory#!addon/viritin)
 * [Spring 4](http://projects.spring.io/spring-framework/#quick-start)
 * [Spring Boot](http://projects.spring.io/spring-boot/)
 * [HSQLDB](http://hsqldb.org/)

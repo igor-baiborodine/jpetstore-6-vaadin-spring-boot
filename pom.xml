@@ -37,9 +37,25 @@
       <version>1.0.0</version>
     </dependency>
     <dependency>
+      <groupId>com.vaadin</groupId>
+      <artifactId>vaadin-client</artifactId>
+      <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>javax.validation</groupId>
+          <artifactId>validation-api</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
       <groupId>org.vaadin</groupId>
       <artifactId>viritin</artifactId>
       <version>1.34</version>
+    </dependency>
+    <dependency>
+      <groupId>org.vaadin.addons</groupId>
+      <artifactId>loginform</artifactId>
+      <version>0.6.1</version>
     </dependency>
 
     <!-- MYBATIS -->
@@ -136,12 +152,69 @@
       </plugin>
 
       <plugin>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-maven-plugin</artifactId>
+        <configuration>
+          <extraJvmArgs>-Xmx1g -Xss1024k</extraJvmArgs>
+
+          <!-- We are doing "inplace" gwt compilation but into subdir VAADIN/widgetsets -->
+          <webappDirectory>src/main/resources/VAADIN/widgetsets</webappDirectory>
+          <hostedWebapp>src/main/resources/VAADIN/widgetsets</hostedWebapp>
+          <noServer>true</noServer>
+          <!-- Remove draftCompile when project is ready -->
+          <draftCompile>true</draftCompile>
+          <persistentunitcachedir>${project.build.directory}/gwtdirt</persistentunitcachedir>
+          <compileReport>false</compileReport>
+          <style>OBF</style>
+          <strict>true</strict>
+          <!-- Symbol maps etc, not needed in vaadin app, just target them outside war -->
+          <deploy>${project.build.directory}/gwt-deploy</deploy>
+        </configuration>
+        <executions>
+          <execution>
+            <configuration>
+              <!-- if you don't specify any modules, the plugin will find them -->
+              <!-- <modules> <module>com.vaadin.demo.mobilemail.gwt.ColorPickerWidgetSet</module>
+              </modules> -->
+            </configuration>
+            <goals>
+              <goal>clean</goal>
+              <goal>resources</goal>
+              <!-- These are non functional currently with spring boot directory structure
+              <goal>update-theme</goal>
+              <goal>compile-theme</goal>
+               -->
+              <goal>update-widgetset</goal>
+              <goal>compile</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
         <version>2.7</version>
         <configuration>
           <encoding>${project.build.sourceEncoding}</encoding>
         </configuration>
+        <executions>
+          <execution>
+            <id>copy-resources</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${basedir}/target/classes/VAADIN</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${basedir}/src/main/resources/VAADIN</directory>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
 
       <plugin>

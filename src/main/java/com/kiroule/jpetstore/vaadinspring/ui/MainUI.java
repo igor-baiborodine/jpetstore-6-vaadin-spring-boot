@@ -10,6 +10,7 @@ import com.kiroule.jpetstore.vaadinspring.ui.menu.TopNavBar;
 import com.kiroule.jpetstore.vaadinspring.ui.util.PageTitleUpdater;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
+import com.vaadin.annotations.Widgetset;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
@@ -30,6 +31,7 @@ import java.util.Map;
  */
 @Title("JPetStore 6 Demo Spring Vaadin")
 @Theme("jpetstoretheme")
+@Widgetset("JPetStore6Widgetset")
 @SpringUI
 public class MainUI extends UI {
 

@@ -5,11 +5,11 @@ import static com.kiroule.jpetstore.vaadinspring.ui.util.ViewConfigUtil.getDispl
 import com.kiroule.jpetstore.vaadinspring.ui.MainUI;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UINavigationEvent;
+import com.kiroule.jpetstore.vaadinspring.ui.form.UserLoginForm;
 import com.kiroule.jpetstore.vaadinspring.ui.theme.JPetStoreTheme;
 import com.kiroule.jpetstore.vaadinspring.ui.view.CartView;
 import com.kiroule.jpetstore.vaadinspring.ui.view.HelpView;
 import com.kiroule.jpetstore.vaadinspring.ui.view.SearchView;
-import com.kiroule.jpetstore.vaadinspring.ui.view.SignInView;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.navigator.ViewChangeListener;
@@ -18,6 +18,8 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.Window;
 
 /**
  * @author Igor Baiborodine
@@ -42,9 +44,25 @@ public class TopNavBar extends CssLayout implements ViewChangeListener {
     addComponent(searchTextField);
 
     addButton(null, getDisplayName(SearchView.class), event -> searchProducts(searchTextField.getValue()));
-    addButton(SignInView.VIEW_NAME, getDisplayName(SignInView.class));
+    addSignInButton();
+    //addButton(SignInView.VIEW_NAME, getDisplayName(SignInView.class));
     addButton(CartView.VIEW_NAME, getDisplayName(CartView.class));
     addButton(HelpView.VIEW_NAME, getDisplayName(HelpView.class));
+  }
+
+  @Override
+  public boolean beforeViewChange(ViewChangeEvent viewChangeEvent) {
+    return true; // false blocks navigation, always return true here
+  }
+
+  @Override
+  public void afterViewChange(ViewChangeEvent event) {
+
+    MainUI.getUriToButtonMap().values().forEach(button -> button.removeStyleName(JPetStoreTheme.SELECTED));
+    Button button = MainUI.getUriToButtonMap().get(event.getViewName());
+    if (button != null) {
+      button.addStyleName(JPetStoreTheme.SELECTED);
+    }
   }
 
   private void searchProducts(String keyword) {
@@ -71,24 +89,26 @@ public class TopNavBar extends CssLayout implements ViewChangeListener {
     Button viewButton = new Button(displayName, clickListener);
     MainUI.getUriToButtonMap().put(uri, viewButton);
 
-    viewButton.addStyleName(JPetStoreTheme.MENU_ITEM);
-    viewButton.addStyleName(JPetStoreTheme.BUTTON_BORDERLESS);
+    setButtonStyle(viewButton);
     addComponent(viewButton);
     return viewButton;
   }
 
-  @Override
-  public boolean beforeViewChange(ViewChangeEvent viewChangeEvent) {
-    return true; // false blocks navigation, always return true here
+  private Button addSignInButton() {
+
+    Button signInButton = new Button("Sign In");
+    signInButton.addClickListener(event -> {
+      Window loginWindow = new Window("Sign In", new UserLoginForm());
+      loginWindow.setModal(true);
+      UI.getCurrent().addWindow(loginWindow);
+    });
+    setButtonStyle(signInButton);
+    addComponent(signInButton);
+    return signInButton;
   }
 
-  @Override
-  public void afterViewChange(ViewChangeEvent event) {
-
-    MainUI.getUriToButtonMap().values().forEach(button -> button.removeStyleName(JPetStoreTheme.SELECTED));
-    Button button = MainUI.getUriToButtonMap().get(event.getViewName());
-    if (button != null) {
-      button.addStyleName(JPetStoreTheme.SELECTED);
-    }
+  private void setButtonStyle(Button button) {
+    button.addStyleName(JPetStoreTheme.MENU_ITEM);
+    button.addStyleName(JPetStoreTheme.BUTTON_BORDERLESS);
   }
 }
