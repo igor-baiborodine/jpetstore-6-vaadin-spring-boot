@@ -4,7 +4,7 @@ jpetstore-6-vaadin-spring-boot
 
 ######Software and technologies used:######
 * [Java SE 8](http://www.oracle.com/technetwork/java/javase/downloads/index-jsp-138363.html)
-* [Vaadin 7](https://vaadin.com/home) with add-ons: [Viritin](https://vaadin.com/directory#!addon/viritin)
+* [Vaadin 7](https://vaadin.com/home) with add-ons: [Viritin](https://vaadin.com/directory#!addon/viritin), [LoginForm](https://vaadin.com/directory#!addon/loginform)
 * [Spring 4](http://projects.spring.io/spring-framework/#quick-start)
 * [Spring Boot](http://projects.spring.io/spring-boot/)
 * [HSQLDB](http://hsqldb.org/)
@@ -12,5 +12,8 @@ jpetstore-6-vaadin-spring-boot
 * [JUnit 4](http://junit.org/)
 * [IntelliJ IDEA](https://www.jetbrains.com/idea/)
 
-######References:######
-* TODO
+######Resources:######
+* [Vaadin tips](https://github.com/vaadin-marcus/vaadin-tips)
+* [Vaadin Spring tutorial](https://vaadin.com/wiki/-/wiki/Spring+Vaadin/I+-+Getting+Started+with+Vaadin+Spring+and+Spring+Boot)
+* [Vaadin Spring Data CRUD example](https://github.com/mstahv/spring-data-vaadin-crud)
+* [Building "Bootiful" Vaadin Applications with Spring Boot](https://github.com/joshlong/vaadin-and-spring-talk)
