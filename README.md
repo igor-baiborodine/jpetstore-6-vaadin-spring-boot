@@ -13,7 +13,7 @@ jpetstore-6-vaadin-spring-boot
 * [IntelliJ IDEA](https://www.jetbrains.com/idea/)
 
 ######Resources:######
-* [Vaadin tips](https://github.com/vaadin-marcus/vaadin-tips)
-* [Vaadin Spring tutorial](https://vaadin.com/wiki/-/wiki/Spring+Vaadin/I+-+Getting+Started+with+Vaadin+Spring+and+Spring+Boot)
-* [Vaadin Spring Data CRUD example](https://github.com/mstahv/spring-data-vaadin-crud)
+* [Vaadin Tips](https://github.com/vaadin-marcus/vaadin-tips)
+* [Vaadin Spring Tutorial](https://vaadin.com/wiki/-/wiki/Spring+Vaadin/I+-+Getting+Started+with+Vaadin+Spring+and+Spring+Boot)
+* [Vaadin Spring Data CRUD Example](https://github.com/mstahv/spring-data-vaadin-crud)
 * [Building "Bootiful" Vaadin Applications with Spring Boot](https://github.com/joshlong/vaadin-and-spring-talk)
