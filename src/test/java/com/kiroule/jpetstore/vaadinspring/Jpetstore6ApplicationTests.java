@@ -6,6 +6,7 @@ import static org.springframework.test.util.ReflectionTestUtils.getField;
 
 import com.kiroule.jpetstore.vaadinspring.persistence.ProductMapper;
 import com.kiroule.jpetstore.vaadinspring.service.CatalogService;
+import com.kiroule.jpetstore.vaadinspring.service.LoginService;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,9 +24,13 @@ public class Jpetstore6ApplicationTests {
   private ProductMapper productMapper;
   @Autowired
   private CatalogService catalogService;
+  @Autowired
+  private LoginService loginService;
 
   @Test
   public void testLoadContext() {
+
+    assertThat(loginService, notNullValue());
     assertThat(productMapper, notNullValue());
     assertThat(catalogService, notNullValue());
     assertThat(getField(catalogService, "productMapper"), notNullValue());

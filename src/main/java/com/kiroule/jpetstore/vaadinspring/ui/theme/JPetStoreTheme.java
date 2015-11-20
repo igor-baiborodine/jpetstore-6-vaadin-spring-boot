@@ -10,4 +10,5 @@ public class JPetStoreTheme extends ValoTheme {
   public static final String TOP_MENU = "top-menu";
   public static final String LEFT_MENU = "left-menu";
   public static final String SELECTED = "selected";
+  public static final String WELCOME_USER_LABEL = "welcome-user-label";
 }

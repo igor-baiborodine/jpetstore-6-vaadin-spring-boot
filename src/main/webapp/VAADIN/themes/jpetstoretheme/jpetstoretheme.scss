@@ -30,10 +30,11 @@
 
   .top-menu {
     position: relative;
+    width: 100%;
+    height: 44px;
 
     .valo-menu-item {
       display: inline-block;
-      width: 65px;
       font-size: 16px;
       text-align: center;
       padding: 0px 0px 0px 0px;
@@ -47,6 +48,14 @@
       padding: 0px 0px 0px 0px;
       margin-left: 20px;
       margin-top: 10px;
+    }
+    .welcome-user-label {
+      font-size: 16px;
+      font-weight: 600;
+      color: #5ea6ed;
+      height: 44px;
+      line-height: 49px;
+      padding-left: 10px;
     }
   }
 }

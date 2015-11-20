@@ -4,10 +4,14 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.Page;
+import com.vaadin.spring.annotation.SpringComponent;
+import com.vaadin.spring.annotation.UIScope;
 
 /**
  * @author Igor Baiborodine
  */
+@SpringComponent
+@UIScope
 public class PageTitleUpdater implements ViewChangeListener {
 
   @Override
@@ -17,6 +21,7 @@ public class PageTitleUpdater implements ViewChangeListener {
 
   @Override
   public void afterViewChange(ViewChangeEvent event) {
+
     String title = ViewConfigUtil.getDisplayName(event.getNewView().getClass());
     if (title.isEmpty()) {
       title = "Home";

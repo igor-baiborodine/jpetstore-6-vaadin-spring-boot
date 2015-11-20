@@ -1,35 +1,54 @@
 package com.kiroule.jpetstore.vaadinspring.ui.menu;
 
 import static com.kiroule.jpetstore.vaadinspring.ui.util.ViewConfigUtil.getDisplayName;
+import static java.lang.String.format;
 
-import com.kiroule.jpetstore.vaadinspring.ui.MainUI;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
+import com.kiroule.jpetstore.vaadinspring.ui.event.UILogoutEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UINavigationEvent;
-import com.kiroule.jpetstore.vaadinspring.ui.form.UserLoginForm;
+import com.kiroule.jpetstore.vaadinspring.ui.form.SigninForm;
 import com.kiroule.jpetstore.vaadinspring.ui.theme.JPetStoreTheme;
+import com.kiroule.jpetstore.vaadinspring.ui.util.CurrentAccount;
+import com.kiroule.jpetstore.vaadinspring.ui.util.NavBarButtonUpdater;
 import com.kiroule.jpetstore.vaadinspring.ui.view.CartView;
 import com.kiroule.jpetstore.vaadinspring.ui.view.HelpView;
 import com.kiroule.jpetstore.vaadinspring.ui.view.SearchView;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
-import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.Page;
+import com.vaadin.spring.annotation.SpringComponent;
+import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.UI;
-import com.vaadin.ui.Window;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.annotation.PostConstruct;
 
 /**
  * @author Igor Baiborodine
  */
-public class TopNavBar extends CssLayout implements ViewChangeListener {
+@SpringComponent
+@UIScope
+public class TopNavBar extends CssLayout {
 
-  public TopNavBar() {
+  public static final String SIGNIN_BUTTON_URI = "sign-in";
+  public static final String SIGNIN_CAPTION = "Sing in";
+  public static final String SIGNOUT_CAPTION = "Sign out";
 
-    setWidth(100f, Unit.PERCENTAGE);
-    setHeight(44f, Unit.PIXELS);
+  @Autowired
+  private NavBarButtonUpdater navBarButtonUpdater;
+  @Autowired
+  private SigninForm signinForm;
+
+  private Label userLabel;
+
+  @PostConstruct
+  void init() {
+
     addStyleName(JPetStoreTheme.MENU_ROOT);
     addStyleName(JPetStoreTheme.TOP_MENU);
 
@@ -43,26 +62,15 @@ public class TopNavBar extends CssLayout implements ViewChangeListener {
     });
     addComponent(searchTextField);
 
-    addButton(null, getDisplayName(SearchView.class), event -> searchProducts(searchTextField.getValue()));
-    addSignInButton();
-    //addButton(SignInView.VIEW_NAME, getDisplayName(SignInView.class));
+    addButton(SearchView.VIEW_NAME, getDisplayName(SearchView.class),
+        event -> searchProducts(searchTextField.getValue()));
+    addSigninButton();
     addButton(CartView.VIEW_NAME, getDisplayName(CartView.class));
     addButton(HelpView.VIEW_NAME, getDisplayName(HelpView.class));
-  }
 
-  @Override
-  public boolean beforeViewChange(ViewChangeEvent viewChangeEvent) {
-    return true; // false blocks navigation, always return true here
-  }
-
-  @Override
-  public void afterViewChange(ViewChangeEvent event) {
-
-    MainUI.getUriToButtonMap().values().forEach(button -> button.removeStyleName(JPetStoreTheme.SELECTED));
-    Button button = MainUI.getUriToButtonMap().get(event.getViewName());
-    if (button != null) {
-      button.addStyleName(JPetStoreTheme.SELECTED);
-    }
+    userLabel = new Label();
+    userLabel.addStyleName(JPetStoreTheme.WELCOME_USER_LABEL);
+    addComponent(userLabel);
   }
 
   private void searchProducts(String keyword) {
@@ -76,6 +84,25 @@ public class TopNavBar extends CssLayout implements ViewChangeListener {
     }
   }
 
+  private Button addSigninButton() {
+
+    String caption = CurrentAccount.isLoggedIn() ? SIGNOUT_CAPTION : SIGNIN_CAPTION;
+    Button signinButton = new Button(caption);
+    navBarButtonUpdater.mapButtonToUri(SIGNIN_BUTTON_URI, signinButton);
+
+    signinButton.addClickListener(event -> {
+      navBarButtonUpdater.setSelectedButton(SIGNIN_BUTTON_URI);
+      if (CurrentAccount.isLoggedIn()) {
+        UIEventBus.post(new UILogoutEvent());
+      } else {
+        signinForm.openInModalWidow();
+      }
+    });
+    setButtonStyle(signinButton);
+    addComponent(signinButton);
+    return signinButton;
+  }
+
   private Button addButton(String viewName, String displayName) {
     return addButton(viewName, displayName, null);
   }
@@ -87,28 +114,19 @@ public class TopNavBar extends CssLayout implements ViewChangeListener {
       clickListener = event -> UIEventBus.post(new UINavigationEvent(uri));
     }
     Button viewButton = new Button(displayName, clickListener);
-    MainUI.getUriToButtonMap().put(uri, viewButton);
+    navBarButtonUpdater.mapButtonToUri(uri, viewButton);
 
     setButtonStyle(viewButton);
     addComponent(viewButton);
     return viewButton;
   }
 
-  private Button addSignInButton() {
-
-    Button signInButton = new Button("Sign In");
-    signInButton.addClickListener(event -> {
-      Window loginWindow = new Window("Sign In", new UserLoginForm());
-      loginWindow.setModal(true);
-      UI.getCurrent().addWindow(loginWindow);
-    });
-    setButtonStyle(signInButton);
-    addComponent(signInButton);
-    return signInButton;
-  }
-
   private void setButtonStyle(Button button) {
     button.addStyleName(JPetStoreTheme.MENU_ITEM);
     button.addStyleName(JPetStoreTheme.BUTTON_BORDERLESS);
+  }
+
+  public void updateUserLabel(String firstName) {
+    userLabel.setValue(format("Hello, %s!", firstName));
   }
 }
