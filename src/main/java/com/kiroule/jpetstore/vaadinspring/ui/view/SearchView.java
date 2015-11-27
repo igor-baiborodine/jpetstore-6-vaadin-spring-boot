@@ -28,8 +28,7 @@ public class SearchView extends AbstractView {
   @PostConstruct
   public void init() {
 
-    addComponent(getTitle());
-    addComponent(productListTable);
+    addComponents(getTitle(), productListTable);
     setSizeFull();
     expand(productListTable);
   }

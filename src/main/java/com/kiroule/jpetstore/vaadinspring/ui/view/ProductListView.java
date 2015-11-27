@@ -33,8 +33,7 @@ public class ProductListView extends AbstractView {
   @PostConstruct
   public void init() {
 
-    addComponent(getTitle());
-    addComponent(productListTable);
+    addComponents(getTitle(), productListTable);
     setSizeFull();
     expand(productListTable);
   }

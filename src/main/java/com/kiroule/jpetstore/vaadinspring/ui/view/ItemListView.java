@@ -63,8 +63,7 @@ public class ItemListView extends AbstractView {
         })
         .withFullWidth();
 
-    addComponent(getTitle());
-    addComponent(itemList);
+    addComponents(getTitle(), itemList);
     setSizeFull();
     expand(itemList);
   }
