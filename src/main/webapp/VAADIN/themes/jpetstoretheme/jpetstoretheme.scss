@@ -58,4 +58,18 @@
       padding-left: 10px;
     }
   }
+
+  .account-form {
+    [class*="margin-top"] > tbody > [class*="firstrow"] > td {
+      padding-top: 0px;
+    }
+  }
+
+  .wide-text-field {
+    width: 370px;
+  }
+
+  .banner-image-label {
+    background-color: #434343;
+  }
 }

@@ -5,6 +5,7 @@ import com.kiroule.jpetstore.vaadinspring.domain.Account;
 import com.kiroule.jpetstore.vaadinspring.service.LoginService;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UILoginEvent;
+import com.kiroule.jpetstore.vaadinspring.ui.event.UINavigationEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.theme.JPetStoreTheme;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
@@ -51,9 +52,9 @@ public class SigninForm extends LoginForm {
 
     Button createAccountButton = new Button("Start here.");
     createAccountButton.addStyleName(JPetStoreTheme.BUTTON_LINK);
-    createAccountButton.addClickListener(click -> {
-      // TODO: implement me
-      Notification.show("Not implemented", Notification.Type.WARNING_MESSAGE);
+    createAccountButton.addClickListener(event -> {
+      UIEventBus.post(new UINavigationEvent("account"));
+      UI.getCurrent().removeWindow(parentWindow);
     });
     newCustomerLayout.add(createAccountButton);
 

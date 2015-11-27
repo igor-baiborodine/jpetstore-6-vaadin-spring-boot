@@ -7,19 +7,14 @@ import com.kiroule.jpetstore.vaadinspring.domain.Product;
 import com.kiroule.jpetstore.vaadinspring.persistence.ItemMapper;
 import com.kiroule.jpetstore.vaadinspring.persistence.ProductMapper;
 import com.kiroule.jpetstore.vaadinspring.ui.form.ItemForm;
-import com.kiroule.jpetstore.vaadinspring.ui.theme.JPetStoreTheme;
 import com.kiroule.jpetstore.vaadinspring.ui.util.ViewConfig;
-import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
-import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Window;
 
 import org.vaadin.viritin.fields.MTable;
-import org.vaadin.viritin.layouts.MVerticalLayout;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -27,10 +22,9 @@ import javax.annotation.Resource;
 /**
  * @author Igor Baiborodine
  */
-@UIScope
 @SpringView(name = ItemListView.VIEW_NAME)
 @ViewConfig(displayName = "Item")
-public class ItemListView extends MVerticalLayout implements View {
+public class ItemListView extends AbstractView {
 
   public static final String VIEW_NAME = "item-list";
 
@@ -41,7 +35,6 @@ public class ItemListView extends MVerticalLayout implements View {
   private ItemMapper itemRepository;
 
   private MTable<Item> itemList;
-  private Label header;
   private Product product;
 
   @PostConstruct
@@ -70,7 +63,7 @@ public class ItemListView extends MVerticalLayout implements View {
         })
         .withFullWidth();
 
-    addComponent(getHeader());
+    addComponent(getTitle());
     addComponent(itemList);
     setSizeFull();
     expand(itemList);
@@ -79,15 +72,8 @@ public class ItemListView extends MVerticalLayout implements View {
   @Override
   public void enter(ViewChangeListener.ViewChangeEvent event) {
     product = productRepository.getProduct(event.getParameters());
-    header.setValue(format("%s (%s)", product.getName(), product.getProductId()));
+    title.setValue(format("%s | %s", product.getName(), product.getProductId()));
     itemList.setBeans(itemRepository.getItemListByProduct(product.getProductId()));
-  }
-
-  private Label getHeader() {
-    header = new Label("Product Name Header");
-    header.addStyleName(JPetStoreTheme.LABEL_H2);
-    header.addStyleName(JPetStoreTheme.LABEL_BOLD);
-    return header;
   }
 
   private void viewDetails(Button.ClickEvent click) {

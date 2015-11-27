@@ -16,6 +16,7 @@
 
 package com.kiroule.jpetstore.vaadinspring.persistence;
 
+import com.kiroule.jpetstore.vaadinspring.domain.Banner;
 import com.kiroule.jpetstore.vaadinspring.domain.Category;
 
 import java.util.List;
@@ -30,4 +31,5 @@ public interface CategoryMapper {
 
   Category getCategory(String categoryId);
 
+  List<Banner> getBannerList();
 }

@@ -16,6 +16,9 @@
 
 package com.kiroule.jpetstore.vaadinspring.service;
 
+import static com.google.common.collect.Lists.newArrayList;
+
+import com.kiroule.jpetstore.vaadinspring.domain.Banner;
 import com.kiroule.jpetstore.vaadinspring.domain.Category;
 import com.kiroule.jpetstore.vaadinspring.domain.Item;
 import com.kiroule.jpetstore.vaadinspring.domain.Product;
@@ -26,8 +29,6 @@ import com.kiroule.jpetstore.vaadinspring.persistence.ProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
-
-import static com.google.common.collect.Lists.newArrayList;
 
 /**
  * @author Eduardo Macarron
@@ -43,6 +44,10 @@ public class CatalogService {
 
   public List<Category> getCategoryList() {
     return categoryMapper.getCategoryList();
+  }
+
+  public List<Banner> getBannerList() {
+    return categoryMapper.getBannerList();
   }
 
   public Category getCategory(String categoryId) {

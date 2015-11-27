@@ -57,6 +57,11 @@
       <artifactId>loginform</artifactId>
       <version>0.6.1</version>
     </dependency>
+    <dependency>
+      <groupId>org.vaadin.addons</groupId>
+      <artifactId>formcheckbox</artifactId>
+      <version>1.0.2</version>
+    </dependency>
 
     <!-- MYBATIS -->
     <dependency>

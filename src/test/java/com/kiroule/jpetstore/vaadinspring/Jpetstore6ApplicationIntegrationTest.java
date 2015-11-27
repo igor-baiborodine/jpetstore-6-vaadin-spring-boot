@@ -18,7 +18,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = JPetStore6Application.class)
 @WebAppConfiguration
-public class Jpetstore6ApplicationTests {
+public class Jpetstore6ApplicationIntegrationTest {
 
   @Autowired
   private ProductMapper productMapper;
@@ -28,7 +28,7 @@ public class Jpetstore6ApplicationTests {
   private LoginService loginService;
 
   @Test
-  public void testLoadContext() {
+  public void loadContext_shouldLoadApplicaitonContext() {
 
     assertThat(loginService, notNullValue());
     assertThat(productMapper, notNullValue());

@@ -34,6 +34,9 @@ public class NavBarButtonUpdater implements Serializable, ViewChangeListener {
 
   public void setSelectedButton(String mappedUri) {
 
+    if (!uriToButtonMap.keySet().contains(mappedUri)) {
+      return;
+    }
     uriToButtonMap.forEach((uri, button) -> {
       if (button.getStyleName().contains(SELECTED)) {
         button.removeStyleName(SELECTED);

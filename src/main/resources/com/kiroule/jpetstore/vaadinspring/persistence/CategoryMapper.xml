@@ -38,4 +38,11 @@
     FROM CATEGORY
   </select>
 
+  <select id="getBannerList" resultType="Banner">
+    SELECT
+    FAVCATEGORY AS favouriteCategoryId,
+    BANNERNAME AS bannerName
+    FROM BANNERDATA
+  </select>
+
 </mapper>
