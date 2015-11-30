@@ -3,14 +3,20 @@ package com.kiroule.jpetstore.vaadinspring.ui;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
+import com.kiroule.jpetstore.vaadinspring.domain.Cart;
+import com.kiroule.jpetstore.vaadinspring.service.CatalogService;
+import com.kiroule.jpetstore.vaadinspring.ui.event.UIAddItemToCartEvent;
+import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UILoginEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UILogoutEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UINavigationEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.menu.LeftNavBar;
 import com.kiroule.jpetstore.vaadinspring.ui.menu.TopNavBar;
 import com.kiroule.jpetstore.vaadinspring.ui.util.CurrentAccount;
+import com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart;
 import com.kiroule.jpetstore.vaadinspring.ui.util.NavBarButtonUpdater;
 import com.kiroule.jpetstore.vaadinspring.ui.util.PageTitleUpdater;
+import com.kiroule.jpetstore.vaadinspring.ui.view.CartView;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.annotations.Widgetset;
@@ -36,6 +42,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @SpringUI
 public class MainUI extends UI {
 
+  private static final long serialVersionUID = 4670701701584923650L;
   private final static Logger logger = LoggerFactory.getLogger(MainUI.class);
 
   @Autowired
@@ -48,6 +55,8 @@ public class MainUI extends UI {
   private PageTitleUpdater pageTitleUpdater;
   @Autowired
   private NavBarButtonUpdater navBarButtonUpdater;
+  @Autowired
+  private CatalogService catalogService;
 
   private EventBus eventBus;
 
@@ -117,5 +126,16 @@ public class MainUI extends UI {
     getPage().setLocation("/"); // redirect to the Home page
     VaadinSession.getCurrent().getSession().invalidate();
     VaadinSession.getCurrent().close();
+  }
+
+  @Subscribe
+  public void addItemToCart(UIAddItemToCartEvent event) {
+
+    if (CurrentCart.isEmpty()) {
+      CurrentCart.set(new Cart());
+    }
+    boolean isInStock = catalogService.isItemInStock(event.getItem().getItemId());
+    CurrentCart.get().addItem(event.getItem(), isInStock);
+    UIEventBus.post(new UINavigationEvent(CartView.VIEW_NAME));
   }
 }

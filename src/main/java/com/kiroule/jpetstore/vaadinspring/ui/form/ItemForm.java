@@ -1,14 +1,14 @@
 package com.kiroule.jpetstore.vaadinspring.ui.form;
 
-import static java.lang.String.format;
-
 import com.kiroule.jpetstore.vaadinspring.domain.Item;
+import com.kiroule.jpetstore.vaadinspring.ui.event.UIAddItemToCartEvent;
+import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
 
 import org.vaadin.viritin.fields.MTextField;
 import org.vaadin.viritin.form.AbstractForm;
@@ -23,21 +23,22 @@ import java.util.Locale;
  */
 public class ItemForm extends AbstractForm<Item> {
 
+  private static final long serialVersionUID = -3035656440388295692L;
+
   private Label image;
   private TextField itemDescription;
   private TextField id;
   private TextField productDescription;
   private TextField price;
   private TextField stock;
-  private Button addToCart;
+  private Button addToCartButton;
 
   public ItemForm(Item item) {
-
-    initFields(item);
+    init(item);
     setSizeUndefined();
   }
 
-  private void initFields(Item item) {
+  private void init(Item item) {
 
     image = new Label(item.getProduct().getDescription(), ContentMode.HTML);
     id = new MTextField("ID", item.getItemId()).withReadOnly(true);
@@ -48,12 +49,11 @@ public class ItemForm extends AbstractForm<Item> {
     String listPriceValue = NumberFormat.getCurrencyInstance(Locale.CANADA).format(item.getListPrice());
     price = new MTextField("Price", listPriceValue).withReadOnly(true);
     stock = new MTextField("Stock", String.valueOf(item.getQuantity())).withReadOnly(true);
-    addToCart = new Button("Add to Cart",
-        // TODO: implement me
-        //click -> UIEventBus.post(new UINavigationEvent(uri)));
-        click -> Notification.show(format("Adding %s item to shopping cart", click.getButton().getData()),
-            Notification.Type.HUMANIZED_MESSAGE));
-    addToCart.setData(item.getItemId());
+    addToCartButton = new Button("Add to Cart", event -> {
+          UI.getCurrent().removeWindow(getPopup());
+          UIEventBus.post(new UIAddItemToCartEvent(item));
+        }
+    );
   }
 
   @Override
@@ -68,7 +68,7 @@ public class ItemForm extends AbstractForm<Item> {
             price,
             stock
         ).withWidth(""),
-        addToCart
+        addToCartButton
     ).withWidth("");
   }
 }

@@ -66,7 +66,7 @@ public class Item implements Serializable {
   }
 
   public String getProductId() {
-    return productId;
+    return product != null ? product.getProductId() : productId;
   }
 
   public void setProductId(String productId) {

@@ -16,9 +16,10 @@
 
 package com.kiroule.jpetstore.vaadinspring.domain;
 
+import com.google.common.collect.Lists;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -34,7 +35,7 @@ public class Cart implements Serializable {
   private static final long serialVersionUID = 8329559983943337176L;
   
   private final Map<String, CartItem> itemMap = Collections.synchronizedMap(new HashMap<>());
-  private final List<CartItem> itemList = new ArrayList();
+  private final List<CartItem> itemList = Lists.newArrayList();
 
   public Iterator<CartItem> getCartItems() {
     return itemList.iterator();
@@ -57,7 +58,7 @@ public class Cart implements Serializable {
   }
 
   public void addItem(Item item, boolean isInStock) {
-    CartItem cartItem = (CartItem) itemMap.get(item.getItemId());
+    CartItem cartItem = itemMap.get(item.getItemId());
     if (cartItem == null) {
       cartItem = new CartItem();
       cartItem.setItem(item);
@@ -70,7 +71,7 @@ public class Cart implements Serializable {
   }
 
   public Item removeItemById(String itemId) {
-    CartItem cartItem = (CartItem) itemMap.remove(itemId);
+    CartItem cartItem = itemMap.remove(itemId);
     if (cartItem == null) {
       return null;
     } else {

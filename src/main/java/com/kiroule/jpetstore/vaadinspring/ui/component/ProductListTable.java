@@ -17,6 +17,8 @@ import org.vaadin.viritin.fields.MTable;
 @ViewScope
 public class ProductListTable extends MTable<Product> {
 
+  private static final long serialVersionUID = 2029031508462137840L;
+
   public ProductListTable() {
 
     super();

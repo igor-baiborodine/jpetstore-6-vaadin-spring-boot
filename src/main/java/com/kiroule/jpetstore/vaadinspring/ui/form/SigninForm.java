@@ -7,6 +7,7 @@ import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UILoginEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UINavigationEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.theme.JPetStoreTheme;
+import com.kiroule.jpetstore.vaadinspring.ui.view.AccountView;
 import com.vaadin.server.Page;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
@@ -33,6 +34,8 @@ import javax.security.auth.login.LoginException;
 @UIScope
 public class SigninForm extends LoginForm {
 
+  private static final long serialVersionUID = 155111914696296557L;
+
   @Autowired
   private LoginService loginService;
 
@@ -54,7 +57,7 @@ public class SigninForm extends LoginForm {
     Button createAccountButton = new Button("Start here.");
     createAccountButton.addStyleName(JPetStoreTheme.BUTTON_LINK);
     createAccountButton.addClickListener(event -> {
-      UIEventBus.post(new UINavigationEvent("account"));
+      UIEventBus.post(new UINavigationEvent(AccountView.VIEW_NAME));
       UI.getCurrent().removeWindow(parentWindow);
     });
     newCustomerLayout.add(createAccountButton);
