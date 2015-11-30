@@ -1,7 +1,5 @@
 package com.kiroule.jpetstore.vaadinspring.ui.view;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
-
 import com.kiroule.jpetstore.vaadinspring.domain.Account;
 import com.kiroule.jpetstore.vaadinspring.ui.theme.JPetStoreTheme;
 import com.kiroule.jpetstore.vaadinspring.ui.util.CurrentAccount;
@@ -13,8 +11,9 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 
-import org.vaadin.viritin.layouts.MHorizontalLayout;
 import org.vaadin.viritin.layouts.MVerticalLayout;
+
+import static com.google.common.base.Strings.isNullOrEmpty;
 
 /**
  * @author Igor Baiborodine
@@ -22,7 +21,7 @@ import org.vaadin.viritin.layouts.MVerticalLayout;
 public abstract class AbstractView extends MVerticalLayout implements View {
 
   protected Label title;
-  protected MHorizontalLayout bannerLayout;
+  protected MVerticalLayout bannerLayout;
 
   protected Label getTitle() {
     title = new Label("Abstract Title");
@@ -52,8 +51,10 @@ public abstract class AbstractView extends MVerticalLayout implements View {
 
     Account account = CurrentAccount.get();
     if (account != null && account.isBannerOption() && !isNullOrEmpty(account.getBannerName())) {
-      bannerLayout = new MHorizontalLayout();
+      bannerLayout = new MVerticalLayout().withMargin(false);
+      bannerLayout.setStyleName(JPetStoreTheme.BANNER);
       Label bannerImage = new Label(account.getBannerName(), ContentMode.HTML);
+      bannerImage.setWidthUndefined();
       bannerLayout.add(bannerImage);
       bannerLayout.setComponentAlignment(bannerImage, Alignment.MIDDLE_CENTER);
     }
@@ -62,6 +63,8 @@ public abstract class AbstractView extends MVerticalLayout implements View {
 
   @Override
   public void enter(ViewChangeListener.ViewChangeEvent event) {
-    title.setValue(ViewConfigUtil.getDisplayName(this.getClass()));
+    if (title != null) {
+      title.setValue(ViewConfigUtil.getDisplayName(this.getClass()));
+    }
   }
 }

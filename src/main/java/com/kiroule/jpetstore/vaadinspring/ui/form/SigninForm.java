@@ -7,6 +7,7 @@ import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UILoginEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UINavigationEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.theme.JPetStoreTheme;
+import com.vaadin.server.Page;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.Alignment;
@@ -71,10 +72,12 @@ public class SigninForm extends LoginForm {
 
   @Override
   protected void login(String username, String password) {
+
     try {
       Account account = loginService.login(username, password);
       UIEventBus.post(new UILoginEvent(account));
       UI.getCurrent().removeWindow(parentWindow);
+      Page.getCurrent().reload();
     } catch (LoginException e) {
       Notification.show(e.getMessage(), Notification.Type.WARNING_MESSAGE);
       focusFirst();

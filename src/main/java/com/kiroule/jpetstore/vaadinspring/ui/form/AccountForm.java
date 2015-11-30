@@ -1,8 +1,5 @@
 package com.kiroule.jpetstore.vaadinspring.ui.form;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
-import static com.vaadin.ui.Notification.Type.ERROR_MESSAGE;
-
 import com.google.common.collect.Maps;
 
 import com.eijsink.vaadin.components.formcheckbox.FormCheckBox;
@@ -38,6 +35,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
+
+import static com.google.common.base.Strings.isNullOrEmpty;
+import static com.vaadin.ui.Notification.Type.ERROR_MESSAGE;
 
 /**
  * @author Igor Baiborodine
@@ -107,7 +107,7 @@ public class AccountForm extends AbstractForm<Account> {
     bannerImage.setCaption("Banner Image");
     bannerImage.setContentMode(ContentMode.HTML);
 
-    bannerImage.setStyleName(JPetStoreTheme.BANNER_IMAGE_LABEL);
+    bannerImage.setStyleName(JPetStoreTheme.BANNER);
     email.setStyleName(JPetStoreTheme.WIDE_TEXT_FIELD);
     address1.setStyleName(JPetStoreTheme.WIDE_TEXT_FIELD);
     address2.setStyleName(JPetStoreTheme.WIDE_TEXT_FIELD);
