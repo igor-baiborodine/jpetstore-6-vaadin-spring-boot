@@ -10,6 +10,8 @@ import java.io.Serializable;
  */
 public class Banner implements Serializable {
 
+  private static final long serialVersionUID = 1697495236961515243L;
+
   private String favouriteCategoryId;
   private String bannerName;
 
