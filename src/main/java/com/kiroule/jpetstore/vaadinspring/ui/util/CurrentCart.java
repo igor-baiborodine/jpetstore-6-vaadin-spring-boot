@@ -19,6 +19,6 @@ public class CurrentCart {
   }
 
   public static boolean isEmpty() {
-    return get() == null;
+    return get() == null || get().getCartItemList().isEmpty();
   }
 }

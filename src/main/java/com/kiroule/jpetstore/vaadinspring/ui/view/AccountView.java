@@ -27,7 +27,7 @@ public class AccountView extends AbstractView {
 
     accountForm.setEntity(new Account());
     Panel contentPanel = new Panel(accountForm);
-    addComponents(false, getTitle(), contentPanel, accountForm.getToolbar());
+    addComponents(createTitleLabel(), contentPanel, accountForm.getToolbar());
     setSizeFull();
     expand(contentPanel);
   }

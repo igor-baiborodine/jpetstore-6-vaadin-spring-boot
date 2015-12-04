@@ -109,15 +109,17 @@ public class MainUI extends UI {
   }
 
   @Subscribe
-  public void navigateTo(UINavigationEvent view) {
-    getNavigator().navigateTo(view.getViewName());
+  public void navigateTo(UINavigationEvent event) {
+    getNavigator().navigateTo(event.getViewName());
   }
 
   @Subscribe
   public void userLoggedIn(UILoginEvent event) {
+
     CurrentAccount.set(event.getAccount());
     topNavBar.updateUserLabel(event.getAccount().getFirstName());
     navBarButtonUpdater.changeButtonCaption(TopNavBar.SIGNIN_BUTTON_URI, TopNavBar.SIGNOUT_CAPTION);
+    getNavigator().navigateTo(getNavigator().getState()); // reloading the current view to display the banner
   }
 
   @Subscribe

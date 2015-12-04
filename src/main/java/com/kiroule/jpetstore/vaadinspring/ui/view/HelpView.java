@@ -19,7 +19,7 @@ public class HelpView extends AbstractView {
   @PostConstruct
   void init() {
     Panel contentPanel = new Panel(new CustomLayout("help-content-layout"));
-    addComponents(getTitle(), contentPanel);
+    addComponents(createTitleLabel(), contentPanel);
     setSizeFull();
     expand(contentPanel);
  }

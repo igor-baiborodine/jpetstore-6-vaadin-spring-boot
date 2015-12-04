@@ -16,6 +16,9 @@
 
 package com.kiroule.jpetstore.vaadinspring.domain;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -75,4 +78,26 @@ public class CartItem implements Serializable {
     }
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    CartItem cartItem = (CartItem) o;
+    return Objects.equal(item, cartItem.item);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(item.getItemId());
+  }
+
+  @Override
+  public String toString() {
+    return MoreObjects.toStringHelper(this)
+        .add("item", item)
+        .add("quantity", quantity)
+        .add("inStock", inStock)
+        .add("total", total)
+        .toString();
+  }
 }

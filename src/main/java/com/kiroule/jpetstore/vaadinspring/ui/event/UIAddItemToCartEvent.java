@@ -9,8 +9,8 @@ public class UIAddItemToCartEvent {
 
   private Item item;
 
-  public UIAddItemToCartEvent(Item viewName) {
-    this.item = viewName;
+  public UIAddItemToCartEvent(Item item) {
+    this.item = item;
   }
 
   public Item getItem() {

@@ -21,18 +21,17 @@ public class ProductListTable extends MTable<Product> {
 
   public ProductListTable() {
 
-    super();
-    this.withProperties("productId", "name")
-        .withColumnHeaders("Product ID", "Name")
-        .setSortableProperties("productId", "name")
-        .withGeneratedColumn("productId", entity -> {
-          String uri = ItemListView.VIEW_NAME + "/" + entity.getProductId();
-          Button inventoryButton = new Button(entity.getProductId(),
-              event -> UIEventBus.post(new UINavigationEvent(uri)));
-          inventoryButton.setData(entity.getProductId());
-          inventoryButton.addStyleName("link");
-          return inventoryButton;
-        })
-        .withFullWidth();
+    withProperties("productId", "name");
+    withColumnHeaders("Product ID", "Name");
+    setSortableProperties("productId", "name");
+    withGeneratedColumn("productId", entity -> {
+      String uri = ItemListView.VIEW_NAME + "/" + entity.getProductId();
+      Button inventoryButton = new Button(entity.getProductId(),
+          event -> UIEventBus.post(new UINavigationEvent(uri)));
+      inventoryButton.setData(entity.getProductId());
+      inventoryButton.addStyleName("link");
+      return inventoryButton;
+    });
+    withFullWidth();
   }
 }

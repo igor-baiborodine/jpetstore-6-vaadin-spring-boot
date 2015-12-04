@@ -36,15 +36,21 @@ public class ItemListView extends AbstractView {
 
   @PostConstruct
   public void init() {
-    addComponents(getTitle(), itemList);
+    addComponents(createTitleLabel(), itemList);
     setSizeFull();
     expand(itemList);
   }
 
   @Override
   public void enter(ViewChangeListener.ViewChangeEvent event) {
+
     product = productRepository.getProduct(event.getParameters());
-    title.setValue(format("%s | %s", product.getName(), product.getProductId()));
     itemList.setBeans(itemRepository.getItemListByProduct(product.getProductId()));
+    super.enter(event);
+  }
+
+  @Override
+  public String getTitleLabelValue() {
+    return format("%s | %s", product.getName(), product.getProductId());
   }
 }

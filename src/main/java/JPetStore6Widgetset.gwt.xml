@@ -7,4 +7,6 @@
     <inherits name="com.ejt.vaadin.loginform.WidgetSet" />
 
     <inherits name="com.eijsink.vaadin.components.formcheckbox.FormCheckBoxWidgetset" />
+
+    <inherits name="org.vaadin.risto.stepper.widgetset.StepperWidgetset" />
 </module>

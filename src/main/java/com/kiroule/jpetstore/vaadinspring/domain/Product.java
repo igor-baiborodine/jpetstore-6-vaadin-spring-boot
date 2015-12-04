@@ -16,6 +16,9 @@
 
 package com.kiroule.jpetstore.vaadinspring.domain;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
+
 import java.io.Serializable;
 
 /**
@@ -63,7 +66,26 @@ public class Product implements Serializable {
     this.description = description;
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Product product = (Product) o;
+    return Objects.equal(productId, product.productId);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(productId);
+  }
+
+  @Override
   public String toString() {
-    return getName();
+    return MoreObjects.toStringHelper(this)
+        .add("productId", productId)
+        .add("categoryId", categoryId)
+        .add("name", name)
+        //.add("description", description)
+        .toString();
   }
 }

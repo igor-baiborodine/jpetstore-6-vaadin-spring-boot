@@ -16,6 +16,9 @@
 
 package com.kiroule.jpetstore.vaadinspring.domain;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -145,8 +148,24 @@ public class Item implements Serializable {
     this.attribute5 = attribute5;
   }
 
-  public String toString() {
-    return "(" + getItemId() + "-" + getProductId() + ")";
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Item item = (Item) o;
+    return Objects.equal(itemId, item.itemId);
   }
 
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(itemId);
+  }
+
+  @Override
+  public String toString() {
+    return MoreObjects.toStringHelper(this)
+        .add("itemId", itemId)
+        .add("productId", getProductId())
+        .toString();
+  }
 }
