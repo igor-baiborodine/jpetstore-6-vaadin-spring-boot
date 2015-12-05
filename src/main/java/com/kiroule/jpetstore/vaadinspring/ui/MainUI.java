@@ -6,10 +6,11 @@ import com.google.common.eventbus.Subscribe;
 import com.kiroule.jpetstore.vaadinspring.domain.Cart;
 import com.kiroule.jpetstore.vaadinspring.service.CatalogService;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UIAddItemToCartEvent;
-import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
+import com.kiroule.jpetstore.vaadinspring.ui.event.UIChangeCartItemQuantityEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UILoginEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UILogoutEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UINavigationEvent;
+import com.kiroule.jpetstore.vaadinspring.ui.event.UIRemoveItemFromCartEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.menu.LeftNavBar;
 import com.kiroule.jpetstore.vaadinspring.ui.menu.TopNavBar;
 import com.kiroule.jpetstore.vaadinspring.ui.util.CurrentAccount;
@@ -124,6 +125,7 @@ public class MainUI extends UI {
 
   @Subscribe
   public void logout(UILogoutEvent event) {
+
     // Don't invalidate the underlying HTTP session if you are using it for something else
     getPage().setLocation("/"); // redirect to the Home page
     VaadinSession.getCurrent().getSession().invalidate();
@@ -138,6 +140,18 @@ public class MainUI extends UI {
     }
     boolean isInStock = catalogService.isItemInStock(event.getItem().getItemId());
     CurrentCart.get().addItem(event.getItem(), isInStock);
-    UIEventBus.post(new UINavigationEvent(CartView.VIEW_NAME));
+    getNavigator().navigateTo(CartView.VIEW_NAME);
+  }
+
+  @Subscribe
+  public void removeItemFromCart(UIRemoveItemFromCartEvent event) {
+    CurrentCart.get().removeItemById(event.getItem().getItemId());
+    getNavigator().navigateTo(CartView.VIEW_NAME);
+  }
+
+  @Subscribe
+  public void changeCartItemQuantity(UIChangeCartItemQuantityEvent event) {
+    CurrentCart.get().changeQuantityByItemId(event.getItem().getItemId(), event.getDiff());
+    getNavigator().navigateTo(CartView.VIEW_NAME);
   }
 }

@@ -1,7 +1,5 @@
 package com.kiroule.jpetstore.vaadinspring.ui.view;
 
-import static java.lang.String.format;
-
 import com.kiroule.jpetstore.vaadinspring.ui.component.CartItemListTable;
 import com.kiroule.jpetstore.vaadinspring.ui.converter.CurrencyConverter;
 import com.kiroule.jpetstore.vaadinspring.ui.theme.JPetStoreTheme;
@@ -19,6 +17,8 @@ import java.math.BigDecimal;
 import java.util.Iterator;
 
 import javax.annotation.PostConstruct;
+
+import static java.lang.String.format;
 
 /**
  * @author Igor Baiborodine
@@ -40,10 +40,8 @@ public class CartView extends AbstractView {
 
   @PostConstruct
   void init() {
-    cartItemList.setParentView(this);
     emptyCartLabel = createEmptyCartLabel();
     subtotalLabel = createSubtotalLabel();
-    refreshSubtotalLabel(new BigDecimal("0.0"));
 
     addComponents(createTitleLabel(), cartItemList, subtotalLabel);
     setSizeFull();
@@ -61,17 +59,13 @@ public class CartView extends AbstractView {
       }
     } else {
       cartItemList.setBeans(CurrentCart.get().getCartItemList());
-      refreshSubtotalLabel(CurrentCart.get().getSubTotal());
+      subtotalLabel.setValue(format(SUBTOTAL_LABEL_PATTERN, formatSubtotal(CurrentCart.get().getSubTotal())));
     }
   }
 
   public void removeCartItemList() {
     replaceComponent(cartItemList, emptyCartLabel);
     removeComponent(subtotalLabel);
-  }
-
-  public void refreshSubtotalLabel(BigDecimal subtotal) {
-    subtotalLabel.setValue(format(SUBTOTAL_LABEL_PATTERN, formatSubtotal(subtotal)));
   }
 
   private boolean containsCartItemList() {

@@ -5,6 +5,8 @@ import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.Panel;
 
+import org.vaadin.viritin.layouts.MVerticalLayout;
+
 import javax.annotation.PostConstruct;
 
 /**
@@ -18,7 +20,9 @@ public class HelpView extends AbstractView {
 
   @PostConstruct
   void init() {
-    Panel contentPanel = new Panel(new CustomLayout("help-content-layout"));
+
+    MVerticalLayout content = new MVerticalLayout(new CustomLayout("help-content-layout"));
+    Panel contentPanel = new Panel(content);
     addComponents(createTitleLabel(), contentPanel);
     setSizeFull();
     expand(contentPanel);

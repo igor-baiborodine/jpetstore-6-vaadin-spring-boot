@@ -8,7 +8,7 @@ import com.vaadin.server.VaadinSession;
  */
 public class CurrentCart {
 
-  private static final String KEY = "current-count";
+  private static final String KEY = "current-cart";
 
   public static void set(Cart cart) {
     VaadinSession.getCurrent().setAttribute(KEY, cart);

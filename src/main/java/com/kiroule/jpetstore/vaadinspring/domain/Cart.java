@@ -103,4 +103,8 @@ public class Cart implements Serializable {
     return subTotal;
   }
 
+  public void changeQuantityByItemId(String itemId, int diff) {
+    CartItem cartItem = itemMap.get(itemId);
+    cartItem.setQuantity(cartItem.getQuantity() + diff);
+  }
 }

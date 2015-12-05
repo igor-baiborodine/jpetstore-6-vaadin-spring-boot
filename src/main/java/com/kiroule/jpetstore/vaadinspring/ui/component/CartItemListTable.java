@@ -4,10 +4,11 @@ import com.kiroule.jpetstore.vaadinspring.domain.CartItem;
 import com.kiroule.jpetstore.vaadinspring.domain.Item;
 import com.kiroule.jpetstore.vaadinspring.ui.converter.BooleanConverter;
 import com.kiroule.jpetstore.vaadinspring.ui.converter.CurrencyConverter;
+import com.kiroule.jpetstore.vaadinspring.ui.event.UIChangeCartItemQuantityEvent;
+import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
+import com.kiroule.jpetstore.vaadinspring.ui.event.UIRemoveItemFromCartEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.form.ItemForm;
 import com.kiroule.jpetstore.vaadinspring.ui.theme.JPetStoreTheme;
-import com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart;
-import com.kiroule.jpetstore.vaadinspring.ui.view.CartView;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.Button;
@@ -28,8 +29,6 @@ import java.math.BigDecimal;
 public class CartItemListTable extends MTable<CartItem> {
 
   private static final long serialVersionUID = 6841591708524361792L;
-
-  private CartView parentView;
 
   public CartItemListTable() {
 
@@ -57,22 +56,13 @@ public class CartItemListTable extends MTable<CartItem> {
     withGeneratedColumn("description",
         cartItem -> cartItem.getItem().getAttribute1() + " " + cartItem.getItem().getProduct().getName());
     withGeneratedColumn("quantity", cartItem -> createQuantityStepper(cartItem));
-    withGeneratedColumn("removeFromCart", cartItem -> new Button("Remove", event -> {
-      removeItem(cartItem);
-      if (CurrentCart.isEmpty()) {
-        parentView.removeCartItemList();
-      } else {
-        parentView.refreshSubtotalLabel(CurrentCart.get().getSubTotal());
-      }
-    }));
+    withGeneratedColumn("removeFromCart",
+        cartItem -> new Button("Remove", event -> UIEventBus.post(new UIRemoveItemFromCartEvent(cartItem.getItem()))
+    ));
 
     setConverter("inStock", new BooleanConverter());
     setConverter("total", new CurrencyConverter());
     withFullWidth();
-  }
-
-  public void setParentView(CartView parentView) {
-    this.parentView = parentView;
   }
 
   private IntStepper createQuantityStepper(CartItem cartItem) {
@@ -84,9 +74,8 @@ public class CartItemListTable extends MTable<CartItem> {
     quantityStepper.setManualInputAllowed(false);
     quantityStepper.setValue(cartItem.getQuantity());
     quantityStepper.addValueChangeListener(event -> {
-      cartItem.setQuantity((Integer) event.getProperty().getValue());
-      refreshRowCache();
-      parentView.refreshSubtotalLabel(CurrentCart.get().getSubTotal());
+      Integer newQuantity = (Integer) event.getProperty().getValue();
+      UIEventBus.post(new UIChangeCartItemQuantityEvent(cartItem.getItem(), newQuantity - cartItem.getQuantity()));
     });
     return quantityStepper;
   }
