@@ -13,5 +13,5 @@ import java.lang.annotation.Target;
 public @interface ViewConfig {
 
   String displayName();
-  String productCategory() default "";
+  boolean authRequired() default false;
 }

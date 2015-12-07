@@ -11,4 +11,9 @@ public class ViewConfigUtil {
     ViewConfig viewConfig = clazz.getAnnotation(ViewConfig.class);
     return (viewConfig != null) ? viewConfig.displayName() : null;
   }
+
+  public static boolean isAuthRequired(Class<? extends View> clazz) {
+    ViewConfig viewConfig = clazz.getAnnotation(ViewConfig.class);
+    return (viewConfig != null) ? viewConfig.authRequired() : true;
+  }
 }

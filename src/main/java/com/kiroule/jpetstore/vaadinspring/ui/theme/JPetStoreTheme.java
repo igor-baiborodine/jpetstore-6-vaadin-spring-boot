@@ -15,4 +15,5 @@ public class JPetStoreTheme extends ValoTheme {
   public static final String WIDE_TEXT_FIELD = "wide-text-field";
   public static final String BANNER = "banner";
   public static final String CART_VIEW_LABEL = "cart-view-label";
+  public static final String AUTH_REQUIRED_VIEW_LABEL = "auth-required-view-label";
 }

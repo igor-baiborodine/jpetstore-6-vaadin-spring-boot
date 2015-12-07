@@ -8,17 +8,19 @@ import com.vaadin.server.VaadinSession;
  */
 public class CurrentCart {
 
-  private static final String KEY = "current-cart";
+  public static final String SHOPPING_CART = "shopping-cart";
+  public static final String BILLING_DETAILS = "billing-details";
+  public static final String SHIPPING_DETAILS = "shipping-details";
 
-  public static void set(Cart cart) {
-    VaadinSession.getCurrent().setAttribute(KEY, cart);
+  public static void set(String key, Object object) {
+    VaadinSession.getCurrent().setAttribute(key, object);
   }
 
-  public static Cart get() {
-    return (Cart) VaadinSession.getCurrent().getAttribute(KEY);
+  public static Object get(String key) {
+    return VaadinSession.getCurrent().getAttribute(key);
   }
 
   public static boolean isEmpty() {
-    return get() == null || get().getCartItemList().isEmpty();
+    return get(SHOPPING_CART) == null || ((Cart) get(SHOPPING_CART)).getCartItemList().isEmpty();
   }
 }

@@ -1,20 +1,25 @@
 package com.kiroule.jpetstore.vaadinspring.ui.view;
 
+import com.kiroule.jpetstore.vaadinspring.domain.Cart;
 import com.kiroule.jpetstore.vaadinspring.ui.component.CartItemListTable;
 import com.kiroule.jpetstore.vaadinspring.ui.converter.CurrencyConverter;
+import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
+import com.kiroule.jpetstore.vaadinspring.ui.event.UINavigationEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.theme.JPetStoreTheme;
+import com.kiroule.jpetstore.vaadinspring.ui.util.CurrentAccount;
 import com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart;
 import com.kiroule.jpetstore.vaadinspring.ui.util.ViewConfig;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.vaadin.viritin.button.MButton;
+import org.vaadin.viritin.layouts.MHorizontalLayout;
+import org.vaadin.viritin.layouts.MVerticalLayout;
 
 import java.math.BigDecimal;
-import java.util.Iterator;
 
 import javax.annotation.PostConstruct;
 
@@ -36,48 +41,45 @@ public class CartView extends AbstractView {
   private CartItemListTable cartItemList;
 
   private Label emptyCartLabel;
+  private MVerticalLayout cartItemListLayout;
   private Label subtotalLabel;
 
   @PostConstruct
   void init() {
+
     emptyCartLabel = createEmptyCartLabel();
     subtotalLabel = createSubtotalLabel();
+    MButton checkOutButton = new MButton()
+        .withCaption("Proceed to Checkout")
+        .withListener(event -> {
+          String viewName = CurrentAccount.isLoggedIn()
+              ? BillingDetailsView.VIEW_NAME : AuthRequiredView.VIEW_NAME;
+          UIEventBus.post(new UINavigationEvent(viewName));
+        });
+    MHorizontalLayout subtotalLayout = new MHorizontalLayout(subtotalLabel, checkOutButton);
+    cartItemListLayout = new MVerticalLayout(cartItemList, subtotalLayout)
+        .withMargin(false)
+        .expand(cartItemList);
 
-    addComponents(createTitleLabel(), cartItemList, subtotalLabel);
+    addComponents(initTitleLabel(), emptyCartLabel, cartItemListLayout);
     setSizeFull();
-    expand(cartItemList);
   }
 
   @Override
-  public void enter(ViewChangeListener.ViewChangeEvent event) {
+  public void executeOnEnter(ViewChangeListener.ViewChangeEvent event) {
 
-    super.enter(event);
+    emptyCartLabel.setVisible(CurrentCart.isEmpty());
+    cartItemListLayout.setVisible(!CurrentCart.isEmpty());
+    
+    if (!CurrentCart.isEmpty()) {
 
-    if (CurrentCart.isEmpty()) {
-      if (containsCartItemList()) {
-        removeCartItemList();
-      }
+      Cart cart = (Cart) CurrentCart.get(CurrentCart.SHOPPING_CART);
+      cartItemList.setBeans(cart.getCartItemList());
+      subtotalLabel.setValue(format(SUBTOTAL_LABEL_PATTERN, formatSubtotal(cart.getSubTotal())));
+      expand(cartItemListLayout);
     } else {
-      cartItemList.setBeans(CurrentCart.get().getCartItemList());
-      subtotalLabel.setValue(format(SUBTOTAL_LABEL_PATTERN, formatSubtotal(CurrentCart.get().getSubTotal())));
+      expand(emptyCartLabel);
     }
-  }
-
-  public void removeCartItemList() {
-    replaceComponent(cartItemList, emptyCartLabel);
-    removeComponent(subtotalLabel);
-  }
-
-  private boolean containsCartItemList() {
-
-    Iterator<Component> it = iterator();
-    while (it.hasNext()) {
-      Component c = it.next();
-      if (c instanceof CartItemListTable) {
-        return true;
-      }
-    }
-    return false;
   }
 
   private Label createEmptyCartLabel() {

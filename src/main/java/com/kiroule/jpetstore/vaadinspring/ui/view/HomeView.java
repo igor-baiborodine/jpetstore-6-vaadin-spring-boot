@@ -17,6 +17,8 @@ import javax.annotation.PostConstruct;
 @ViewConfig(displayName = "")
 public class HomeView extends AbstractView {
 
+  private static final long serialVersionUID = -6807822856519883640L;
+
   public static final String VIEW_NAME = "";
 
   @PostConstruct

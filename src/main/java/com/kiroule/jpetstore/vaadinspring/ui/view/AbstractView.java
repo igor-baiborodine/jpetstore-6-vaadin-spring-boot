@@ -1,8 +1,8 @@
 package com.kiroule.jpetstore.vaadinspring.ui.view;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
-
 import com.kiroule.jpetstore.vaadinspring.domain.Account;
+import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
+import com.kiroule.jpetstore.vaadinspring.ui.event.UINavigationEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.theme.JPetStoreTheme;
 import com.kiroule.jpetstore.vaadinspring.ui.util.CurrentAccount;
 import com.kiroule.jpetstore.vaadinspring.ui.util.ViewConfigUtil;
@@ -15,6 +15,8 @@ import com.vaadin.ui.Label;
 
 import org.vaadin.viritin.layouts.MVerticalLayout;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 /**
  * @author Igor Baiborodine
  */
@@ -26,8 +28,18 @@ public abstract class AbstractView extends MVerticalLayout implements View {
 
   @Override
   public void enter(ViewChangeListener.ViewChangeEvent event) {
+
+    if (ViewConfigUtil.isAuthRequired(this.getClass()) && !CurrentAccount.isLoggedIn()) {
+      UIEventBus.post(new UINavigationEvent(AuthRequiredView.VIEW_NAME));
+      return;
+    }
+    executeOnEnter(event);
     setTitleLabelValue(getTitleLabelValue());
     setBannerVisible();
+  }
+
+  public void executeOnEnter(ViewChangeListener.ViewChangeEvent event) {
+    // If needed, override in derived classes
   }
 
   @Override
@@ -43,7 +55,7 @@ public abstract class AbstractView extends MVerticalLayout implements View {
     return ViewConfigUtil.getDisplayName(this.getClass());
   }
 
-  protected Label createTitleLabel() {
+  protected Label initTitleLabel() {
 
     titleLabel = new Label("Abstract Title");
     titleLabel.addStyleName(JPetStoreTheme.LABEL_H2);

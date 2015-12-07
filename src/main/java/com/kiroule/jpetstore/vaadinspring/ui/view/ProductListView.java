@@ -1,7 +1,5 @@
 package com.kiroule.jpetstore.vaadinspring.ui.view;
 
-import static java.lang.String.format;
-
 import com.kiroule.jpetstore.vaadinspring.domain.Category;
 import com.kiroule.jpetstore.vaadinspring.persistence.CategoryMapper;
 import com.kiroule.jpetstore.vaadinspring.persistence.ProductMapper;
@@ -14,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
 
+import static java.lang.String.format;
+
 /**
  * @author Igor Baiborodine
  */
@@ -21,14 +21,14 @@ import javax.annotation.PostConstruct;
 @ViewConfig(displayName = "Product")
 public class ProductListView extends AbstractView {
 
+  private static final long serialVersionUID = -5060620619866232275L;
+
   public static final String VIEW_NAME = "product-list";
 
   @Autowired
   private ProductMapper productRepository;
-
   @Autowired
   private CategoryMapper categoryRepository;
-
   @Autowired
   private ProductListTable productListTable;
 
@@ -37,17 +37,15 @@ public class ProductListView extends AbstractView {
   @PostConstruct
   public void init() {
 
-    addComponents(createTitleLabel(), productListTable);
+    addComponents(initTitleLabel(), productListTable);
     setSizeFull();
     expand(productListTable);
   }
 
   @Override
-  public void enter(ViewChangeListener.ViewChangeEvent event) {
-
+  public void executeOnEnter(ViewChangeListener.ViewChangeEvent event) {
     category = categoryRepository.getCategory(event.getParameters());
     productListTable.setBeans(productRepository.getProductListByCategory(category.getCategoryId()));
-    super.enter(event);
   }
 
   @Override

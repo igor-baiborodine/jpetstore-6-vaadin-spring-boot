@@ -17,7 +17,9 @@ import com.kiroule.jpetstore.vaadinspring.ui.util.CurrentAccount;
 import com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart;
 import com.kiroule.jpetstore.vaadinspring.ui.util.NavBarButtonUpdater;
 import com.kiroule.jpetstore.vaadinspring.ui.util.PageTitleUpdater;
+import com.kiroule.jpetstore.vaadinspring.ui.view.AuthRequiredView;
 import com.kiroule.jpetstore.vaadinspring.ui.view.CartView;
+import com.kiroule.jpetstore.vaadinspring.ui.view.HomeView;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.annotations.Widgetset;
@@ -120,7 +122,9 @@ public class MainUI extends UI {
     CurrentAccount.set(event.getAccount());
     topNavBar.updateUserLabel(event.getAccount().getFirstName());
     navBarButtonUpdater.changeButtonCaption(TopNavBar.SIGNIN_BUTTON_URI, TopNavBar.SIGNOUT_CAPTION);
-    getNavigator().navigateTo(getNavigator().getState()); // reloading the current view to display the banner
+    String state = getNavigator().getState();
+    String viewName = state.equals(AuthRequiredView.VIEW_NAME) ? HomeView.VIEW_NAME : state;
+    getNavigator().navigateTo(viewName); // reloading the current view to display the banner
   }
 
   @Subscribe
@@ -136,22 +140,27 @@ public class MainUI extends UI {
   public void addItemToCart(UIAddItemToCartEvent event) {
 
     if (CurrentCart.isEmpty()) {
-      CurrentCart.set(new Cart());
+      CurrentCart.set(CurrentCart.SHOPPING_CART, new Cart());
     }
     boolean isInStock = catalogService.isItemInStock(event.getItem().getItemId());
-    CurrentCart.get().addItem(event.getItem(), isInStock);
+    Cart cart = (Cart) CurrentCart.get(CurrentCart.SHOPPING_CART);
+    cart.addItem(event.getItem(), isInStock);
     getNavigator().navigateTo(CartView.VIEW_NAME);
   }
 
   @Subscribe
   public void removeItemFromCart(UIRemoveItemFromCartEvent event) {
-    CurrentCart.get().removeItemById(event.getItem().getItemId());
+
+    Cart cart = (Cart) CurrentCart.get(CurrentCart.SHOPPING_CART);
+    cart.removeItemById(event.getItem().getItemId());
     getNavigator().navigateTo(CartView.VIEW_NAME);
   }
 
   @Subscribe
   public void changeCartItemQuantity(UIChangeCartItemQuantityEvent event) {
-    CurrentCart.get().changeQuantityByItemId(event.getItem().getItemId(), event.getDiff());
+
+    Cart cart = (Cart) CurrentCart.get(CurrentCart.SHOPPING_CART);
+    cart.changeQuantityByItemId(event.getItem().getItemId(), event.getDiff());
     getNavigator().navigateTo(CartView.VIEW_NAME);
   }
 }

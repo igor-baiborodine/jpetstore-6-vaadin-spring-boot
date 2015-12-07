@@ -16,6 +16,8 @@ import javax.annotation.PostConstruct;
 @ViewConfig(displayName = "Help")
 public class HelpView extends AbstractView {
 
+  private static final long serialVersionUID = 6381532466842382505L;
+
   public static final String VIEW_NAME = "help";
 
   @PostConstruct
@@ -23,7 +25,7 @@ public class HelpView extends AbstractView {
 
     MVerticalLayout content = new MVerticalLayout(new CustomLayout("help-content-layout"));
     Panel contentPanel = new Panel(content);
-    addComponents(createTitleLabel(), contentPanel);
+    addComponents(initTitleLabel(), contentPanel);
     setSizeFull();
     expand(contentPanel);
  }

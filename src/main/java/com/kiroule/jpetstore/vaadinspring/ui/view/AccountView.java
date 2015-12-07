@@ -17,6 +17,8 @@ import javax.annotation.PostConstruct;
 @ViewConfig(displayName = "Account")
 public class AccountView extends AbstractView {
 
+  private static final long serialVersionUID = -6569401295596695005L;
+
   public static final String VIEW_NAME = "account";
 
   @Autowired
@@ -27,7 +29,7 @@ public class AccountView extends AbstractView {
 
     accountForm.setEntity(new Account());
     Panel contentPanel = new Panel(accountForm);
-    addComponents(createTitleLabel(), contentPanel, accountForm.getToolbar());
+    addComponents(initTitleLabel(), contentPanel, accountForm.getToolbar());
     setSizeFull();
     expand(contentPanel);
   }
