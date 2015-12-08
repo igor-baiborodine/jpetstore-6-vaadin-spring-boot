@@ -23,6 +23,7 @@ import java.math.BigDecimal;
 
 import javax.annotation.PostConstruct;
 
+import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.SHOPPING_CART;
 import static java.lang.String.format;
 
 /**
@@ -73,7 +74,7 @@ public class CartView extends AbstractView {
     
     if (!CurrentCart.isEmpty()) {
 
-      Cart cart = (Cart) CurrentCart.get(CurrentCart.SHOPPING_CART);
+      Cart cart = (Cart) CurrentCart.get(SHOPPING_CART);
       cartItemList.setBeans(cart.getCartItemList());
       subtotalLabel.setValue(format(SUBTOTAL_LABEL_PATTERN, formatSubtotal(cart.getSubTotal())));
       expand(cartItemListLayout);

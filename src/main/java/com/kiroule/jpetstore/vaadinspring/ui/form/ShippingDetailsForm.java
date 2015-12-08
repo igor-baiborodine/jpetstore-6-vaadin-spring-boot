@@ -18,7 +18,7 @@ import org.vaadin.viritin.layouts.MVerticalLayout;
 
 import javax.annotation.PostConstruct;
 
-import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.SHIPPING_DETAILS;
+import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.SHIPPING_DETAILS;
 
 /**
  * @author Igor Baiborodine

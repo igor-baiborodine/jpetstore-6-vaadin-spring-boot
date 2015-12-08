@@ -36,6 +36,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.SHOPPING_CART;
+
 /**
  * @author Igor Baiborodine
  */
@@ -140,10 +142,10 @@ public class MainUI extends UI {
   public void addItemToCart(UIAddItemToCartEvent event) {
 
     if (CurrentCart.isEmpty()) {
-      CurrentCart.set(CurrentCart.SHOPPING_CART, new Cart());
+      CurrentCart.set(SHOPPING_CART, new Cart());
     }
     boolean isInStock = catalogService.isItemInStock(event.getItem().getItemId());
-    Cart cart = (Cart) CurrentCart.get(CurrentCart.SHOPPING_CART);
+    Cart cart = (Cart) CurrentCart.get(SHOPPING_CART);
     cart.addItem(event.getItem(), isInStock);
     getNavigator().navigateTo(CartView.VIEW_NAME);
   }
@@ -151,7 +153,7 @@ public class MainUI extends UI {
   @Subscribe
   public void removeItemFromCart(UIRemoveItemFromCartEvent event) {
 
-    Cart cart = (Cart) CurrentCart.get(CurrentCart.SHOPPING_CART);
+    Cart cart = (Cart) CurrentCart.get(SHOPPING_CART);
     cart.removeItemById(event.getItem().getItemId());
     getNavigator().navigateTo(CartView.VIEW_NAME);
   }
@@ -159,7 +161,7 @@ public class MainUI extends UI {
   @Subscribe
   public void changeCartItemQuantity(UIChangeCartItemQuantityEvent event) {
 
-    Cart cart = (Cart) CurrentCart.get(CurrentCart.SHOPPING_CART);
+    Cart cart = (Cart) CurrentCart.get(SHOPPING_CART);
     cart.changeQuantityByItemId(event.getItem().getItemId(), event.getDiff());
     getNavigator().navigateTo(CartView.VIEW_NAME);
   }

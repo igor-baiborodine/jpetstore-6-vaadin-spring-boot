@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
 
+import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.BILLING_DETAILS;
+
 /**
  * @author Igor Baiborodine
  */
@@ -40,7 +42,7 @@ public class ShippingDetailsView extends AbstractView {
   @Override
   public void executeOnEnter(ViewChangeListener.ViewChangeEvent event) {
 
-    if (CurrentCart.isEmpty() || CurrentCart.get(CurrentCart.BILLING_DETAILS) == null) {
+    if (CurrentCart.isEmpty() || CurrentCart.get(BILLING_DETAILS) == null) {
       UIEventBus.post(new UINavigationEvent(CartView.VIEW_NAME));
       return;
     }

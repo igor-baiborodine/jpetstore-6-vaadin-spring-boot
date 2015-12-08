@@ -2,6 +2,7 @@ package com.kiroule.jpetstore.vaadinspring.ui.form;
 
 import com.eijsink.vaadin.components.formcheckbox.FormCheckBox;
 import com.kiroule.jpetstore.vaadinspring.domain.BillingDetails;
+import com.kiroule.jpetstore.vaadinspring.domain.ShippingDetails;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UINavigationEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.theme.JPetStoreTheme;
@@ -22,7 +23,7 @@ import org.vaadin.viritin.layouts.MVerticalLayout;
 
 import javax.annotation.PostConstruct;
 
-import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.BILLING_DETAILS;
+import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.BILLING_DETAILS;
 
 /**
  * @author Igor Baiborodine
@@ -55,8 +56,13 @@ public class BillingDetailsForm extends AbstractForm<BillingDetails> {
     setSavedHandler(billingDetails -> {
       CurrentCart.set(BILLING_DETAILS, billingDetails);
       boolean shipToDifferentAddressSelected = Boolean.valueOf(shipToDifferentAddress.getValue());
-      String viewName = shipToDifferentAddressSelected ? ShippingDetailsView.VIEW_NAME : ConfirmOrderView.VIEW_NAME;
-      UIEventBus.post(new UINavigationEvent(viewName));
+
+      if (shipToDifferentAddressSelected) {
+        UIEventBus.post(new UINavigationEvent(ShippingDetailsView.VIEW_NAME));
+      } else {
+        CurrentCart.set(CurrentCart.Key.SHIPPING_DETAILS, new ShippingDetails(billingDetails));
+        UIEventBus.post(new UINavigationEvent(ConfirmOrderView.VIEW_NAME));
+      }
     });
     setResetHandler(billingDetails -> setEntity(new BillingDetails()));
     setSizeUndefined();
