@@ -1,5 +1,9 @@
 package com.kiroule.jpetstore.vaadinspring.ui;
 
+import static com.kiroule.jpetstore.vaadinspring.ui.menu.TopNavBar.SIGNIN_BUTTON_URI;
+import static com.kiroule.jpetstore.vaadinspring.ui.menu.TopNavBar.SIGNOUT_BUTTON_URI;
+import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.SHOPPING_CART;
+
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
@@ -35,8 +39,6 @@ import com.vaadin.ui.VerticalLayout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.SHOPPING_CART;
 
 /**
  * @author Igor Baiborodine
@@ -123,7 +125,8 @@ public class MainUI extends UI {
 
     CurrentAccount.set(event.getAccount());
     topNavBar.updateUserLabel(event.getAccount().getFirstName());
-    navBarButtonUpdater.changeButtonCaption(TopNavBar.SIGNIN_BUTTON_URI, TopNavBar.SIGNOUT_CAPTION);
+    navBarButtonUpdater.setButtonVisible(SIGNIN_BUTTON_URI, false);
+    navBarButtonUpdater.setButtonVisible(SIGNOUT_BUTTON_URI, true);
     String state = getNavigator().getState();
     String viewName = state.equals(AuthRequiredView.VIEW_NAME) ? HomeView.VIEW_NAME : state;
     getNavigator().navigateTo(viewName); // reloading the current view to display the banner

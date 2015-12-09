@@ -1,5 +1,7 @@
 package com.kiroule.jpetstore.vaadinspring.ui.form;
 
+import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.BILLING_DETAILS;
+
 import com.eijsink.vaadin.components.formcheckbox.FormCheckBox;
 import com.kiroule.jpetstore.vaadinspring.domain.BillingDetails;
 import com.kiroule.jpetstore.vaadinspring.domain.ShippingDetails;
@@ -22,8 +24,6 @@ import org.vaadin.viritin.layouts.MFormLayout;
 import org.vaadin.viritin.layouts.MVerticalLayout;
 
 import javax.annotation.PostConstruct;
-
-import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.BILLING_DETAILS;
 
 /**
  * @author Igor Baiborodine
@@ -65,6 +65,7 @@ public class BillingDetailsForm extends AbstractForm<BillingDetails> {
       }
     });
     setResetHandler(billingDetails -> setEntity(new BillingDetails()));
+    setStyleName("base-form");
     setSizeUndefined();
   }
 

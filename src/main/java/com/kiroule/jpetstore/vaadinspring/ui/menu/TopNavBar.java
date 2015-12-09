@@ -8,8 +8,8 @@ import com.kiroule.jpetstore.vaadinspring.ui.event.UILogoutEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UINavigationEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.form.SigninForm;
 import com.kiroule.jpetstore.vaadinspring.ui.theme.JPetStoreTheme;
-import com.kiroule.jpetstore.vaadinspring.ui.util.CurrentAccount;
 import com.kiroule.jpetstore.vaadinspring.ui.util.NavBarButtonUpdater;
+import com.kiroule.jpetstore.vaadinspring.ui.view.AccountView;
 import com.kiroule.jpetstore.vaadinspring.ui.view.CartView;
 import com.kiroule.jpetstore.vaadinspring.ui.view.HelpView;
 import com.kiroule.jpetstore.vaadinspring.ui.view.SearchView;
@@ -35,16 +35,19 @@ import javax.annotation.PostConstruct;
 @UIScope
 public class TopNavBar extends CssLayout {
 
+  private static final long serialVersionUID = -4572532480213767784L;
+
   public static final String SIGNIN_BUTTON_URI = "sign-in";
-  public static final String SIGNIN_CAPTION = "Sing in";
-  public static final String SIGNOUT_CAPTION = "Sign out";
+  public static final String SIGNOUT_BUTTON_URI = "sign-out";
 
   @Autowired
   private NavBarButtonUpdater navBarButtonUpdater;
   @Autowired
   private SigninForm signinForm;
 
+  private Button signinButton;
   private Label userLabel;
+  private Button signoutButton;
 
   @PostConstruct
   void init() {
@@ -55,6 +58,7 @@ public class TopNavBar extends CssLayout {
     final TextField searchTextField = new TextField();
     searchTextField.setImmediate(true);
     searchTextField.addShortcutListener(new ShortcutListener("enter-shortcut", ShortcutAction.KeyCode.ENTER, null) {
+      private static final long serialVersionUID = 4638926023595229738L;
       @Override
       public void handleAction(Object sender, Object target) {
         searchProducts(((TextField) target).getValue());
@@ -64,8 +68,19 @@ public class TopNavBar extends CssLayout {
 
     addButton(SearchView.VIEW_NAME, getDisplayName(SearchView.class),
         event -> searchProducts(searchTextField.getValue()));
-    addSigninButton();
     addButton(CartView.VIEW_NAME, getDisplayName(CartView.class));
+    addButton(AccountView.VIEW_NAME, getDisplayName(AccountView.class));
+    signinButton = addButton(SIGNIN_BUTTON_URI, "Sing in", event -> {
+      navBarButtonUpdater.setButtonSelected(SIGNIN_BUTTON_URI);
+      signinForm.openInModalWidow();
+    });
+    signoutButton = addButton(SIGNOUT_BUTTON_URI, "Sign out", event -> {
+      navBarButtonUpdater.setButtonSelected(SIGNOUT_BUTTON_URI);
+      signoutButton.setVisible(false);
+      signinButton.setVisible(true);
+      UIEventBus.post(new UILogoutEvent());
+    });
+    signoutButton.setVisible(false);
     addButton(HelpView.VIEW_NAME, getDisplayName(HelpView.class));
 
     userLabel = new Label();
@@ -84,46 +99,18 @@ public class TopNavBar extends CssLayout {
     }
   }
 
-  private Button addSigninButton() {
-
-    String caption = CurrentAccount.isLoggedIn() ? SIGNOUT_CAPTION : SIGNIN_CAPTION;
-    Button signinButton = new Button(caption);
-    navBarButtonUpdater.mapButtonToUri(SIGNIN_BUTTON_URI, signinButton);
-
-    signinButton.addClickListener(event -> {
-      navBarButtonUpdater.setSelectedButton(SIGNIN_BUTTON_URI);
-      if (CurrentAccount.isLoggedIn()) {
-        UIEventBus.post(new UILogoutEvent());
-      } else {
-        signinForm.openInModalWidow();
-      }
-    });
-    setButtonStyle(signinButton);
-    addComponent(signinButton);
-    return signinButton;
+  private Button addButton(String uri, String caption) {
+    return addButton(uri, caption, event -> UIEventBus.post(new UINavigationEvent(uri)));
   }
 
-  private Button addButton(String viewName, String displayName) {
-    return addButton(viewName, displayName, null);
-  }
+  private Button addButton(String uri, String caption, Button.ClickListener listener) {
 
-  private Button addButton(String viewName, String displayName, Button.ClickListener clickListener) {
-
-    String uri = viewName;
-    if (clickListener == null) {
-      clickListener = event -> UIEventBus.post(new UINavigationEvent(uri));
-    }
-    Button viewButton = new Button(displayName, clickListener);
-    navBarButtonUpdater.mapButtonToUri(uri, viewButton);
-
-    setButtonStyle(viewButton);
-    addComponent(viewButton);
-    return viewButton;
-  }
-
-  private void setButtonStyle(Button button) {
+    Button button = new Button(caption, listener);
     button.addStyleName(JPetStoreTheme.MENU_ITEM);
     button.addStyleName(JPetStoreTheme.BUTTON_BORDERLESS);
+    navBarButtonUpdater.mapButtonToUri(uri, button);
+    addComponent(button);
+    return button;
   }
 
   public void updateUserLabel(String firstName) {

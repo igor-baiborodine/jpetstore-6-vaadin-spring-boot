@@ -32,7 +32,7 @@ public class NavBarButtonUpdater implements Serializable, ViewChangeListener {
     uriToButtonMap.put(uri, button);
   }
 
-  public void setSelectedButton(String mappedUri) {
+  public void setButtonSelected(String mappedUri) {
 
     if (!uriToButtonMap.keySet().contains(mappedUri)) {
       return;
@@ -49,11 +49,12 @@ public class NavBarButtonUpdater implements Serializable, ViewChangeListener {
     });
   }
 
-  public void changeButtonCaption(String mappedUri, String caption) {
+  public void setButtonVisible(String mappedUri, boolean visible) {
+
     uriToButtonMap.forEach((uri, button) -> {
       if (uri.equals(mappedUri)) {
-        button.setCaption(caption);
-        logger.info("Set caption [{}] to button with uri[{}]", caption, uri);
+        button.setVisible(visible);
+        logger.info("Set visible[{}] button with uri[{}]", visible, mappedUri);
       }
     });
   }
@@ -70,6 +71,6 @@ public class NavBarButtonUpdater implements Serializable, ViewChangeListener {
     if (!uri.contains(SearchView.VIEW_NAME) && !isNullOrEmpty(event.getParameters())) {
       uri += "/" + event.getParameters();
     }
-    setSelectedButton(uri);
+    setButtonSelected(uri);
   }
 }
