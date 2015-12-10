@@ -3,11 +3,15 @@ package com.kiroule.jpetstore.vaadinspring.ui.menu;
 import static com.kiroule.jpetstore.vaadinspring.ui.util.ViewConfigUtil.getDisplayName;
 import static java.lang.String.format;
 
+import com.kiroule.jpetstore.vaadinspring.domain.Account;
+import com.kiroule.jpetstore.vaadinspring.service.LoginService;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
+import com.kiroule.jpetstore.vaadinspring.ui.event.UILoginEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UILogoutEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UINavigationEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.form.SigninForm;
 import com.kiroule.jpetstore.vaadinspring.ui.theme.JPetStoreTheme;
+import com.kiroule.jpetstore.vaadinspring.ui.util.CurrentAccount;
 import com.kiroule.jpetstore.vaadinspring.ui.util.NavBarButtonUpdater;
 import com.kiroule.jpetstore.vaadinspring.ui.view.AccountView;
 import com.kiroule.jpetstore.vaadinspring.ui.view.CartView;
@@ -23,10 +27,13 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.Window;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
+import javax.security.auth.login.LoginException;
 
 /**
  * @author Igor Baiborodine
@@ -44,10 +51,12 @@ public class TopNavBar extends CssLayout {
   private NavBarButtonUpdater navBarButtonUpdater;
   @Autowired
   private SigninForm signinForm;
+  @Autowired
+  private LoginService loginService;
 
   private Button signinButton;
-  private Label userLabel;
   private Button signoutButton;
+  private Label userLabel;
 
   @PostConstruct
   void init() {
@@ -69,20 +78,32 @@ public class TopNavBar extends CssLayout {
     addButton(SearchView.VIEW_NAME, getDisplayName(SearchView.class),
         event -> searchProducts(searchTextField.getValue()));
     addButton(CartView.VIEW_NAME, getDisplayName(CartView.class));
-    addButton(AccountView.VIEW_NAME, getDisplayName(AccountView.class));
+    addButton(AccountView.VIEW_NAME, getDisplayName(AccountView.class))
+        .setVisible(CurrentAccount.isLoggedIn());
+
     signinButton = addButton(SIGNIN_BUTTON_URI, "Sing in", event -> {
-      navBarButtonUpdater.setButtonSelected(SIGNIN_BUTTON_URI);
-      signinForm.openInModalWidow();
+      final Window popup = signinForm.openInModalWidow();
+      signinForm.addLoginListener(loginEvent -> {
+        try {
+          Account account = loginService.login(loginEvent.getUserName(), loginEvent.getPassword());
+          UIEventBus.post(new UILoginEvent(account));
+          UI.getCurrent().removeWindow(popup);
+        } catch (LoginException e) {
+          Notification.show(e.getMessage(), Notification.Type.WARNING_MESSAGE);
+          signinForm.focusFirst();
+        }
+      });
     });
+    signinButton.setVisible(!CurrentAccount.isLoggedIn());
+
     signoutButton = addButton(SIGNOUT_BUTTON_URI, "Sign out", event -> {
-      navBarButtonUpdater.setButtonSelected(SIGNOUT_BUTTON_URI);
       signoutButton.setVisible(false);
       signinButton.setVisible(true);
       UIEventBus.post(new UILogoutEvent());
     });
-    signoutButton.setVisible(false);
-    addButton(HelpView.VIEW_NAME, getDisplayName(HelpView.class));
+    signoutButton.setVisible(CurrentAccount.isLoggedIn());
 
+    addButton(HelpView.VIEW_NAME, getDisplayName(HelpView.class));
     userLabel = new Label();
     userLabel.addStyleName(JPetStoreTheme.WELCOME_USER_LABEL);
     addComponent(userLabel);

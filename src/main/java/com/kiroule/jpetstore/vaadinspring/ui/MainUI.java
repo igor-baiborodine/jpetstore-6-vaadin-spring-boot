@@ -7,6 +7,7 @@ import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.SHOPPIN
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
+import com.kiroule.jpetstore.vaadinspring.domain.Account;
 import com.kiroule.jpetstore.vaadinspring.domain.Cart;
 import com.kiroule.jpetstore.vaadinspring.service.CatalogService;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UIAddItemToCartEvent;
@@ -15,12 +16,14 @@ import com.kiroule.jpetstore.vaadinspring.ui.event.UILoginEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UILogoutEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UINavigationEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UIRemoveItemFromCartEvent;
+import com.kiroule.jpetstore.vaadinspring.ui.event.UIUpdateAccountEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.menu.LeftNavBar;
 import com.kiroule.jpetstore.vaadinspring.ui.menu.TopNavBar;
 import com.kiroule.jpetstore.vaadinspring.ui.util.CurrentAccount;
 import com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart;
 import com.kiroule.jpetstore.vaadinspring.ui.util.NavBarButtonUpdater;
 import com.kiroule.jpetstore.vaadinspring.ui.util.PageTitleUpdater;
+import com.kiroule.jpetstore.vaadinspring.ui.view.AccountView;
 import com.kiroule.jpetstore.vaadinspring.ui.view.AuthRequiredView;
 import com.kiroule.jpetstore.vaadinspring.ui.view.CartView;
 import com.kiroule.jpetstore.vaadinspring.ui.view.HomeView;
@@ -117,7 +120,7 @@ public class MainUI extends UI {
 
   @Subscribe
   public void navigateTo(UINavigationEvent event) {
-    getNavigator().navigateTo(event.getViewName());
+    navigateTo(event.getViewName());
   }
 
   @Subscribe
@@ -125,11 +128,23 @@ public class MainUI extends UI {
 
     CurrentAccount.set(event.getAccount());
     topNavBar.updateUserLabel(event.getAccount().getFirstName());
+    navBarButtonUpdater.setButtonVisible(AccountView.VIEW_NAME, true);
     navBarButtonUpdater.setButtonVisible(SIGNIN_BUTTON_URI, false);
     navBarButtonUpdater.setButtonVisible(SIGNOUT_BUTTON_URI, true);
+
     String state = getNavigator().getState();
     String viewName = state.equals(AuthRequiredView.VIEW_NAME) ? HomeView.VIEW_NAME : state;
-    getNavigator().navigateTo(viewName); // reloading the current view to display the banner
+    navigateTo(viewName); // reloading the current view to display the banner
+  }
+
+  @Subscribe
+  public void updateAccount(UIUpdateAccountEvent event) {
+
+    Account account = event.getAccount();
+    account.setPassword(null);
+    CurrentAccount.set(account);
+    topNavBar.updateUserLabel(account.getFirstName());
+    navigateTo(AccountView.VIEW_NAME);
   }
 
   @Subscribe
@@ -150,7 +165,7 @@ public class MainUI extends UI {
     boolean isInStock = catalogService.isItemInStock(event.getItem().getItemId());
     Cart cart = (Cart) CurrentCart.get(SHOPPING_CART);
     cart.addItem(event.getItem(), isInStock);
-    getNavigator().navigateTo(CartView.VIEW_NAME);
+    navigateTo(CartView.VIEW_NAME);
   }
 
   @Subscribe
@@ -158,7 +173,7 @@ public class MainUI extends UI {
 
     Cart cart = (Cart) CurrentCart.get(SHOPPING_CART);
     cart.removeItemById(event.getItem().getItemId());
-    getNavigator().navigateTo(CartView.VIEW_NAME);
+    navigateTo(CartView.VIEW_NAME);
   }
 
   @Subscribe
@@ -166,6 +181,10 @@ public class MainUI extends UI {
 
     Cart cart = (Cart) CurrentCart.get(SHOPPING_CART);
     cart.changeQuantityByItemId(event.getItem().getItemId(), event.getDiff());
-    getNavigator().navigateTo(CartView.VIEW_NAME);
+    navigateTo(CartView.VIEW_NAME);
+  }
+
+  private void navigateTo(String viewName) {
+    getNavigator().navigateTo(viewName);
   }
 }

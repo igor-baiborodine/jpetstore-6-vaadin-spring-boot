@@ -16,9 +16,12 @@
   .v-margin-top {
     padding-top: 20px;
   }
-
-  [class*="margin-top"] > tbody > [class*="firstrow"] > td {
-    padding-top: 0px;
+  .v-panel-caption {
+    font-weight: 500;
+    font-size: 16px;
+  }
+  .v-caption {
+    padding-left: 10px;
   }
 
   .left-menu {
@@ -69,6 +72,18 @@
     }
   }
 
+  .confirm-order-form {
+    [class*="margin-top"] > tbody > [class*="firstrow"] > td {
+      padding-top: 0px;
+    }
+    [class*="margin-bottom"] > tbody > [class*="lastrow"] > td {
+      padding-bottom: 0px;
+    }
+    [class*="spacing"] > tbody > [class*="row"] > td {
+      padding-top: 0px;
+    }
+  }
+
   .wide-text-field {
     width: 370px;
   }
@@ -77,11 +92,17 @@
     background-color: #434343;
   }
 
-  .cart-view-label, .auth-required-view-label {
+  .medium-label {
     margin-top: 0px;
     margin-bottom: 0px;
     font-weight: 500;
     font-size: 1.2em;
     letter-spacing: 0;
+  }
+
+  .base-form {
+    .v-textfield {
+      height: 30px;
+    }
   }
 }

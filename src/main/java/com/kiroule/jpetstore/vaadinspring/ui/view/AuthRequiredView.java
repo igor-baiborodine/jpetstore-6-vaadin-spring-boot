@@ -32,7 +32,7 @@ public class AuthRequiredView extends AbstractView {
   private Label initMessageLabel() {
 
     messageLabel = new Label("Please sign in.");
-    messageLabel.setStyleName(JPetStoreTheme.AUTH_REQUIRED_VIEW_LABEL);
+    messageLabel.setStyleName(JPetStoreTheme.MEDIUM_LABEL);
     return messageLabel;
   }
 }

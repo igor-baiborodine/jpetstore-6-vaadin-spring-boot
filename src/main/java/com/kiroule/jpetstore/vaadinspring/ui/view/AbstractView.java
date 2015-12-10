@@ -1,5 +1,7 @@
 package com.kiroule.jpetstore.vaadinspring.ui.view;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 import com.kiroule.jpetstore.vaadinspring.domain.Account;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UINavigationEvent;
@@ -15,12 +17,12 @@ import com.vaadin.ui.Label;
 
 import org.vaadin.viritin.layouts.MVerticalLayout;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
-
 /**
  * @author Igor Baiborodine
  */
 public abstract class AbstractView extends MVerticalLayout implements View {
+
+  private static final long serialVersionUID = 8810691351327628878L;
 
   protected Label titleLabel;
   protected MVerticalLayout bannerLayout;

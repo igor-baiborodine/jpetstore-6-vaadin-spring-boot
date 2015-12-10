@@ -1,6 +1,6 @@
 package com.kiroule.jpetstore.vaadinspring.ui.view;
 
-import static com.kiroule.jpetstore.vaadinspring.ui.form.AccountForm.Mode.EDIT;
+import static com.kiroule.jpetstore.vaadinspring.ui.form.AccountForm.Mode.INSERT;
 import static com.vaadin.ui.Notification.Type.ERROR_MESSAGE;
 import static com.vaadin.ui.Notification.Type.HUMANIZED_MESSAGE;
 
@@ -8,7 +8,6 @@ import com.kiroule.jpetstore.vaadinspring.domain.Account;
 import com.kiroule.jpetstore.vaadinspring.service.AccountService;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UINavigationEvent;
-import com.kiroule.jpetstore.vaadinspring.ui.event.UIUpdateAccountEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.form.AccountForm;
 import com.kiroule.jpetstore.vaadinspring.ui.util.CurrentAccount;
 import com.kiroule.jpetstore.vaadinspring.ui.util.ViewConfig;
@@ -18,7 +17,6 @@ import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
@@ -26,13 +24,13 @@ import javax.annotation.PostConstruct;
 /**
  * @author Igor Baiborodine
  */
-@SpringView(name = AccountView.VIEW_NAME)
-@ViewConfig(displayName = "Account", authRequired = true)
-public class AccountView extends AbstractView {
+@SpringView(name = NewAccountView.VIEW_NAME)
+@ViewConfig(displayName = "New Account")
+public class NewAccountView extends AbstractView {
 
-  private static final long serialVersionUID = -6569401295596695005L;
+  private static final long serialVersionUID = 4140126432578588414L;
 
-  public static final String VIEW_NAME = "account";
+  public static final String VIEW_NAME = "new-account";
 
   @Autowired
   private AccountForm accountForm;
@@ -47,21 +45,19 @@ public class AccountView extends AbstractView {
         if (!accountForm.validate()) {
           return;
         }
-        accountService.updateAccount(account);
-        accountForm.clear();
-
-        Notification notification = new Notification("Your account has been updated.", HUMANIZED_MESSAGE);
+        accountService.insertAccount(account);
+        Notification notification = new Notification("New account has been created.", HUMANIZED_MESSAGE);
         notification.setDelayMsec(2000);
         notification.show(Page.getCurrent());
-        UIEventBus.post(new UIUpdateAccountEvent(account));
+        UIEventBus.post(new UINavigationEvent(HomeView.VIEW_NAME));
       } catch (Throwable t) {
-        Notification.show("An error occurred while updating account: " + t.getMessage(), ERROR_MESSAGE);
+        Notification.show("An error occurred while creating new account: " + t.getMessage(), ERROR_MESSAGE);
       }
     });
-    accountForm.setResetHandler(account -> UIEventBus.post(new UINavigationEvent(OrderListView.VIEW_NAME)));
+    accountForm.setResetHandler(account -> accountForm.clear());
 
     Panel contentPanel = new Panel(accountForm);
-    addComponents(initTitleLabel(), contentPanel, accountForm.getToolbar(EDIT));
+    addComponents(initTitleLabel(), contentPanel, accountForm.getToolbar(INSERT));
     setSizeFull();
     expand(contentPanel);
   }
@@ -69,9 +65,10 @@ public class AccountView extends AbstractView {
   @Override
   public void executeOnEnter(ViewChangeListener.ViewChangeEvent event) {
 
-    Account copy = new Account();
-    BeanUtils.copyProperties(CurrentAccount.get(), copy);
-    accountForm.setEntity(copy);
-    accountForm.setReadOnlyFields(EDIT);
+    if (CurrentAccount.isLoggedIn()) {
+      UIEventBus.post(new UINavigationEvent(HomeView.VIEW_NAME));
+    }
+    accountForm.setEntity(new Account());
+    accountForm.setReadOnlyFields(INSERT);
   }
 }

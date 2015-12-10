@@ -1,9 +1,11 @@
 package com.kiroule.jpetstore.vaadinspring.ui.util;
 
+import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.BILLING_DETAILS;
+import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.SHIPPING_DETAILS;
+import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.SHOPPING_CART;
+
 import com.kiroule.jpetstore.vaadinspring.domain.Cart;
 import com.vaadin.server.VaadinSession;
-
-import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.SHOPPING_CART;
 
 /**
  * @author Igor Baiborodine
@@ -20,6 +22,12 @@ public class CurrentCart {
 
   public static boolean isEmpty() {
     return get(SHOPPING_CART) == null || ((Cart) get(SHOPPING_CART)).getCartItemList().isEmpty();
+  }
+
+  public static void clear() {
+    set(SHOPPING_CART, null);
+    set(BILLING_DETAILS, null);
+    set(SHIPPING_DETAILS, null);
   }
 
   public enum Key {

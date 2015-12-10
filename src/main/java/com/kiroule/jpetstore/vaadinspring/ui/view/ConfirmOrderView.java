@@ -1,5 +1,8 @@
 package com.kiroule.jpetstore.vaadinspring.ui.view;
 
+import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.BILLING_DETAILS;
+import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.SHIPPING_DETAILS;
+
 import com.kiroule.jpetstore.vaadinspring.domain.BillingDetails;
 import com.kiroule.jpetstore.vaadinspring.domain.OrderDetails;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
@@ -12,14 +15,12 @@ import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 
+import org.vaadin.viritin.button.MButton;
 import org.vaadin.viritin.layouts.MFormLayout;
 import org.vaadin.viritin.layouts.MHorizontalLayout;
 import org.vaadin.viritin.layouts.MVerticalLayout;
 
 import javax.annotation.PostConstruct;
-
-import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.BILLING_DETAILS;
-import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.SHIPPING_DETAILS;
 
 /**
  * @author Igor Baiborodine
@@ -32,25 +33,50 @@ public class ConfirmOrderView extends AbstractView {
 
   public static final String VIEW_NAME = "confirm-order";
 
+  private MHorizontalLayout orderDetailsLayout = new MHorizontalLayout().withMargin(false);
   private PaymentMethodFormLayout paymentMethodFormLayout = new PaymentMethodFormLayout();
-  private MHorizontalLayout orderDetailsLayout = new MHorizontalLayout();
   private OrderDetailsFormLayout billingDetailsFormLayout = new OrderDetailsFormLayout();
   private OrderDetailsFormLayout shippingDetailsFormLayout = new OrderDetailsFormLayout();
+  private Label confirmedOrderLabel = createConfirmedOrderLabel();
 
   @PostConstruct
   void init() {
 
-    orderDetailsLayout.addComponents(billingDetailsFormLayout, shippingDetailsFormLayout);
-    billingDetailsFormLayout.setCaption("Billing Details");
+    Panel paymentMethodPanel = new Panel("Payment Method", paymentMethodFormLayout);
+    Panel billingDetailsPanel = new Panel("Billing Details", billingDetailsFormLayout);
+    Panel shippingDetailsPanel = new Panel("Shipping Details", shippingDetailsFormLayout);
+    orderDetailsLayout.addComponents(paymentMethodPanel, billingDetailsPanel, shippingDetailsPanel);
+    orderDetailsLayout.setExpandRatio(paymentMethodPanel, 1.0f);
+    orderDetailsLayout.setExpandRatio(billingDetailsPanel, 1.0f);
+    orderDetailsLayout.setExpandRatio(shippingDetailsPanel, 1.0f);
+    orderDetailsLayout.setSizeFull();
+
     MVerticalLayout content = new MVerticalLayout(
-        createSectionTitle("Payment Method"),
-        paymentMethodFormLayout,
         orderDetailsLayout
     );
     Panel contentPanel = new Panel(content);
-    addComponents(initTitleLabel(), contentPanel);
+    addComponents(initTitleLabel(), contentPanel, createPlaceOrderButton(), confirmedOrderLabel);
     setSizeFull();
     expand(contentPanel);
+  }
+
+  private MButton createPlaceOrderButton() {
+
+    return new MButton("Place Your Order").withListener(event -> {
+      CurrentCart.clear();
+      event.getButton().setVisible(false);
+      confirmedOrderLabel.setVisible(true);
+      // TODO: persist order to the database
+    });
+  }
+
+  private Label createConfirmedOrderLabel() {
+
+    Label label = new Label("Thank you, your order has been submitted.");
+    label.addStyleName(JPetStoreTheme.MEDIUM_LABEL);
+    label.setStyleName(JPetStoreTheme.NOTIFICATION_SUCCESS);
+    label.setVisible(false);
+    return label;
   }
 
   @Override
@@ -66,15 +92,6 @@ public class ConfirmOrderView extends AbstractView {
     billingDetailsFormLayout.setEntity((OrderDetails) CurrentCart.get(BILLING_DETAILS));
     shippingDetailsFormLayout.setEntity((OrderDetails) CurrentCart.get(SHIPPING_DETAILS));
   }
-
-  private Label createSectionTitle(String content) {
-
-    Label title = new Label(content);
-    title.addStyleName(JPetStoreTheme.LABEL_H3);
-    title.addStyleName(JPetStoreTheme.LABEL_BOLD);
-    title.addStyleName(JPetStoreTheme.LABEL_NO_MARGIN);
-    return title;
-  }
 }
 
 class PaymentMethodFormLayout extends MFormLayout {
@@ -88,21 +105,12 @@ class PaymentMethodFormLayout extends MFormLayout {
   public PaymentMethodFormLayout() {
 
     cardType.setCaption("Card Type:");
-    cardType.setStyleName(JPetStoreTheme.LABEL_NO_MARGIN);
     cardNumber.setCaption("Card Number:");
-    cardNumber.setStyleName(JPetStoreTheme.LABEL_NO_MARGIN);
     expiryDate.setCaption("Expiry Date:");
-    expiryDate.setStyleName(JPetStoreTheme.LABEL_NO_MARGIN);
-    addComponents(cardType, cardNumber, expiryDate);
-    withWidth("");
 
-    // TODO: fix css for caption-cell
-    /*
-    .v-formlayout-captioncell {
-    vertical-align: top;
-    line-height: 36px;
-}
-     */
+    addComponents(cardType, cardNumber, expiryDate);
+    setStyleName(JPetStoreTheme.CONFIRM_ORDER_FORM);
+    withWidth("");
   }
 
   public void setEntity(BillingDetails billingDetails) {
@@ -130,20 +138,20 @@ class OrderDetailsFormLayout extends MFormLayout {
 
   public OrderDetailsFormLayout() {
 
-    firstName.setCaption("First Name");
-    lastName.setCaption("LastName");
-    email.setCaption("Email");
-    phone.setCaption("Phone");
-    address1.setCaption("Address 1");
-    address2.setCaption("Address 2");
-    city.setCaption("City");
-    state.setCaption("State");
-    zip.setCaption("ZIP Code");
-    country.setCaption("Country");
+    firstName.setCaption("First Name:");
+    lastName.setCaption("LastName:");
+    email.setCaption("Email:");
+    phone.setCaption("Phone:");
+    address1.setCaption("Address 1:");
+    address2.setCaption("Address 2:");
+    city.setCaption("City:");
+    state.setCaption("State:");
+    zip.setCaption("ZIP Code:");
+    country.setCaption("Country:");
 
     addComponents(firstName, lastName, email, phone, address1, address2, city, state, zip, country);
+    setStyleName(JPetStoreTheme.CONFIRM_ORDER_FORM);
     withWidth("");
-    // TODO: fix css for label - no margin
   }
 
   public void setEntity(OrderDetails orderDetails) {

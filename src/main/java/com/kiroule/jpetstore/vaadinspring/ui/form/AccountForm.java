@@ -1,27 +1,30 @@
 package com.kiroule.jpetstore.vaadinspring.ui.form;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+import static com.google.common.collect.Lists.newArrayList;
+import static com.vaadin.data.Validator.InvalidValueException;
+
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import com.eijsink.vaadin.components.formcheckbox.FormCheckBox;
 import com.kiroule.jpetstore.vaadinspring.domain.Account;
 import com.kiroule.jpetstore.vaadinspring.domain.Banner;
 import com.kiroule.jpetstore.vaadinspring.domain.Category;
-import com.kiroule.jpetstore.vaadinspring.service.AccountService;
 import com.kiroule.jpetstore.vaadinspring.service.CatalogService;
-import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
-import com.kiroule.jpetstore.vaadinspring.ui.event.UINavigationEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.theme.JPetStoreTheme;
-import com.kiroule.jpetstore.vaadinspring.ui.view.HomeView;
 import com.vaadin.data.Validator;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Field;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.PasswordField;
-import com.vaadin.ui.TextField;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.viritin.fields.MTextField;
@@ -36,9 +39,6 @@ import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
-import static com.vaadin.ui.Notification.Type.ERROR_MESSAGE;
-
 /**
  * @author Igor Baiborodine
  */
@@ -46,13 +46,13 @@ import static com.vaadin.ui.Notification.Type.ERROR_MESSAGE;
 @ViewScope
 public class AccountForm extends AbstractForm<Account> {
 
-  @Autowired
-  private AccountService accountService;
+  private static final long serialVersionUID = 3039694090615398389L;
+
   @Autowired
   private CatalogService catalogService;
 
   // Sign on
-  private TextField username = new MTextField("Username");
+  private MTextField username = new MTextField("Username");
   private PasswordField password = new PasswordField("Password");
   private PasswordField passwordConfirmation = new PasswordField("Password Confirmation");
 
@@ -62,42 +62,80 @@ public class AccountForm extends AbstractForm<Account> {
   private FormCheckBox listOption = new FormCheckBox("Wish List");
   private FormCheckBox bannerOption = new FormCheckBox("Show Banner");
   private Label bannerImage = new Label();
-  private String bannerName;
 
   // User
-  private TextField firstName = new MTextField("First Name");
-  private TextField lastName = new MTextField("LastName");
-  private TextField email = new MTextField("Email");
-  private TextField phone = new MTextField("Phone");
-  private TextField address1 = new MTextField("Address 1");
-  private TextField address2 = new MTextField("Address 2");
-  private TextField city = new MTextField("City");
-  private TextField state = new MTextField("State");
-  private TextField zip = new MTextField("ZIP Code");
-  private TextField country = new MTextField("Country");
+  private MTextField firstName = new MTextField("First Name");
+  private MTextField lastName = new MTextField("LastName");
+  private MTextField email = new MTextField("Email");
+  private MTextField phone = new MTextField("Phone");
+  private MTextField address1 = new MTextField("Address 1");
+  private MTextField address2 = new MTextField("Address 2");
+  private MTextField city = new MTextField("City");
+  private MTextField state = new MTextField("State");
+  private MTextField zip = new MTextField("ZIP Code");
+  private MTextField country = new MTextField("Country");
 
-  Map<String, String> categoryIdToBannerNameMap = Maps.newHashMap();
+  private Map<String, String> categoryIdToBannerNameMap = Maps.newHashMap();
+  private List<Category> categories = newArrayList();
 
   @PostConstruct
   public void init() {
 
     categoryIdToBannerNameMap = catalogService.getBannerList().stream()
         .collect(Collectors.toMap(Banner::getFavouriteCategoryId, Banner::getBannerName));
+    categories = catalogService.getCategoryList();
+    categories.sort(Comparator.comparing(Category::getName));
+    listOption.setImmediate(true);
+    bannerOption.setImmediate(true);
 
-    setSavedHandler(account -> {
-      account.setStatus("OK");
-      account.setBannerName(bannerName);
+    setHeightUndefined();
+    setEagerValidation(false);
+  }
 
-      try {
-        accountService.insertAccount(account);
-        navigateToHomeView();
-      } catch (Throwable t) {
-        Notification.show("An error occurred while adding new account: " + t.getMessage(), ERROR_MESSAGE);
-      }
-    });
+  public void setReadOnlyFields(Mode mode) {
+    if (mode == Mode.EDIT) {
+      username.setReadOnly(true);
+    }
+  }
 
-    setResetHandler(account -> navigateToHomeView());
-    setSizeUndefined();
+  public HorizontalLayout getToolbar(Mode mode) {
+
+    getSaveButton().setVisible(true);
+    getResetButton().setVisible(true);
+
+    if (Mode.INSERT.equals(mode)) {
+      getResetButton().setCaption("Clear");
+    }
+    if (Mode.EDIT.equals(mode)) {
+      getResetButton().setCaption("View My Orders");
+    }
+    return getToolbar();
+  }
+
+  public void clear() {
+    setEntity(new Account());
+    passwordConfirmation.clear();
+  }
+
+  public enum Mode {
+    INSERT, EDIT
+  }
+
+  public boolean validate() {
+
+    try {
+      getFieldGroup().getFields().forEach(field -> {
+        field.focus();
+        field.validate();
+      });
+      validatePasswordConfirmation();
+      passwordConfirmation.focus();
+      passwordConfirmation.validate();
+    } catch (InvalidValueException e) {
+      Notification.show(e.getMessage(), Notification.Type.ERROR_MESSAGE);
+      return false;
+    }
+    return true;
   }
 
   @Override
@@ -106,7 +144,7 @@ public class AccountForm extends AbstractForm<Account> {
     password.setNullRepresentation("");
     bannerImage.setCaption("Banner Image");
     bannerImage.setContentMode(ContentMode.HTML);
-
+    bannerImage.setWidth(300, Unit.PIXELS);
     bannerImage.setStyleName(JPetStoreTheme.BANNER);
     email.setStyleName(JPetStoreTheme.WIDE_TEXT_FIELD);
     address1.setStyleName(JPetStoreTheme.WIDE_TEXT_FIELD);
@@ -114,51 +152,39 @@ public class AccountForm extends AbstractForm<Account> {
 
     setLanguagePreferenceCombo();
     setFavouriteCategoryCombo();
-    setRequiredFields();
-    setToolBarVisible();
+    setRequiredFields(username, password, languagePreference, firstName, lastName, email, phone,
+        address1, city, state, zip, country);
     setListeners();
-    setValidators();
-
-    MFormLayout signonFormLayout = new MFormLayout(
-        username,
-        password,
-        passwordConfirmation
-    ).withWidth("");
-    signonFormLayout.setStyleName(JPetStoreTheme.ACCOUNT_FORM);
-
-    MFormLayout profileFormLayout = new MFormLayout(
-        languagePreference,
-        favouriteCategoryId,
-        listOption,
-        bannerOption,
-        bannerImage
-    ).withWidth("");
-    profileFormLayout.setStyleName(JPetStoreTheme.ACCOUNT_FORM);
-
-    MFormLayout userFormLayout = new MFormLayout(
-        firstName,
-        lastName,
-        email,
-        phone,
-        address1,
-        address2,
-        city,
-        state,
-        zip,
-        country
-    ).withWidth("");
-    userFormLayout.setStyleName(JPetStoreTheme.ACCOUNT_FORM);
 
     MVerticalLayout content = new MVerticalLayout(
-        getSectionTitle("Sign on"),
-        signonFormLayout,
-        getSectionTitle("Profile"),
-        profileFormLayout,
-        getSectionTitle("User"),
-        userFormLayout)
-          .withSpacing(false)
-          .withWidth("");
-
+        new Panel("Sign on", new MFormLayout(
+            username,
+            password,
+            passwordConfirmation
+        ).withWidth("-1px") // undefined width
+        ),
+        new Panel("Profile", new MFormLayout(
+            firstName,
+            lastName,
+            email,
+            phone,
+            address1,
+            address2,
+            city,
+            state,
+            zip,
+            country
+        ).withWidth("-1px") // undefined width
+        ),
+        new Panel("Profile", new MFormLayout(
+            languagePreference,
+            favouriteCategoryId,
+            listOption,
+            bannerOption,
+            bannerImage
+        ).withWidth("-1px") // undefined width
+        )
+    );
     return content;
   }
 
@@ -166,22 +192,14 @@ public class AccountForm extends AbstractForm<Account> {
 
     favouriteCategoryId.addValueChangeListener(event -> {
       if (favouriteCategoryId.getValue() != null) {
-        bannerName = categoryIdToBannerNameMap.get(favouriteCategoryId.getValue());
+        String bannerName = categoryIdToBannerNameMap.get(favouriteCategoryId.getValue());
         if (bannerName == null) {
           return;
         }
         bannerImage.setValue(bannerName);
+        getEntity().setBannerName(bannerName);
       }
     });
-  }
-
-  private void setValidators() {
-
-    addValidator(account -> {
-      if (isNullOrEmpty(account.getPassword()) || !account.getPassword().equals(passwordConfirmation.getValue())) {
-        throw new Validator.InvalidValueException("Confirmation Password is not identical");
-      }
-    }, passwordConfirmation);
   }
 
   private void setLanguagePreferenceCombo() {
@@ -195,8 +213,6 @@ public class AccountForm extends AbstractForm<Account> {
 
   private void setFavouriteCategoryCombo() {
 
-    List<Category> categories = catalogService.getCategoryList();
-    categories.sort(Comparator.comparing(Category::getName));
     categories.forEach(category -> {
       favouriteCategoryId.addItem(category.getCategoryId());
       favouriteCategoryId.setItemCaption(category.getCategoryId(), category.getName());
@@ -204,36 +220,23 @@ public class AccountForm extends AbstractForm<Account> {
     favouriteCategoryId.setNullSelectionAllowed(false);
   }
 
-  private void setRequiredFields() {
+  private void setRequiredFields(Field<?>... fields) {
 
-    username.setRequired(true);
-    password.setRequired(true);
+    Lists.newArrayList(fields).forEach(field -> {
+      field.setRequired(true);
+      field.setRequiredError(field.getCaption() + " is required");
+    });
     passwordConfirmation.setRequired(true);
-    languagePreference.setRequired(true);
-    firstName.setRequired(true);
-    lastName.setRequired(true);
-    email.setRequired(true);
-    phone.setRequired(true);
-    address1.setRequired(true);
-    city.setRequired(true);
-    state.setRequired(true);
-    zip.setRequired(true);
-    country.setRequired(true);
   }
 
-  private void setToolBarVisible() {
-    getSaveButton().setVisible(true);
-    getResetButton().setVisible(true);
-  }
+  private void validatePasswordConfirmation() {
 
-  private Label getSectionTitle(String content) {
-    Label title = new Label(content);
-    title.addStyleName(JPetStoreTheme.LABEL_H3);
-    title.addStyleName(JPetStoreTheme.LABEL_BOLD);
-    return title;
-  }
-
-  private void navigateToHomeView() {
-    UIEventBus.post(new UINavigationEvent(HomeView.VIEW_NAME));
+    passwordConfirmation.focus();
+    if (isNullOrEmpty(passwordConfirmation.getValue())) {
+      throw new Validator.InvalidValueException("Password Confirmation is required");
+    }
+    if (!passwordConfirmation.getValue().equals(getEntity().getPassword())) {
+      throw new Validator.InvalidValueException("Confirmation Password is not identical");
+    }
   }
 }
