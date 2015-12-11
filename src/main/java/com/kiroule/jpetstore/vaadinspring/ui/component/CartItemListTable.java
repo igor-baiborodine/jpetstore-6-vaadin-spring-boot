@@ -7,7 +7,7 @@ import com.kiroule.jpetstore.vaadinspring.ui.converter.CurrencyConverter;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UIChangeCartItemQuantityEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UIRemoveItemFromCartEvent;
-import com.kiroule.jpetstore.vaadinspring.ui.form.ItemForm;
+import com.kiroule.jpetstore.vaadinspring.ui.form.ProductItemForm;
 import com.kiroule.jpetstore.vaadinspring.ui.theme.JPetStoreTheme;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.ViewScope;
@@ -81,8 +81,8 @@ public class CartItemListTable extends MTable<CartItem> {
   }
 
   private void viewDetails(Button.ClickEvent event) {
-    ItemForm itemForm = new ItemForm((Item) event.getButton().getData());
-    Window popup = itemForm.openInModalPopup();
+    ProductItemForm productItemForm = new ProductItemForm((Item) event.getButton().getData());
+    Window popup = productItemForm.openInModalPopup();
     popup.setCaption("View Details");
   }
 

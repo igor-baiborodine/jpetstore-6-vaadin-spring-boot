@@ -31,9 +31,11 @@ public class SigninForm extends LoginForm {
   private Window popup;
 
   @Override
-  protected Component createContent(TextField textField, PasswordField passwordField, Button loginButton) {
+  protected Component createContent(TextField usernameField, PasswordField passwordField, Button loginButton) {
 
-    MVerticalLayout layout = new MVerticalLayout(textField, passwordField, loginButton);
+    MVerticalLayout layout = new MVerticalLayout(usernameField, passwordField, loginButton);
+    usernameField.setWidth(100f, Unit.PERCENTAGE);
+    passwordField.setWidth(100f, Unit.PERCENTAGE);
     layout.setComponentAlignment(loginButton, Alignment.BOTTOM_LEFT);
 
     MHorizontalLayout newCustomerLayout = new MHorizontalLayout();
@@ -41,7 +43,7 @@ public class SigninForm extends LoginForm {
     newCustomerLayout.add(newCustomerLabel);
     newCustomerLayout.setComponentAlignment(newCustomerLabel, Alignment.MIDDLE_LEFT);
 
-    Button createAccountButton = new Button("Register Now!");
+    Button createAccountButton = new Button("Start Here!");
     createAccountButton.addStyleName(JPetStoreTheme.BUTTON_LINK);
     createAccountButton.addClickListener(event -> {
       UIEventBus.post(new UINavigationEvent(NewAccountView.VIEW_NAME));

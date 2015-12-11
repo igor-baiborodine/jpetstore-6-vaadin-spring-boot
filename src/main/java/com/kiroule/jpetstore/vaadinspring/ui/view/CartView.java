@@ -14,6 +14,7 @@ import com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart;
 import com.kiroule.jpetstore.vaadinspring.ui.util.ViewConfig;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 
@@ -48,8 +49,8 @@ public class CartView extends AbstractView {
   @PostConstruct
   void init() {
 
-    emptyCartLabel = createEmptyCartLabel();
-    subtotalLabel = createSubtotalLabel();
+    initEmptyCartLabel();
+    initSubtotalLabel();
     MButton checkOutButton = new MButton()
         .withCaption("Proceed to Checkout")
         .withListener(event -> {
@@ -58,6 +59,7 @@ public class CartView extends AbstractView {
           UIEventBus.post(new UINavigationEvent(viewName));
         });
     MHorizontalLayout subtotalLayout = new MHorizontalLayout(subtotalLabel, checkOutButton);
+    subtotalLayout.setComponentAlignment(subtotalLabel, Alignment.MIDDLE_LEFT);
     cartItemListLayout = new MVerticalLayout(cartItemList, subtotalLayout)
         .withMargin(false)
         .expand(cartItemList);
@@ -83,18 +85,16 @@ public class CartView extends AbstractView {
     }
   }
 
-  private Label createEmptyCartLabel() {
-
-    Label label = new Label("Your Shopping Cart is empty.");
-    label.setStyleName(JPetStoreTheme.MEDIUM_LABEL);
-    return label;
+  private Label initEmptyCartLabel() {
+    emptyCartLabel = new Label("Your Shopping Cart is empty.");
+    emptyCartLabel.setStyleName(JPetStoreTheme.VIEW_LABEL_MEDIUM);
+    return emptyCartLabel;
   }
 
-  private Label createSubtotalLabel() {
-
-    Label label = new Label();
-    label.addStyleName(JPetStoreTheme.MEDIUM_LABEL);
-    return label;
+  private Label initSubtotalLabel() {
+    subtotalLabel = new Label();
+    subtotalLabel.addStyleName(JPetStoreTheme.VIEW_LABEL_MEDIUM);
+    return subtotalLabel;
   }
 
   private String formatSubtotal(BigDecimal subtotal) {

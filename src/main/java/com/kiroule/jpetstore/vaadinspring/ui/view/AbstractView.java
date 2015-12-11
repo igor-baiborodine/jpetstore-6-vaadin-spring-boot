@@ -10,10 +10,12 @@ import com.kiroule.jpetstore.vaadinspring.ui.util.CurrentAccount;
 import com.kiroule.jpetstore.vaadinspring.ui.util.ViewConfigUtil;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
+import com.vaadin.server.Page;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
 
 import org.vaadin.viritin.layouts.MVerticalLayout;
 
@@ -48,7 +50,7 @@ public abstract class AbstractView extends MVerticalLayout implements View {
   public void addComponents(Component... components) {
 
     super.addComponents(components);
-    Component banner = createBanner();
+    Component banner = initBanner();
     banner.setVisible(false);
     super.addComponent(banner);
   }
@@ -58,10 +60,8 @@ public abstract class AbstractView extends MVerticalLayout implements View {
   }
 
   protected Label initTitleLabel() {
-
-    titleLabel = new Label("Abstract Title");
-    titleLabel.addStyleName(JPetStoreTheme.LABEL_H2);
-    titleLabel.addStyleName(JPetStoreTheme.LABEL_BOLD);
+    titleLabel = new Label("[View Title]");
+    titleLabel.setStyleName(JPetStoreTheme.VIEW_LABEL_LARGE);
     return titleLabel;
   }
 
@@ -74,13 +74,19 @@ public abstract class AbstractView extends MVerticalLayout implements View {
     }
   }
 
+  protected void showConfirmation(String caption, Notification.Type type, int delayMsec) {
+    Notification notification = new Notification(caption, type);
+    notification.setDelayMsec(delayMsec);
+    notification.show(Page.getCurrent());
+  }
+
   private void setTitleLabelValue(String value) {
     if (titleLabel != null) {
       titleLabel.setValue(value);
     }
   }
 
-  private Component createBanner() {
+  private Component initBanner() {
 
     bannerImage = new Label();
     bannerImage.setContentMode(ContentMode.HTML);

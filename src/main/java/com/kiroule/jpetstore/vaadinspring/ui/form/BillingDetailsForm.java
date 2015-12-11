@@ -85,7 +85,7 @@ public class BillingDetailsForm extends AbstractForm<BillingDetails> {
         cardNumber,
         expiryDate
     ).withWidth("");
-    paymentMethodFormLayout.setStyleName(JPetStoreTheme.ACCOUNT_FORM);
+    paymentMethodFormLayout.setStyleName(JPetStoreTheme.BASE_FORM);
 
     MFormLayout billingDetailsFormLayout = new MFormLayout(
         firstName,
@@ -100,7 +100,7 @@ public class BillingDetailsForm extends AbstractForm<BillingDetails> {
         country,
         shipToDifferentAddress
     ).withWidth("");
-    billingDetailsFormLayout.setStyleName(JPetStoreTheme.ACCOUNT_FORM);
+    billingDetailsFormLayout.setStyleName(JPetStoreTheme.BASE_FORM);
 
     MVerticalLayout content = new MVerticalLayout(
         createSectionTitle("Payment Method"),

@@ -21,7 +21,7 @@ import java.util.Locale;
 /**
  * @author Igor Baiborodine
  */
-public class ItemForm extends AbstractForm<Item> {
+public class ProductItemForm extends AbstractForm<Item> {
 
   private static final long serialVersionUID = -3035656440388295692L;
 
@@ -33,7 +33,7 @@ public class ItemForm extends AbstractForm<Item> {
   private TextField stock;
   private Button addToCartButton;
 
-  public ItemForm(Item item) {
+  public ProductItemForm(Item item) {
     init(item);
     setSizeUndefined();
   }

@@ -88,6 +88,7 @@ public class AccountForm extends AbstractForm<Account> {
     listOption.setImmediate(true);
     bannerOption.setImmediate(true);
 
+    setStyleName(JPetStoreTheme.BASE_FORM);
     setHeightUndefined();
     setEagerValidation(false);
   }
@@ -129,8 +130,6 @@ public class AccountForm extends AbstractForm<Account> {
         field.validate();
       });
       validatePasswordConfirmation();
-      passwordConfirmation.focus();
-      passwordConfirmation.validate();
     } catch (InvalidValueException e) {
       Notification.show(e.getMessage(), Notification.Type.ERROR_MESSAGE);
       return false;

@@ -1,5 +1,7 @@
 package com.kiroule.jpetstore.vaadinspring.ui.form;
 
+import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.SHIPPING_DETAILS;
+
 import com.kiroule.jpetstore.vaadinspring.domain.ShippingDetails;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UINavigationEvent;
@@ -17,8 +19,6 @@ import org.vaadin.viritin.layouts.MFormLayout;
 import org.vaadin.viritin.layouts.MVerticalLayout;
 
 import javax.annotation.PostConstruct;
-
-import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.SHIPPING_DETAILS;
 
 /**
  * @author Igor Baiborodine
@@ -71,7 +71,7 @@ public class ShippingDetailsForm extends AbstractForm<ShippingDetails> {
         zip,
         country
     ).withWidth("");
-    shippingDetailsFormLayout.setStyleName(JPetStoreTheme.ACCOUNT_FORM);
+    shippingDetailsFormLayout.setStyleName(JPetStoreTheme.BASE_FORM);
 
     MVerticalLayout content = new MVerticalLayout(
         shippingDetailsFormLayout)

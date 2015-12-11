@@ -13,7 +13,6 @@ import com.kiroule.jpetstore.vaadinspring.ui.form.AccountForm;
 import com.kiroule.jpetstore.vaadinspring.ui.util.CurrentAccount;
 import com.kiroule.jpetstore.vaadinspring.ui.util.ViewConfig;
 import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.server.Page;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
@@ -49,10 +48,7 @@ public class AccountView extends AbstractView {
         }
         accountService.updateAccount(account);
         accountForm.clear();
-
-        Notification notification = new Notification("Your account has been updated.", HUMANIZED_MESSAGE);
-        notification.setDelayMsec(2000);
-        notification.show(Page.getCurrent());
+        showConfirmation("Your account has been updated.", HUMANIZED_MESSAGE, 2000);
         UIEventBus.post(new UIUpdateAccountEvent(account));
       } catch (Throwable t) {
         Notification.show("An error occurred while updating account: " + t.getMessage(), ERROR_MESSAGE);

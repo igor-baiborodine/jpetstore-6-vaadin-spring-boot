@@ -73,7 +73,7 @@ public class ConfirmOrderView extends AbstractView {
   private Label createConfirmedOrderLabel() {
 
     Label label = new Label("Thank you, your order has been submitted.");
-    label.addStyleName(JPetStoreTheme.MEDIUM_LABEL);
+    label.addStyleName(JPetStoreTheme.VIEW_LABEL_MEDIUM);
     label.setStyleName(JPetStoreTheme.NOTIFICATION_SUCCESS);
     label.setVisible(false);
     return label;
@@ -109,7 +109,7 @@ class PaymentMethodFormLayout extends MFormLayout {
     expiryDate.setCaption("Expiry Date:");
 
     addComponents(cardType, cardNumber, expiryDate);
-    setStyleName(JPetStoreTheme.CONFIRM_ORDER_FORM);
+    setStyleName(JPetStoreTheme.BASE_FORM);
     withWidth("");
   }
 
@@ -150,7 +150,7 @@ class OrderDetailsFormLayout extends MFormLayout {
     country.setCaption("Country:");
 
     addComponents(firstName, lastName, email, phone, address1, address2, city, state, zip, country);
-    setStyleName(JPetStoreTheme.CONFIRM_ORDER_FORM);
+    setStyleName(JPetStoreTheme.BASE_FORM);
     withWidth("");
   }
 

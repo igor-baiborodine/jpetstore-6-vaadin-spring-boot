@@ -12,7 +12,6 @@ import com.kiroule.jpetstore.vaadinspring.ui.form.AccountForm;
 import com.kiroule.jpetstore.vaadinspring.ui.util.CurrentAccount;
 import com.kiroule.jpetstore.vaadinspring.ui.util.ViewConfig;
 import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.server.Page;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
@@ -46,9 +45,7 @@ public class NewAccountView extends AbstractView {
           return;
         }
         accountService.insertAccount(account);
-        Notification notification = new Notification("New account has been created.", HUMANIZED_MESSAGE);
-        notification.setDelayMsec(2000);
-        notification.show(Page.getCurrent());
+        showConfirmation("New account has been created.", HUMANIZED_MESSAGE, 2000);
         UIEventBus.post(new UINavigationEvent(HomeView.VIEW_NAME));
       } catch (Throwable t) {
         Notification.show("An error occurred while creating new account: " + t.getMessage(), ERROR_MESSAGE);

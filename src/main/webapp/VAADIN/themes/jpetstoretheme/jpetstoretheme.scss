@@ -56,31 +56,29 @@
       margin-left: 20px;
       margin-top: 10px;
     }
-    .welcome-user-label {
-      font-size: 16px;
-      font-weight: 600;
-      color: #5ea6ed;
-      height: 44px;
-      line-height: 49px;
-      padding-left: 10px;
-    }
   }
 
-  .account-form {
-    [class*="margin-top"] > tbody > [class*="firstrow"] > td {
-      padding-top: 0px;
-    }
+  .welcome-user-label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #5ea6ed;
+    height: 44px;
+    line-height: 49px;
+    padding-left: 10px;
   }
 
-  .confirm-order-form {
+  .base-form {
+    .v-textfield {
+      height: 37px;
+    }
     [class*="margin-top"] > tbody > [class*="firstrow"] > td {
       padding-top: 0px;
-    }
-    [class*="margin-bottom"] > tbody > [class*="lastrow"] > td {
-      padding-bottom: 0px;
     }
     [class*="spacing"] > tbody > [class*="row"] > td {
-      padding-top: 0px;
+      padding-top: 8px;
+    }
+    [class*="margin-bottom"] > tbody > [class*="lastrow"] > td {
+      padding-bottom: 8px;
     }
   }
 
@@ -88,21 +86,29 @@
     width: 370px;
   }
 
-  .banner {
-    background-color: #434343;
-  }
-
-  .medium-label {
+  .view-label {
     margin-top: 0px;
     margin-bottom: 0px;
-    font-weight: 500;
-    font-size: 1.2em;
     letter-spacing: 0;
+    font-weight: 500;
   }
 
-  .base-form {
-    .v-textfield {
-      height: 30px;
-    }
+  .view-label-large {
+    @extend .view-label;
+    font-size: 1.5em;
+  }
+
+  .view-label-medium {
+    @extend .view-label;
+    font-size: 1.1em;
+  }
+
+  .view-label-small {
+    @extend .view-label;
+    font-size: 0.9em;
+  }
+
+  .banner {
+    background-color: #434343;
   }
 }
