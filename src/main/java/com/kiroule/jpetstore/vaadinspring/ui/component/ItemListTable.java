@@ -10,8 +10,8 @@ import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Window;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.viritin.fields.MTable;
 
 /**
@@ -22,6 +22,9 @@ import org.vaadin.viritin.fields.MTable;
 public class ItemListTable extends MTable<Item> {
 
   private static final long serialVersionUID = -2847546238729364925L;
+
+  @Autowired
+  private ProductItemForm productItemForm;
 
   public ItemListTable() {
 
@@ -45,8 +48,7 @@ public class ItemListTable extends MTable<Item> {
   }
 
   private void viewDetails(Button.ClickEvent event) {
-    ProductItemForm productItemForm = new ProductItemForm((Item) event.getButton().getData());
-    Window popup = productItemForm.openInModalPopup();
-    popup.setCaption("View Details");
+    productItemForm.setEntity((Item) event.getButton().getData());
+    productItemForm.openInModalPopup().setCaption("View Details");
   }
 }

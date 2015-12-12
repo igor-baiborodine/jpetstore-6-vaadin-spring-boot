@@ -1,8 +1,5 @@
 package com.kiroule.jpetstore.vaadinspring.ui.menu;
 
-import static com.kiroule.jpetstore.vaadinspring.ui.util.ViewConfigUtil.getDisplayName;
-import static java.lang.String.format;
-
 import com.kiroule.jpetstore.vaadinspring.domain.Account;
 import com.kiroule.jpetstore.vaadinspring.service.LoginService;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
@@ -35,6 +32,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.annotation.PostConstruct;
 import javax.security.auth.login.LoginException;
 
+import static com.kiroule.jpetstore.vaadinspring.ui.util.ViewConfigUtil.getDisplayName;
+import static java.lang.String.format;
+
 /**
  * @author Igor Baiborodine
  */
@@ -65,6 +65,7 @@ public class TopNavBar extends CssLayout {
     addStyleName(JPetStoreTheme.TOP_MENU);
 
     final TextField searchTextField = new TextField();
+    searchTextField.setDescription("Product's name contains");
     searchTextField.setImmediate(true);
     searchTextField.addShortcutListener(new ShortcutListener("enter-shortcut", ShortcutAction.KeyCode.ENTER, null) {
       private static final long serialVersionUID = 4638926023595229738L;

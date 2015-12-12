@@ -36,10 +36,12 @@
       ATTR2 AS attribute2,
       ATTR3 AS attribute3,
       ATTR4 AS attribute4,
-      ATTR5 AS attribute5
-    FROM ITEM I, PRODUCT P
+      ATTR5 AS attribute5,
+      V.QTY AS quantity
+    FROM ITEM I, INVENTORY V, PRODUCT P
     WHERE P.PRODUCTID = I.PRODUCTID
-    AND I.PRODUCTID = #{value}
+      AND I.ITEMID = V.ITEMID
+      AND I.PRODUCTID = #{value}
   </select>
 
   <select id="getItem" resultType="Item">

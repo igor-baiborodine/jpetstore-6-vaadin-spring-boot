@@ -14,8 +14,8 @@ import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.Window;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.risto.stepper.IntStepper;
 import org.vaadin.viritin.fields.MTable;
 
@@ -29,6 +29,9 @@ import java.math.BigDecimal;
 public class CartItemListTable extends MTable<CartItem> {
 
   private static final long serialVersionUID = 6841591708524361792L;
+
+  @Autowired
+  private ProductItemForm productItemForm;
 
   public CartItemListTable() {
 
@@ -55,7 +58,7 @@ public class CartItemListTable extends MTable<CartItem> {
     withGeneratedColumn("productId", cartItem -> cartItem.getItem().getProductId());
     withGeneratedColumn("description",
         cartItem -> cartItem.getItem().getAttribute1() + " " + cartItem.getItem().getProduct().getName());
-    withGeneratedColumn("quantity", cartItem -> createQuantityStepper(cartItem));
+    withGeneratedColumn("quantity", this::createQuantityStepper);
     withGeneratedColumn("removeFromCart",
         cartItem -> new Button("Remove", event -> UIEventBus.post(new UIRemoveItemFromCartEvent(cartItem.getItem()))
     ));
@@ -81,9 +84,8 @@ public class CartItemListTable extends MTable<CartItem> {
   }
 
   private void viewDetails(Button.ClickEvent event) {
-    ProductItemForm productItemForm = new ProductItemForm((Item) event.getButton().getData());
-    Window popup = productItemForm.openInModalPopup();
-    popup.setCaption("View Details");
+    productItemForm.setEntity((Item) event.getButton().getData());
+    productItemForm.openInModalPopup().setCaption("View Details");
   }
 
   private String convertToCurrencyPresentation(BigDecimal value) {

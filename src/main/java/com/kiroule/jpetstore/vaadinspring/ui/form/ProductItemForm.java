@@ -1,59 +1,82 @@
 package com.kiroule.jpetstore.vaadinspring.ui.form;
 
 import com.kiroule.jpetstore.vaadinspring.domain.Item;
+import com.kiroule.jpetstore.vaadinspring.ui.converter.CurrencyConverter;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UIAddItemToCartEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
+import com.kiroule.jpetstore.vaadinspring.ui.theme.JPetStoreTheme;
 import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.spring.annotation.SpringComponent;
+import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 
+import org.vaadin.viritin.MBeanFieldGroup;
+import org.vaadin.viritin.button.MButton;
 import org.vaadin.viritin.fields.MTextField;
 import org.vaadin.viritin.form.AbstractForm;
 import org.vaadin.viritin.layouts.MFormLayout;
 import org.vaadin.viritin.layouts.MVerticalLayout;
 
-import java.text.NumberFormat;
-import java.util.Locale;
+import javax.annotation.PostConstruct;
 
 /**
  * @author Igor Baiborodine
  */
+@SpringComponent
+@ViewScope
 public class ProductItemForm extends AbstractForm<Item> {
 
   private static final long serialVersionUID = -3035656440388295692L;
 
-  private Label image;
-  private TextField itemDescription;
-  private TextField id;
-  private TextField productDescription;
-  private TextField price;
-  private TextField stock;
-  private Button addToCartButton;
+  private Label image = new Label();
+  private TextField itemId = new MTextField("ID");
+  private TextField itemDescription = new MTextField("Description");
+  private TextField productDescription = new MTextField("Product");
+  private TextField listPrice = new MTextField("Price");
+  private TextField quantity = new MTextField("Stock Quantity");
+  private Button addToCartButton = new MButton("Add to Cart");
 
-  public ProductItemForm(Item item) {
-    init(item);
+  @PostConstruct
+  public void init() {
+
+    image.setContentMode(ContentMode.HTML);
+    listPrice.setConverter(new CurrencyConverter());
+    addToCartButton.addClickListener(event -> {
+          UI.getCurrent().removeWindow(getPopup());
+          UIEventBus.post(new UIAddItemToCartEvent(getEntity()));
+        }
+    );
+    addToCartButton.focus();
+    setStyleName(JPetStoreTheme.BASE_FORM);
     setSizeUndefined();
   }
 
-  private void init(Item item) {
+  @Override
+  public MBeanFieldGroup<Item> setEntity(Item entity) {
 
-    image = new Label(item.getProduct().getDescription(), ContentMode.HTML);
-    id = new MTextField("ID", item.getItemId()).withReadOnly(true);
-    String itemDescriptionValue = item.getAttribute1() + " " + item.getProduct().getName();
-    itemDescription = new MTextField("Description", itemDescriptionValue).withReadOnly(true);
-    productDescription = new MTextField("Product", item.getProduct().getName()).withReadOnly(true);
+    setReadOnly(false);
+    MBeanFieldGroup<Item> fieldGroup = super.setEntity(entity);
+    image.setValue(entity.getProduct().getDescription());
+    itemDescription.setValue(entity.getAttribute1() + " " + entity.getProduct().getName());
+    productDescription.setValue(entity.getProduct().getName());
+    setReadOnly(true);
 
-    String listPriceValue = NumberFormat.getCurrencyInstance(Locale.CANADA).format(item.getListPrice());
-    price = new MTextField("Price", listPriceValue).withReadOnly(true);
-    stock = new MTextField("Stock", String.valueOf(item.getQuantity())).withReadOnly(true);
-    addToCartButton = new Button("Add to Cart", event -> {
-          UI.getCurrent().removeWindow(getPopup());
-          UIEventBus.post(new UIAddItemToCartEvent(item));
-        }
-    );
+    return fieldGroup;
+  }
+
+  @Override
+  public void setReadOnly(boolean readOnly) {
+
+    super.setReadOnly(readOnly);
+    itemId.setReadOnly(readOnly);
+    itemDescription.setReadOnly(readOnly);
+    productDescription.setReadOnly(readOnly);
+    listPrice.setReadOnly(readOnly);
+    quantity.setReadOnly(readOnly);
   }
 
   @Override
@@ -62,11 +85,11 @@ public class ProductItemForm extends AbstractForm<Item> {
     return new MVerticalLayout(
         image,
         new MFormLayout(
-            id,
+            itemId,
             itemDescription,
             productDescription,
-            price,
-            stock
+            listPrice,
+            quantity
         ).withWidth(""),
         addToCartButton
     ).withWidth("");
