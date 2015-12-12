@@ -1,9 +1,5 @@
 package com.kiroule.jpetstore.vaadinspring.ui.form;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
-import static com.google.common.collect.Lists.newArrayList;
-import static com.vaadin.data.Validator.InvalidValueException;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -38,6 +34,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
+
+import static com.google.common.base.Strings.isNullOrEmpty;
+import static com.google.common.collect.Lists.newArrayList;
+import static com.vaadin.data.Validator.InvalidValueException;
 
 /**
  * @author Igor Baiborodine
@@ -85,12 +85,10 @@ public class AccountForm extends AbstractForm<Account> {
         .collect(Collectors.toMap(Banner::getFavouriteCategoryId, Banner::getBannerName));
     categories = catalogService.getCategoryList();
     categories.sort(Comparator.comparing(Category::getName));
-    listOption.setImmediate(true);
-    bannerOption.setImmediate(true);
 
     setStyleName(JPetStoreTheme.BASE_FORM);
-    setHeightUndefined();
     setEagerValidation(false);
+    setHeightUndefined();
   }
 
   public void setReadOnlyFields(Mode mode) {
@@ -141,13 +139,17 @@ public class AccountForm extends AbstractForm<Account> {
   protected Component createContent() {
 
     password.setNullRepresentation("");
+    email.setStyleName(JPetStoreTheme.WIDE_TEXT_FIELD);
+    address1.setStyleName(JPetStoreTheme.WIDE_TEXT_FIELD);
+    address2.setStyleName(JPetStoreTheme.WIDE_TEXT_FIELD);
+
+    listOption.setImmediate(true);
+    bannerOption.setImmediate(true);
+
     bannerImage.setCaption("Banner Image");
     bannerImage.setContentMode(ContentMode.HTML);
     bannerImage.setWidth(300, Unit.PIXELS);
     bannerImage.setStyleName(JPetStoreTheme.BANNER);
-    email.setStyleName(JPetStoreTheme.WIDE_TEXT_FIELD);
-    address1.setStyleName(JPetStoreTheme.WIDE_TEXT_FIELD);
-    address2.setStyleName(JPetStoreTheme.WIDE_TEXT_FIELD);
 
     setLanguagePreferenceCombo();
     setFavouriteCategoryCombo();
@@ -155,36 +157,17 @@ public class AccountForm extends AbstractForm<Account> {
         address1, city, state, zip, country);
     setListeners();
 
-    MVerticalLayout content = new MVerticalLayout(
-        new Panel("Sign on", new MFormLayout(
-            username,
-            password,
-            passwordConfirmation
-        ).withWidth("-1px") // undefined width
-        ),
-        new Panel("Profile", new MFormLayout(
-            firstName,
-            lastName,
-            email,
-            phone,
-            address1,
-            address2,
-            city,
-            state,
-            zip,
-            country
-        ).withWidth("-1px") // undefined width
-        ),
-        new Panel("Profile", new MFormLayout(
-            languagePreference,
-            favouriteCategoryId,
-            listOption,
-            bannerOption,
-            bannerImage
-        ).withWidth("-1px") // undefined width
-        )
+    MFormLayout signonFormLayout = new MFormLayout(username, password, passwordConfirmation).withWidth("-1px");
+    MFormLayout accountFormLayout = new MFormLayout(firstName, lastName, email, phone, address1, address2, city,
+        state, zip, country).withWidth("-1px");
+    MFormLayout profileFormLayout = new MFormLayout(languagePreference, favouriteCategoryId, listOption,
+        bannerOption, bannerImage).withWidth("-1px");
+
+    return new MVerticalLayout(
+        new Panel("Sign on", signonFormLayout), 
+        new Panel("User", accountFormLayout),
+        new Panel("Profile", profileFormLayout)
     );
-    return content;
   }
 
   private void setListeners() {

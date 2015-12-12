@@ -1,6 +1,7 @@
 package com.kiroule.jpetstore.vaadinspring.ui.view;
 
 import com.kiroule.jpetstore.vaadinspring.domain.BillingDetails;
+import com.kiroule.jpetstore.vaadinspring.domain.ShippingDetails;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UINavigationEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.form.BillingDetailsForm;
@@ -14,6 +15,8 @@ import com.vaadin.ui.Panel;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
+
+import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.BILLING_DETAILS;
 
 /**
  * @author Igor Baiborodine
@@ -32,6 +35,22 @@ public class BillingDetailsView extends AbstractView {
   @PostConstruct
   void init() {
 
+    billingDetailsForm.setSavedHandler(billingDetails -> {
+
+      if (!billingDetailsForm.validate()) {
+        return;
+      }
+      CurrentCart.set(BILLING_DETAILS, billingDetails);
+
+      if (billingDetailsForm.isShipToDifferentAddress()) {
+        UIEventBus.post(new UINavigationEvent(ShippingDetailsView.VIEW_NAME));
+      } else {
+        CurrentCart.set(CurrentCart.Key.SHIPPING_DETAILS, new ShippingDetails(billingDetails));
+        UIEventBus.post(new UINavigationEvent(ConfirmOrderView.VIEW_NAME));
+      }
+    });
+    billingDetailsForm.setResetHandler(billingDetails -> billingDetailsForm.clear());
+
     Panel contentPanel = new Panel(billingDetailsForm);
     addComponents(initTitleLabel(), contentPanel, billingDetailsForm.getToolbar());
     setSizeFull();
@@ -46,6 +65,7 @@ public class BillingDetailsView extends AbstractView {
       return;
     }
     BillingDetails billingDetails = new BillingDetails(CurrentAccount.get());
+    billingDetails.setCardType("Visa");
     billingDetails.setCardNumber("9999 9999 9999 9999");
     billingDetails.setExpiryDate("01/1900");
     billingDetailsForm.setEntity(billingDetails);
