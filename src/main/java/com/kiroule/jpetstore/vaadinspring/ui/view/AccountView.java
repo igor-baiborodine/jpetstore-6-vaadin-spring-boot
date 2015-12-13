@@ -1,9 +1,5 @@
 package com.kiroule.jpetstore.vaadinspring.ui.view;
 
-import static com.kiroule.jpetstore.vaadinspring.ui.form.AccountForm.Mode.EDIT;
-import static com.vaadin.ui.Notification.Type.ERROR_MESSAGE;
-import static com.vaadin.ui.Notification.Type.HUMANIZED_MESSAGE;
-
 import com.kiroule.jpetstore.vaadinspring.domain.Account;
 import com.kiroule.jpetstore.vaadinspring.service.AccountService;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
@@ -21,6 +17,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
+
+import static com.kiroule.jpetstore.vaadinspring.ui.form.AccountForm.Mode.EDIT;
+import static com.vaadin.ui.Notification.Type.ERROR_MESSAGE;
 
 /**
  * @author Igor Baiborodine
@@ -48,7 +47,7 @@ public class AccountView extends AbstractView {
         }
         accountService.updateAccount(account);
         accountForm.clear();
-        showConfirmation("Your account has been updated.", HUMANIZED_MESSAGE, 2000);
+        showConfirmation("Your account has been updated.");
         UIEventBus.post(new UIUpdateAccountEvent(account));
       } catch (Throwable t) {
         Notification.show("An error occurred while updating account: " + t.getMessage(), ERROR_MESSAGE);

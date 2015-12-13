@@ -20,7 +20,6 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -57,7 +56,7 @@ public class Order implements Serializable {
   private String cardType;
   private String locale;
   private String status;
-  private List<LineItem> lineItems = new ArrayList<LineItem>();
+  private List<LineItem> lineItems = new ArrayList<>();
 
   public int getOrderId() {
     return orderId;
@@ -275,44 +274,40 @@ public class Order implements Serializable {
     return lineItems;
   }
 
-  public void initOrder(Account account, Cart cart) {
+  public void initOrder(String username, BillingDetails billingDetails, ShippingDetails shippingDetails, Cart cart) {
 
-    username = account.getUsername();
+    this.username = username;
     orderDate = new Date();
 
-    shipToFirstName = account.getFirstName();
-    shipToLastName = account.getLastName();
-    shipAddress1 = account.getAddress1();
-    shipAddress2 = account.getAddress2();
-    shipCity = account.getCity();
-    shipState = account.getState();
-    shipZip = account.getZip();
-    shipCountry = account.getCountry();
+    creditCard = billingDetails.getCardNumber();
+    expiryDate = billingDetails.getExpiryDate();
+    cardType = billingDetails.getCardType();
 
-    billToFirstName = account.getFirstName();
-    billToLastName = account.getLastName();
-    billAddress1 = account.getAddress1();
-    billAddress2 = account.getAddress2();
-    billCity = account.getCity();
-    billState = account.getState();
-    billZip = account.getZip();
-    billCountry = account.getCountry();
+    billToFirstName = billingDetails.getFirstName();
+    billToLastName = billingDetails.getLastName();
+    billAddress1 = billingDetails.getAddress1();
+    billAddress2 = billingDetails.getAddress2();
+    billCity = billingDetails.getCity();
+    billState = billingDetails.getState();
+    billZip = billingDetails.getZip();
+    billCountry = billingDetails.getCountry();
+
+    shipToFirstName = shippingDetails.getFirstName();
+    shipToLastName = shippingDetails.getLastName();
+    shipAddress1 = shippingDetails.getAddress1();
+    shipAddress2 = shippingDetails.getAddress2();
+    shipCity = shippingDetails.getCity();
+    shipState = shippingDetails.getState();
+    shipZip = shippingDetails.getZip();
+    shipCountry = shippingDetails.getCountry();
 
     totalPrice = cart.getSubTotal();
 
-    creditCard = "999 9999 9999 9999";
-    expiryDate = "12/03";
-    cardType = "Visa";
     courier = "UPS";
     locale = "CA";
     status = "P";
 
-    Iterator<CartItem> i = cart.getAllCartItems();
-    while (i.hasNext()) {
-      CartItem cartItem = (CartItem) i.next();
-      addLineItem(cartItem);
-    }
-
+    cart.getAllCartItems().forEachRemaining(this::addLineItem);
   }
 
   public void addLineItem(CartItem cartItem) {
@@ -323,5 +318,4 @@ public class Order implements Serializable {
   public void addLineItem(LineItem lineItem) {
     lineItems.add(lineItem);
   }
-
 }

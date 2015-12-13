@@ -79,6 +79,11 @@ public class ProductItemForm extends AbstractForm<Item> {
     quantity.setReadOnly(readOnly);
   }
 
+
+  public Button getAddToCartButton() {
+    return addToCartButton;
+  }
+
   @Override
   protected Component createContent() {
 

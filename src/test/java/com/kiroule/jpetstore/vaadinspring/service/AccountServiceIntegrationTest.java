@@ -1,8 +1,5 @@
 package com.kiroule.jpetstore.vaadinspring.service;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-
 import com.kiroule.jpetstore.vaadinspring.JPetStore6Application;
 import com.kiroule.jpetstore.vaadinspring.domain.Account;
 
@@ -12,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Igor Baiborodine
@@ -74,7 +74,7 @@ public class AccountServiceIntegrationTest {
     account.setCountry("USA");
     account.setPhone("555-555-5555");
     account.setFavouriteCategoryId("CATS");
-    account.setLanguagePreference("english");
+    account.setLanguagePreference("Komi");
     return account;
   }
 }

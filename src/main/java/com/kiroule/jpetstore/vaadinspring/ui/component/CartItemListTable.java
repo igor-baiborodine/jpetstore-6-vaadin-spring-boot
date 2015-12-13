@@ -9,6 +9,7 @@ import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UIRemoveItemFromCartEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.form.ProductItemForm;
 import com.kiroule.jpetstore.vaadinspring.ui.theme.JPetStoreTheme;
+import com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.Button;
@@ -60,7 +61,12 @@ public class CartItemListTable extends MTable<CartItem> {
         cartItem -> cartItem.getItem().getAttribute1() + " " + cartItem.getItem().getProduct().getName());
     withGeneratedColumn("quantity", this::createQuantityStepper);
     withGeneratedColumn("removeFromCart",
-        cartItem -> new Button("Remove", event -> UIEventBus.post(new UIRemoveItemFromCartEvent(cartItem.getItem()))
+        cartItem -> new Button("Remove", event -> {
+          if (CurrentCart.isEmpty()) {
+            return;
+          }
+          UIEventBus.post(new UIRemoveItemFromCartEvent(cartItem.getItem()));
+        }
     ));
 
     setConverter("inStock", new BooleanConverter());
@@ -77,6 +83,10 @@ public class CartItemListTable extends MTable<CartItem> {
     quantityStepper.setManualInputAllowed(false);
     quantityStepper.setValue(cartItem.getQuantity());
     quantityStepper.addValueChangeListener(event -> {
+      if (CartItemListTable.this.isReadOnly()) {
+        event.getProperty().setValue(cartItem.getQuantity());
+        return;
+      }
       Integer newQuantity = (Integer) event.getProperty().getValue();
       UIEventBus.post(new UIChangeCartItemQuantityEvent(cartItem.getItem(), newQuantity - cartItem.getQuantity()));
     });
@@ -84,6 +94,9 @@ public class CartItemListTable extends MTable<CartItem> {
   }
 
   private void viewDetails(Button.ClickEvent event) {
+    if (isReadOnly()) {
+      productItemForm.getAddToCartButton().setEnabled(false);
+    }
     productItemForm.setEntity((Item) event.getButton().getData());
     productItemForm.openInModalPopup().setCaption("View Details");
   }

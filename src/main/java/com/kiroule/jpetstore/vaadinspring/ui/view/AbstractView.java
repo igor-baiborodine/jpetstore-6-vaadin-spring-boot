@@ -1,7 +1,5 @@
 package com.kiroule.jpetstore.vaadinspring.ui.view;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
-
 import com.kiroule.jpetstore.vaadinspring.domain.Account;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UINavigationEvent;
@@ -18,6 +16,9 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 
 import org.vaadin.viritin.layouts.MVerticalLayout;
+
+import static com.google.common.base.Strings.isNullOrEmpty;
+import static com.vaadin.ui.Notification.Type.HUMANIZED_MESSAGE;
 
 /**
  * @author Igor Baiborodine
@@ -74,9 +75,14 @@ public abstract class AbstractView extends MVerticalLayout implements View {
     }
   }
 
-  protected void showConfirmation(String caption, Notification.Type type, int delayMsec) {
-    Notification notification = new Notification(caption, type);
-    notification.setDelayMsec(delayMsec);
+  protected void showConfirmation(String caption) {
+    Notification notification = new Notification(caption, HUMANIZED_MESSAGE);
+    notification.setDelayMsec(2000);
+    notification.show(Page.getCurrent());
+  }
+
+  protected void showError(String caption) {
+    Notification notification = new Notification(caption, Notification.Type.ERROR_MESSAGE);
     notification.show(Page.getCurrent());
   }
 

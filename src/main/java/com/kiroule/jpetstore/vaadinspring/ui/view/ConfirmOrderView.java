@@ -1,26 +1,40 @@
 package com.kiroule.jpetstore.vaadinspring.ui.view;
 
-import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.BILLING_DETAILS;
-import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.SHIPPING_DETAILS;
-
 import com.kiroule.jpetstore.vaadinspring.domain.BillingDetails;
+import com.kiroule.jpetstore.vaadinspring.domain.Cart;
+import com.kiroule.jpetstore.vaadinspring.domain.Order;
 import com.kiroule.jpetstore.vaadinspring.domain.OrderDetails;
+import com.kiroule.jpetstore.vaadinspring.domain.ShippingDetails;
+import com.kiroule.jpetstore.vaadinspring.service.OrderService;
+import com.kiroule.jpetstore.vaadinspring.ui.component.CartItemListTable;
+import com.kiroule.jpetstore.vaadinspring.ui.converter.CurrencyConverter;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UINavigationEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.theme.JPetStoreTheme;
+import com.kiroule.jpetstore.vaadinspring.ui.util.CurrentAccount;
 import com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart;
 import com.kiroule.jpetstore.vaadinspring.ui.util.ViewConfig;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.UI;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.viritin.button.MButton;
 import org.vaadin.viritin.layouts.MFormLayout;
 import org.vaadin.viritin.layouts.MHorizontalLayout;
 import org.vaadin.viritin.layouts.MVerticalLayout;
 
+import java.math.BigDecimal;
+
 import javax.annotation.PostConstruct;
+
+import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key;
+import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.BILLING_DETAILS;
+import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.SHIPPING_DETAILS;
+import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.SHOPPING_CART;
+import static java.lang.String.format;
 
 /**
  * @author Igor Baiborodine
@@ -32,12 +46,20 @@ public class ConfirmOrderView extends AbstractView {
   private static final long serialVersionUID = 2011890008388273461L;
 
   public static final String VIEW_NAME = "confirm-order";
+  public static final String SUBTOTAL_LABEL_PATTERN = "Subtotal: %s";
+
+  @Autowired
+  private OrderService orderService;
+  @Autowired
+  private CartItemListTable cartItemList;
 
   private MHorizontalLayout orderDetailsLayout = new MHorizontalLayout().withMargin(false);
   private PaymentMethodFormLayout paymentMethodFormLayout = new PaymentMethodFormLayout();
   private OrderDetailsFormLayout billingDetailsFormLayout = new OrderDetailsFormLayout();
   private OrderDetailsFormLayout shippingDetailsFormLayout = new OrderDetailsFormLayout();
-  private Label confirmedOrderLabel = createConfirmedOrderLabel();
+  private MButton placeOrderButton = createPlaceOrderButton();
+  private MButton viewOrdersButton = createViewOrdersButton();
+  private Label subtotalLabel = createSubtotalLabel();
 
   @PostConstruct
   void init() {
@@ -50,33 +72,16 @@ public class ConfirmOrderView extends AbstractView {
     orderDetailsLayout.setExpandRatio(billingDetailsPanel, 1.0f);
     orderDetailsLayout.setExpandRatio(shippingDetailsPanel, 1.0f);
     orderDetailsLayout.setSizeFull();
+    viewOrdersButton.setVisible(false);
+    int actualRowCount = cartItemList.getContainerDataSource().size();
+    cartItemList.setPageLength(Math.min(actualRowCount, 5));
 
-    MVerticalLayout content = new MVerticalLayout(
-        orderDetailsLayout
-    );
+    MVerticalLayout content = new MVerticalLayout(cartItemList, subtotalLabel, orderDetailsLayout);
     Panel contentPanel = new Panel(content);
-    addComponents(initTitleLabel(), contentPanel, createPlaceOrderButton(), confirmedOrderLabel);
+    addComponents(initTitleLabel(), contentPanel,
+        placeOrderButton, viewOrdersButton);
     setSizeFull();
     expand(contentPanel);
-  }
-
-  private MButton createPlaceOrderButton() {
-
-    return new MButton("Place Your Order").withListener(event -> {
-      CurrentCart.clear();
-      event.getButton().setVisible(false);
-      confirmedOrderLabel.setVisible(true);
-      // TODO: persist order to the database
-    });
-  }
-
-  private Label createConfirmedOrderLabel() {
-
-    Label label = new Label("Thank you, your order has been submitted.");
-    label.addStyleName(JPetStoreTheme.VIEW_LABEL_MEDIUM);
-    label.setStyleName(JPetStoreTheme.NOTIFICATION_SUCCESS);
-    label.setVisible(false);
-    return label;
   }
 
   @Override
@@ -88,9 +93,49 @@ public class ConfirmOrderView extends AbstractView {
       UIEventBus.post(new UINavigationEvent(CartView.VIEW_NAME));
       return;
     }
+    Cart cart = (Cart) CurrentCart.get(SHOPPING_CART);
+    cartItemList.setBeans(cart.getCartItemList());
+    subtotalLabel.setValue(format(SUBTOTAL_LABEL_PATTERN, formatSubtotal(cart.getSubTotal())));
+
     paymentMethodFormLayout.setEntity((BillingDetails) CurrentCart.get(BILLING_DETAILS));
     billingDetailsFormLayout.setEntity((OrderDetails) CurrentCart.get(BILLING_DETAILS));
     shippingDetailsFormLayout.setEntity((OrderDetails) CurrentCart.get(SHIPPING_DETAILS));
+  }
+
+  private Label createSubtotalLabel() {
+    Label label = new Label();
+    label.addStyleName(JPetStoreTheme.VIEW_LABEL_MEDIUM);
+    return label;
+  }
+
+  private MButton createPlaceOrderButton() {
+
+    return new MButton("Place Your Order").withListener(event -> {
+
+      Order order = new Order();
+      order.initOrder(CurrentAccount.get().getUsername(), (BillingDetails) CurrentCart.get(BILLING_DETAILS),
+          (ShippingDetails) CurrentCart.get(SHIPPING_DETAILS), (Cart) CurrentCart.get(Key.SHOPPING_CART));
+      try {
+        orderService.insertOrder(order);
+        CurrentCart.clear();
+        event.getButton().setVisible(false);
+        viewOrdersButton.setVisible(true);
+        cartItemList.setReadOnly(true);
+
+        showConfirmation("Thank you, your order has been submitted.");
+      } catch (Exception e) {
+        showError("An error occurred while inserting a new order: " + e.getMessage());
+      }
+    });
+  }
+
+  private MButton createViewOrdersButton() {
+    return new MButton("View My Orders")
+        .withListener(event -> UIEventBus.post(new UINavigationEvent(OrderListView.VIEW_NAME)));
+  }
+
+  private String formatSubtotal(BigDecimal subtotal) {
+    return new CurrencyConverter().convertToPresentation(subtotal, String.class, UI.getCurrent().getLocale());
   }
 }
 

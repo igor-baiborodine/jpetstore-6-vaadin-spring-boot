@@ -1,9 +1,5 @@
 package com.kiroule.jpetstore.vaadinspring.ui.view;
 
-import static com.kiroule.jpetstore.vaadinspring.ui.form.AccountForm.Mode.INSERT;
-import static com.vaadin.ui.Notification.Type.ERROR_MESSAGE;
-import static com.vaadin.ui.Notification.Type.HUMANIZED_MESSAGE;
-
 import com.kiroule.jpetstore.vaadinspring.domain.Account;
 import com.kiroule.jpetstore.vaadinspring.service.AccountService;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
@@ -19,6 +15,9 @@ import com.vaadin.ui.Panel;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
+
+import static com.kiroule.jpetstore.vaadinspring.ui.form.AccountForm.Mode.INSERT;
+import static com.vaadin.ui.Notification.Type.ERROR_MESSAGE;
 
 /**
  * @author Igor Baiborodine
@@ -45,7 +44,7 @@ public class NewAccountView extends AbstractView {
           return;
         }
         accountService.insertAccount(account);
-        showConfirmation("New account has been created.", HUMANIZED_MESSAGE, 2000);
+        showConfirmation("New account has been created.");
         UIEventBus.post(new UINavigationEvent(HomeView.VIEW_NAME));
       } catch (Throwable t) {
         Notification.show("An error occurred while creating new account: " + t.getMessage(), ERROR_MESSAGE);

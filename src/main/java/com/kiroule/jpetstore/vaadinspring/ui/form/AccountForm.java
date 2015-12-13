@@ -185,12 +185,9 @@ public class AccountForm extends AbstractForm<Account> {
   }
 
   private void setLanguagePreferenceCombo() {
-
-    languagePreference.addItem("english");
-    languagePreference.setItemCaption("english", "English");
-    languagePreference.addItem("russian");
-    languagePreference.setItemCaption("russian", "Russian");
-    languagePreference.setNullSelectionAllowed(false);
+    languagePreference.addItem("English");
+    languagePreference.addItem("Komi");
+    languagePreference.addItem("Russian");
   }
 
   private void setFavouriteCategoryCombo() {
