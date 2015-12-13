@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.annotation.PostConstruct;
 
 import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.BILLING_DETAILS;
+import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.SHIPPING_DETAILS;
 
 /**
  * @author Igor Baiborodine
@@ -32,6 +33,16 @@ public class ShippingDetailsView extends AbstractView {
 
   @PostConstruct
   void init() {
+
+    shippingDetailsForm.setSavedHandler(shippingDetails -> {
+
+      if (!shippingDetailsForm.validate()) {
+        return;
+      }
+      CurrentCart.set(SHIPPING_DETAILS, shippingDetails);
+      UIEventBus.post(new UINavigationEvent(ConfirmOrderView.VIEW_NAME));
+    });
+    shippingDetailsForm.setResetHandler(shippingDetails -> shippingDetailsForm.clear());
 
     Panel contentPanel = new Panel(shippingDetailsForm);
     addComponents(initTitleLabel(), contentPanel, shippingDetailsForm.getToolbar());

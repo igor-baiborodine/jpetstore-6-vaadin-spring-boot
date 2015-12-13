@@ -1,16 +1,16 @@
 package com.kiroule.jpetstore.vaadinspring.ui.form;
 
-import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.SHIPPING_DETAILS;
+import com.google.common.collect.Lists;
 
 import com.kiroule.jpetstore.vaadinspring.domain.ShippingDetails;
-import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
-import com.kiroule.jpetstore.vaadinspring.ui.event.UINavigationEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.theme.JPetStoreTheme;
-import com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart;
-import com.kiroule.jpetstore.vaadinspring.ui.view.ConfirmOrderView;
+import com.vaadin.data.Validator;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Field;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
 
 import org.vaadin.viritin.fields.MTextField;
@@ -27,6 +27,8 @@ import javax.annotation.PostConstruct;
 @ViewScope
 public class ShippingDetailsForm extends AbstractForm<ShippingDetails> {
 
+  private static final long serialVersionUID = 3450336789838413879L;
+
   private TextField firstName = new MTextField("First Name").withNullRepresentation("");
   private TextField lastName = new MTextField("LastName").withNullRepresentation("");
   private TextField email = new MTextField("Email").withNullRepresentation("");
@@ -40,13 +42,27 @@ public class ShippingDetailsForm extends AbstractForm<ShippingDetails> {
 
   @PostConstruct
   public void init() {
+    setStyleName(JPetStoreTheme.BASE_FORM);
+    setEagerValidation(false);
+    setHeightUndefined();
+  }
 
-    setSavedHandler(shippingDetails -> {
-      CurrentCart.set(SHIPPING_DETAILS, shippingDetails);
-      UIEventBus.post(new UINavigationEvent(ConfirmOrderView.VIEW_NAME));
-    });
-    setResetHandler(shippingDetails -> setEntity(new ShippingDetails()));
-    setSizeUndefined();
+  public boolean validate() {
+
+    try {
+      getFieldGroup().getFields().forEach(field -> {
+        field.focus();
+        field.validate();
+      });
+    } catch (Validator.InvalidValueException e) {
+      Notification.show(e.getMessage(), Notification.Type.ERROR_MESSAGE);
+      return false;
+    }
+    return true;
+  }
+
+  public void clear() {
+    setEntity(new ShippingDetails());
   }
 
   @Override
@@ -56,42 +72,23 @@ public class ShippingDetailsForm extends AbstractForm<ShippingDetails> {
     address1.setStyleName(JPetStoreTheme.WIDE_TEXT_FIELD);
     address2.setStyleName(JPetStoreTheme.WIDE_TEXT_FIELD);
 
-    setRequiredFields();
     setToolBarVisible();
+    setRequiredFields(firstName, lastName, email, phone, address1, city, state, zip, country);
 
-    MFormLayout shippingDetailsFormLayout = new MFormLayout(
-        firstName,
-        lastName,
-        email,
-        phone,
-        address1,
-        address2,
-        city,
-        state,
-        zip,
-        country
-    ).withWidth("");
-    shippingDetailsFormLayout.setStyleName(JPetStoreTheme.BASE_FORM);
+    MFormLayout shippingDetailsFormLayout = new MFormLayout(firstName, lastName, email, phone, address1, address2,
+        city, state, zip, country).withWidth("-1px");
 
-    MVerticalLayout content = new MVerticalLayout(
-        shippingDetailsFormLayout)
-          .withSpacing(false)
-          .withWidth("");
-
-    return content;
+    return new MVerticalLayout(
+        new Panel("Shipping Details", shippingDetailsFormLayout)
+    );
   }
 
-  private void setRequiredFields() {
+  private void setRequiredFields(Field<?>... fields) {
 
-    firstName.setRequired(true);
-    lastName.setRequired(true);
-    email.setRequired(true);
-    phone.setRequired(true);
-    address1.setRequired(true);
-    city.setRequired(true);
-    state.setRequired(true);
-    zip.setRequired(true);
-    country.setRequired(true);
+    Lists.newArrayList(fields).forEach(field -> {
+      field.setRequired(true);
+      field.setRequiredError(field.getCaption() + " is required");
+    });
   }
 
   private void setToolBarVisible() {
