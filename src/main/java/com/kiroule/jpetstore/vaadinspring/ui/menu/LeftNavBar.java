@@ -23,6 +23,8 @@ import javax.annotation.PostConstruct;
 @UIScope
 public class LeftNavBar extends CssLayout {
 
+  private static final long serialVersionUID = 3267397700833804590L;
+
   @Autowired
   private NavBarButtonUpdater navBarButtonUpdater;
 
@@ -36,11 +38,11 @@ public class LeftNavBar extends CssLayout {
     Label logo = new Label("<strong>JPetStore 6 Demo Vaadin</strong>", ContentMode.HTML);
     logo.addStyleName(JPetStoreTheme.MENU_TITLE);
     addComponent(logo);
-    addButton("FISH", "Fish");
-    addButton("DOGS", "Dogs");
-    addButton("CATS", "Cats");
-    addButton("REPTILES", "Reptiles");
     addButton("BIRDS", "Birds");
+    addButton("CATS", "Cats");
+    addButton("DOGS", "Dogs");
+    addButton("FISH", "Fish");
+    addButton("REPTILES", "Reptiles");
   }
 
   private void addButton(String categoryId, String displayName) {
