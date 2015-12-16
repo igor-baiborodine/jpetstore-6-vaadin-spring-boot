@@ -75,14 +75,11 @@ public class CartView extends AbstractView {
     cartItemListLayout.setVisible(!CurrentCart.isEmpty());
     
     if (!CurrentCart.isEmpty()) {
-
       Cart cart = (Cart) CurrentCart.get(SHOPPING_CART);
       cartItemList.setBeans(cart.getCartItemList());
       subtotalLabel.setValue(format(SUBTOTAL_LABEL_PATTERN, formatSubtotal(cart.getSubTotal())));
-      expand(cartItemListLayout);
-    } else {
-      expand(emptyCartLabel);
     }
+    expand(CurrentCart.isEmpty() ? emptyCartLabel : cartItemListLayout);
   }
 
   private Label initEmptyCartLabel() {

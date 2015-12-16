@@ -1,5 +1,13 @@
 package com.kiroule.jpetstore.vaadinspring.ui.view;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key;
+import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.BILLING_DETAILS;
+import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.SHIPPING_DETAILS;
+import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.SHOPPING_CART;
+import static java.lang.String.format;
+
+import com.kiroule.jpetstore.vaadinspring.domain.Account;
 import com.kiroule.jpetstore.vaadinspring.domain.BillingDetails;
 import com.kiroule.jpetstore.vaadinspring.domain.Cart;
 import com.kiroule.jpetstore.vaadinspring.domain.Order;
@@ -15,10 +23,15 @@ import com.kiroule.jpetstore.vaadinspring.ui.util.CurrentAccount;
 import com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart;
 import com.kiroule.jpetstore.vaadinspring.ui.util.ViewConfig;
 import com.vaadin.navigator.ViewChangeListener;
+import com.vaadin.server.ThemeResource;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.spring.annotation.SpringView;
+import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.Window;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.viritin.button.MButton;
@@ -29,12 +42,6 @@ import org.vaadin.viritin.layouts.MVerticalLayout;
 import java.math.BigDecimal;
 
 import javax.annotation.PostConstruct;
-
-import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key;
-import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.BILLING_DETAILS;
-import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.SHIPPING_DETAILS;
-import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.SHOPPING_CART;
-import static java.lang.String.format;
 
 /**
  * @author Igor Baiborodine
@@ -78,8 +85,7 @@ public class ConfirmOrderView extends AbstractView {
 
     MVerticalLayout content = new MVerticalLayout(cartItemList, subtotalLabel, orderDetailsLayout);
     Panel contentPanel = new Panel(content);
-    addComponents(initTitleLabel(), contentPanel,
-        placeOrderButton, viewOrdersButton);
+    addComponents(initTitleLabel(), contentPanel, placeOrderButton, viewOrdersButton);
     setSizeFull();
     expand(contentPanel);
   }
@@ -130,12 +136,36 @@ public class ConfirmOrderView extends AbstractView {
   }
 
   private MButton createViewOrdersButton() {
-    return new MButton("View My Orders")
+    return new MButton("View Your Orders")
         .withListener(event -> UIEventBus.post(new UINavigationEvent(OrderListView.VIEW_NAME)));
   }
 
   private String formatSubtotal(BigDecimal subtotal) {
     return new CurrencyConverter().convertToPresentation(subtotal, String.class, UI.getCurrent().getLocale());
+  }
+
+  @Override
+  public void showConfirmation(String caption) {
+
+    Account account = CurrentAccount.get();
+    if (account.isBannerOption()
+        && !isNullOrEmpty(account.getBannerName())
+        && account.getBannerName().contains("reptiles")) {
+
+      Label message = new Label("Good news, <strong>" + account.getFirstName() + "</strong>!</br>" +
+          "Your order has been shipped with <strong>Planet Express</strong>.</br>" +
+          "The ETA date is <strong>January 1st, 3000</strong>.", ContentMode.HTML);
+      Image image = new Image(null, new ThemeResource("img/order_confirmation.jpg"));
+      image.setSizeUndefined();
+
+      MVerticalLayout content = new MVerticalLayout(message, image);
+      content.setComponentAlignment(image, Alignment.MIDDLE_CENTER);
+      Window popup = new Window("Confirmation", content);
+      popup.setModal(true);
+      UI.getCurrent().addWindow(popup);
+    } else {
+      super.showConfirmation(caption);
+    }
   }
 }
 
@@ -159,7 +189,6 @@ class PaymentMethodFormLayout extends MFormLayout {
   }
 
   public void setEntity(BillingDetails billingDetails) {
-
     cardType.setValue(billingDetails.getCardType());
     cardNumber.setValue(billingDetails.getCardNumber());
     expiryDate.setValue(billingDetails.getExpiryDate());

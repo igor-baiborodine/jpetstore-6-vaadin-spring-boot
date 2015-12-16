@@ -36,7 +36,7 @@ public class BillingDetailsForm extends AbstractForm<BillingDetails> {
   private MTextField cardNumber = new MTextField("Card Number").withNullRepresentation("");
   private MTextField expiryDate = new MTextField("Expiry Date (MM/YYYY)").withNullRepresentation("");
 
-  // Billing details
+  // Billing address
   private TextField firstName = new MTextField("First Name").withNullRepresentation("");
   private TextField lastName = new MTextField("LastName").withNullRepresentation("");
   private TextField email = new MTextField("Email").withNullRepresentation("");
@@ -97,7 +97,7 @@ public class BillingDetailsForm extends AbstractForm<BillingDetails> {
 
     return new MVerticalLayout(
         new Panel("Payment Method", paymentMethodFormLayout),
-        new Panel("Billing Details", billingDetailsFormLayout));
+        new Panel("Billing Address", billingDetailsFormLayout));
   }
 
   private void setCardTypeCombo() {

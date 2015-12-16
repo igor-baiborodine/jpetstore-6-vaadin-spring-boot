@@ -24,6 +24,8 @@ import java.util.Map;
 @UIScope
 public class NavBarButtonUpdater implements Serializable, ViewChangeListener {
 
+  private static final long serialVersionUID = 548690532364285091L;
+
   private static final Logger logger = LoggerFactory.getLogger(NavBarButtonUpdater.class);
 
   private Map<String, Button> uriToButtonMap = Maps.newHashMap();
@@ -47,6 +49,10 @@ public class NavBarButtonUpdater implements Serializable, ViewChangeListener {
         logger.info("Added [{}] style to button with uri[{}]", SELECTED, uri);
       }
     });
+  }
+
+  public void clear() {
+    uriToButtonMap.values().forEach(button -> button.removeStyleName(SELECTED));
   }
 
   public void setButtonVisible(String mappedUri, boolean visible) {

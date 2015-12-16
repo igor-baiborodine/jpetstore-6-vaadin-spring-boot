@@ -79,7 +79,7 @@ public class ShippingDetailsForm extends AbstractForm<ShippingDetails> {
         city, state, zip, country).withWidth("-1px");
 
     return new MVerticalLayout(
-        new Panel("Shipping Details", shippingDetailsFormLayout)
+        new Panel("Shipping Address", shippingDetailsFormLayout)
     );
   }
 

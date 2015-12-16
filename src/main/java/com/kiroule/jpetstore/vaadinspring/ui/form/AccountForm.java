@@ -1,5 +1,9 @@
 package com.kiroule.jpetstore.vaadinspring.ui.form;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+import static com.google.common.collect.Lists.newArrayList;
+import static com.vaadin.data.Validator.InvalidValueException;
+
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -34,10 +38,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
-
-import static com.google.common.base.Strings.isNullOrEmpty;
-import static com.google.common.collect.Lists.newArrayList;
-import static com.vaadin.data.Validator.InvalidValueException;
 
 /**
  * @author Igor Baiborodine
@@ -106,7 +106,7 @@ public class AccountForm extends AbstractForm<Account> {
       getResetButton().setCaption("Clear");
     }
     if (Mode.EDIT.equals(mode)) {
-      getResetButton().setCaption("View My Orders");
+      getResetButton().setCaption("View Your Orders");
     }
     return getToolbar();
   }
@@ -179,6 +179,7 @@ public class AccountForm extends AbstractForm<Account> {
           return;
         }
         bannerImage.setValue(bannerName);
+        bannerImage.setStyleName(getBannerStyleName(bannerName));
         getEntity().setBannerName(bannerName);
       }
     });
@@ -217,5 +218,9 @@ public class AccountForm extends AbstractForm<Account> {
     if (!passwordConfirmation.getValue().equals(getEntity().getPassword())) {
       throw new Validator.InvalidValueException("Confirmation Password is not identical");
     }
+  }
+
+  private String getBannerStyleName(String bannerName) {
+    return bannerName.contains("reptiles") ? JPetStoreTheme.BANNER_2 : JPetStoreTheme.BANNER;
   }
 }

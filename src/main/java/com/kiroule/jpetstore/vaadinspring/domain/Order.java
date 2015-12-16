@@ -303,7 +303,7 @@ public class Order implements Serializable {
 
     totalPrice = cart.getSubTotal();
 
-    courier = "UPS";
+    courier = "Planet Express";
     locale = "CA";
     status = "P";
 

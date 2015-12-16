@@ -11,6 +11,7 @@ public class JPetStoreTheme extends ValoTheme {
   public static final String LEFT_MENU = "left-menu";
   public static final String SELECTED = "selected";
   public static final String BANNER = "banner";
+  public static final String BANNER_2 = "banner-2";
   public static final String WELCOME_USER_LABEL = "welcome-user-label";
   public static final String WIDE_TEXT_FIELD = "wide-text-field";
   public static final String VIEW_LABEL_LARGE = "view-label-large";

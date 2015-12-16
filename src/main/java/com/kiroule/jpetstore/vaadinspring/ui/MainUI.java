@@ -27,6 +27,7 @@ import com.kiroule.jpetstore.vaadinspring.ui.view.AccountView;
 import com.kiroule.jpetstore.vaadinspring.ui.view.AuthRequiredView;
 import com.kiroule.jpetstore.vaadinspring.ui.view.CartView;
 import com.kiroule.jpetstore.vaadinspring.ui.view.HomeView;
+import com.kiroule.jpetstore.vaadinspring.ui.view.ItemListView;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.annotations.Widgetset;
@@ -131,6 +132,7 @@ public class MainUI extends UI {
     navBarButtonUpdater.setButtonVisible(AccountView.VIEW_NAME, true);
     navBarButtonUpdater.setButtonVisible(SIGNIN_BUTTON_URI, false);
     navBarButtonUpdater.setButtonVisible(SIGNOUT_BUTTON_URI, true);
+    navBarButtonUpdater.clear();
 
     String state = getNavigator().getState();
     String viewName = state.equals(AuthRequiredView.VIEW_NAME) ? HomeView.VIEW_NAME : state;
@@ -165,7 +167,12 @@ public class MainUI extends UI {
     boolean isInStock = catalogService.isItemInStock(event.getItem().getItemId());
     Cart cart = (Cart) CurrentCart.get(SHOPPING_CART);
     cart.addItem(event.getItem(), isInStock);
-    navigateTo(CartView.VIEW_NAME);
+
+    // If an item added from the Item list view, redirect to the Cart view;
+    // otherwise reload the current view which could be either Cart or Confirm Order
+    String state = getNavigator().getState();
+    String viewName = state.contains(ItemListView.VIEW_NAME) ? CartView.VIEW_NAME : state;
+    navigateTo(viewName);
   }
 
   @Subscribe
@@ -173,15 +180,15 @@ public class MainUI extends UI {
 
     Cart cart = (Cart) CurrentCart.get(SHOPPING_CART);
     cart.removeItemById(event.getItem().getItemId());
-    navigateTo(CartView.VIEW_NAME);
+    String viewName = CurrentCart.isEmpty() ? CartView.VIEW_NAME : getNavigator().getState();
+    navigateTo(viewName);
   }
 
   @Subscribe
   public void changeCartItemQuantity(UIChangeCartItemQuantityEvent event) {
-
     Cart cart = (Cart) CurrentCart.get(SHOPPING_CART);
     cart.changeQuantityByItemId(event.getItem().getItemId(), event.getDiff());
-    navigateTo(CartView.VIEW_NAME);
+    navigateTo(getNavigator().getState());
   }
 
   private void navigateTo(String viewName) {

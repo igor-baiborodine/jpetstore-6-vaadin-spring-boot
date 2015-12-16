@@ -1,11 +1,18 @@
 package com.kiroule.jpetstore.vaadinspring.ui.view;
 
+import com.kiroule.jpetstore.vaadinspring.domain.Order;
+import com.kiroule.jpetstore.vaadinspring.service.OrderService;
+import com.kiroule.jpetstore.vaadinspring.ui.component.OrderListTable;
+import com.kiroule.jpetstore.vaadinspring.ui.theme.JPetStoreTheme;
+import com.kiroule.jpetstore.vaadinspring.ui.util.CurrentAccount;
 import com.kiroule.jpetstore.vaadinspring.ui.util.ViewConfig;
+import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Panel;
 
-import org.vaadin.viritin.layouts.MVerticalLayout;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 
@@ -13,20 +20,39 @@ import javax.annotation.PostConstruct;
  * @author Igor Baiborodine
  */
 @SpringView(name = OrderListView.VIEW_NAME)
-@ViewConfig(displayName = "My Orders", authRequired = true)
+@ViewConfig(displayName = "Your Orders", authRequired = true)
 public class OrderListView extends AbstractView {
 
   private static final long serialVersionUID = -1297358094619700705L;
 
   public static final String VIEW_NAME = "order-list";
 
+  @Autowired
+  private OrderService orderService;
+  @Autowired
+  private OrderListTable orderList;
+
+  private Label noOrdersLabel;
+
   @PostConstruct
   void init() {
-
-    MVerticalLayout content = new MVerticalLayout(new Label("Not implemented!"));
-    Panel contentPanel = new Panel(content);
-    addComponents(initTitleLabel(), contentPanel);
+    addComponents(initTitleLabel(), initNoOrdersLabel(), orderList);
     setSizeFull();
-    expand(contentPanel);
- }
+  }
+
+  @Override
+  public void executeOnEnter(ViewChangeListener.ViewChangeEvent event) {
+
+    List<Order> orders = orderService.getOrdersByUsername(CurrentAccount.get().getUsername());
+    orderList.setBeans(orders);
+    orderList.setVisible(!orders.isEmpty());
+    noOrdersLabel.setVisible(orders.isEmpty());
+    expand(orders.isEmpty() ? noOrdersLabel : orderList);
+  }
+
+  private Label initNoOrdersLabel() {
+    noOrdersLabel = new Label("You have not placed any orders.");
+    noOrdersLabel.setStyleName(JPetStoreTheme.VIEW_LABEL_MEDIUM);
+    return noOrdersLabel;
+  }
 }

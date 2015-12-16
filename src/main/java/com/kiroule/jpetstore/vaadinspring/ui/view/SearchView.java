@@ -1,6 +1,8 @@
 package com.kiroule.jpetstore.vaadinspring.ui.view;
 
-import com.kiroule.jpetstore.vaadinspring.persistence.ProductMapper;
+import static java.lang.String.format;
+
+import com.kiroule.jpetstore.vaadinspring.service.CatalogService;
 import com.kiroule.jpetstore.vaadinspring.ui.component.ProductListTable;
 import com.kiroule.jpetstore.vaadinspring.ui.util.ViewConfig;
 import com.kiroule.jpetstore.vaadinspring.ui.util.ViewConfigUtil;
@@ -10,8 +12,6 @@ import com.vaadin.spring.annotation.SpringView;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
-
-import static java.lang.String.format;
 
 /**
  * @author Igor Baiborodine
@@ -25,7 +25,7 @@ public class SearchView extends AbstractView {
   public static final String VIEW_NAME = "search";
 
   @Autowired
-  private ProductMapper productRepository;
+  private CatalogService catalogService;
   @Autowired
   private ProductListTable productListTable;
 
@@ -33,7 +33,6 @@ public class SearchView extends AbstractView {
 
   @PostConstruct
   public void init() {
-
     addComponents(initTitleLabel(), productListTable);
     setSizeFull();
     expand(productListTable);
@@ -42,7 +41,7 @@ public class SearchView extends AbstractView {
   @Override
   public void executeOnEnter(ViewChangeListener.ViewChangeEvent event) {
     keyword = event.getParameters();
-    productListTable.setBeans(productRepository.searchProductList(keyword));
+    productListTable.setBeans(catalogService.searchProductList(keyword));
   }
 
   @Override

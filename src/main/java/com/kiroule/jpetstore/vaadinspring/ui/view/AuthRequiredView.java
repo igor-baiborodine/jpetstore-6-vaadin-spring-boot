@@ -22,15 +22,12 @@ public class AuthRequiredView extends AbstractView {
 
   @PostConstruct
   void init() {
-
     addComponents(initTitleLabel(), initMessageLabel());
-    setSizeFull();
     expand(messageLabel);
     setSizeFull();
   }
 
   private Label initMessageLabel() {
-
     messageLabel = new Label("Please sign in.");
     messageLabel.setStyleName(JPetStoreTheme.VIEW_LABEL_MEDIUM);
     return messageLabel;
