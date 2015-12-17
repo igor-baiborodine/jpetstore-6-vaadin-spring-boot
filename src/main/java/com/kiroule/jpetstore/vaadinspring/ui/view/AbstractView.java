@@ -1,8 +1,5 @@
 package com.kiroule.jpetstore.vaadinspring.ui.view;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
-import static com.vaadin.ui.Notification.Type.HUMANIZED_MESSAGE;
-
 import com.kiroule.jpetstore.vaadinspring.domain.Account;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UINavigationEvent;
@@ -19,6 +16,9 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 
 import org.vaadin.viritin.layouts.MVerticalLayout;
+
+import static com.google.common.base.Strings.isNullOrEmpty;
+import static com.vaadin.ui.Notification.Type.HUMANIZED_MESSAGE;
 
 /**
  * @author Igor Baiborodine
@@ -69,7 +69,9 @@ public abstract class AbstractView extends MVerticalLayout implements View {
   protected void setBannerVisible() {
 
     Account account = CurrentAccount.get();
-    if (account != null && account.isBannerOption() && !isNullOrEmpty(account.getBannerName())) {
+    if (account == null || !account.isBannerOption()) {
+      bannerLayout.setVisible(false);
+    } else if (!isNullOrEmpty(account.getBannerName())) {
       bannerImage.setValue(account.getBannerName());
       bannerLayout.setVisible(true);
       bannerLayout.setStyleName(getBannerStyleName(account.getBannerName()));
