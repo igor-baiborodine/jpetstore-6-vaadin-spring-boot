@@ -1,3 +1,4 @@
+<<<<<<< 2dfff5f701f179963a953645603ceb09b03a5888
 jpetstore-6-vaadin-spring-boot
 ------------------------------
 #####This project is an exercise to port the original [JPetStore-6](https://github.com/mybatis/jpetstore-6) to Vaadin and Spring Boot with JavaConfig.#####
@@ -17,3 +18,8 @@ jpetstore-6-vaadin-spring-boot
 * [Vaadin Spring Tutorial](https://vaadin.com/wiki/-/wiki/Spring+Vaadin/I+-+Getting+Started+with+Vaadin+Spring+and+Spring+Boot)
 * [Vaadin Spring Data CRUD Example](https://github.com/mstahv/spring-data-vaadin-crud)
 * [Building "Bootiful" Vaadin Applications with Spring Boot](https://github.com/joshlong/vaadin-and-spring-talk)
+=======
+The OpenShift `diy` cartridge documentation can be found at:
+
+http://openshift.github.io/documentation/oo_cartridge_guide.html#diy
+>>>>>>> Creating template
