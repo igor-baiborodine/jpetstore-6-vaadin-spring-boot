@@ -37,4 +37,4 @@ export MAVEN_OPTS="-Xms384m -Xmx412m"
 export JAVA_HOME=$OPENSHIFT_DATA_DIR/jdk1.8.0_20
 export PATH=$JAVA_HOME/bin:$M2:$PATH
 
-mvn -s settings.xml clean package -DskipTests=true
+mvn -s .openshift/settings.xml clean package -DskipTests=true
