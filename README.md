@@ -9,8 +9,8 @@ jpetstore-6-vaadin-spring-boot
 git clone https://github.com/igor-baiborodine/jpetstore-6-vaadin-spring-boot.git
 cd jpetstore-6-vaadin-spring-boot
 mvn clean package spring-boot:run
+# Access in your browser at http://localhost:8080
 ```
-Access in your browser: http://localhost:8080
 
 ######Software and technologies used:
 * [Java SE 8](http://www.oracle.com/technetwork/java/javase/downloads/index-jsp-138363.html)
