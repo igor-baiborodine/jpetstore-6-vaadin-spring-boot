@@ -3,6 +3,7 @@ jpetstore-6-vaadin-spring-boot
 #####This project is an exercise to port the original [JPetStore-6](https://github.com/mybatis/jpetstore-6) to Vaadin and Spring Boot with JavaConfig.
 
 ######Deployment on the OpenShift PaaS: http://jpetstore-kiroule.rhcloud.com/
+The deployed application contains two Easter eggs. Whoever finds them first will get free beer (FOB Montreal)!
 
 ######Run with Maven:
 ```bash
