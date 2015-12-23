@@ -82,7 +82,7 @@ public class TopNavBar extends CssLayout {
     addButton(AccountView.VIEW_NAME, getDisplayName(AccountView.class))
         .setVisible(CurrentAccount.isLoggedIn());
 
-    signinButton = addButton(SIGNIN_BUTTON_URI, "Sing in", event -> {
+    signinButton = addButton(SIGNIN_BUTTON_URI, "Sign in", event -> {
       final Window popup = signinForm.openInModalWidow();
       signinForm.addLoginListener(loginEvent -> {
         try {
