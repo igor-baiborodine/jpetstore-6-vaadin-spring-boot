@@ -4,6 +4,7 @@ jpetstore-6-vaadin-spring-boot
 
 ######Deployment on the OpenShift PaaS: http://jpetstore-kiroule.rhcloud.com/
 The deployed application contains two Easter eggs. Whoever finds them first will get free beer (FOB Montreal)!
+Note: since an in-memory database is used, all accounts and orders data will be lost whenever the application is re-started or re-deployed.
 
 ######Run with Maven:
 ```bash
