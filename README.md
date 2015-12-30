@@ -23,6 +23,7 @@ mvn clean package spring-boot:run
 * [Vaadin 7](https://vaadin.com/home) with add-ons: [Viritin](https://vaadin.com/directory#!addon/viritin), [LoginForm](https://vaadin.com/directory#!addon/loginform), [FormCheckBox](https://vaadin.com/directory#!addon/formcheckbox), [Stepper](https://vaadin.com/directory#!addon/stepper)
 * [Spring 4](http://projects.spring.io/spring-framework/#quick-start)
 * [Spring Boot](http://projects.spring.io/spring-boot/)
+* [MyBatis 3](http://mybatis.org/mybatis-3/)
 * [HSQLDB](http://hsqldb.org/)
 * [Maven 3](http://maven.apache.org/)
 * [JUnit 4](http://junit.org/)
