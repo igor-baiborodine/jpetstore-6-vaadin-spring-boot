@@ -1,10 +1,14 @@
 jpetstore-6-vaadin-spring-boot
 ------------------------------
+[![Build
+Status](https://travis-ci.org/igor-baiborodine/jpetstore-6-vaadin-spring-boot.svg?branch=master)](https://travis-ci.org/igor-baiborodine/jpetstore-6-vaadin-spring-boot)
+
 #####This project is an exercise to port the original [JPetStore-6](https://github.com/mybatis/jpetstore-6) to Vaadin and Spring Boot with JavaConfig.
 
 ######Deployment on the OpenShift PaaS: http://jpetstore-kiroule.rhcloud.com/
 The deployed application contains two Easter eggs. Whoever finds them first will get free beer (FOB Montreal)!
-Note: since an in-memory database is used, all accounts and orders data will be lost whenever the application is re-started or re-deployed.
+
+NOTE: Since an in-memory database is used, all accounts and orders data will be lost whenever the application is re-started or re-deployed.
 
 ######Run with Maven:
 ```bash
@@ -19,6 +23,7 @@ mvn clean package spring-boot:run
 * [Vaadin 7](https://vaadin.com/home) with add-ons: [Viritin](https://vaadin.com/directory#!addon/viritin), [LoginForm](https://vaadin.com/directory#!addon/loginform), [FormCheckBox](https://vaadin.com/directory#!addon/formcheckbox), [Stepper](https://vaadin.com/directory#!addon/stepper)
 * [Spring 4](http://projects.spring.io/spring-framework/#quick-start)
 * [Spring Boot](http://projects.spring.io/spring-boot/)
+* [MyBatis 3](http://mybatis.org/mybatis-3/)
 * [HSQLDB](http://hsqldb.org/)
 * [Maven 3](http://maven.apache.org/)
 * [JUnit 4](http://junit.org/)

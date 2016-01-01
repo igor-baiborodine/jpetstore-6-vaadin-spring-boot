@@ -1,8 +1,6 @@
 package com.kiroule.jpetstore.vaadinspring.ui.view;
 
 import com.kiroule.jpetstore.vaadinspring.domain.Category;
-import com.kiroule.jpetstore.vaadinspring.persistence.CategoryMapper;
-import com.kiroule.jpetstore.vaadinspring.persistence.ProductMapper;
 import com.kiroule.jpetstore.vaadinspring.service.CatalogService;
 import com.kiroule.jpetstore.vaadinspring.ui.component.ProductListTable;
 import com.kiroule.jpetstore.vaadinspring.ui.util.ViewConfig;
@@ -24,10 +22,6 @@ public class ProductListView extends AbstractView {
 
   public static final String VIEW_NAME = "product-list";
 
-  @Autowired
-  private ProductMapper productRepository;
-  @Autowired
-  private CategoryMapper categoryRepository;
   @Autowired
   private CatalogService catalogService;
   @Autowired
