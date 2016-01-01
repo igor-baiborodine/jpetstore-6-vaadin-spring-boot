@@ -1,8 +1,5 @@
 package com.kiroule.jpetstore.vaadinspring.ui.view;
 
-import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.SHOPPING_CART;
-import static java.lang.String.format;
-
 import com.kiroule.jpetstore.vaadinspring.domain.Cart;
 import com.kiroule.jpetstore.vaadinspring.ui.component.CartItemListTable;
 import com.kiroule.jpetstore.vaadinspring.ui.converter.CurrencyConverter;
@@ -26,6 +23,9 @@ import org.vaadin.viritin.layouts.MVerticalLayout;
 import java.math.BigDecimal;
 
 import javax.annotation.PostConstruct;
+
+import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.SHOPPING_CART;
+import static java.lang.String.format;
 
 /**
  * @author Igor Baiborodine
@@ -83,7 +83,7 @@ public class CartView extends AbstractView {
   }
 
   private Label initEmptyCartLabel() {
-    emptyCartLabel = new Label("Your Shopping Cart is empty.");
+    emptyCartLabel = new Label("Your shopping cart is empty.");
     emptyCartLabel.setStyleName(JPetStoreTheme.VIEW_LABEL_MEDIUM);
     return emptyCartLabel;
   }

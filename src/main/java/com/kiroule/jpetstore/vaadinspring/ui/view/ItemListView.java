@@ -1,7 +1,5 @@
 package com.kiroule.jpetstore.vaadinspring.ui.view;
 
-import static java.lang.String.format;
-
 import com.kiroule.jpetstore.vaadinspring.domain.Product;
 import com.kiroule.jpetstore.vaadinspring.service.CatalogService;
 import com.kiroule.jpetstore.vaadinspring.ui.component.ItemListTable;
@@ -12,6 +10,8 @@ import com.vaadin.spring.annotation.SpringView;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
+
+import static java.lang.String.format;
 
 /**
  * @author Igor Baiborodine
@@ -46,6 +46,6 @@ public class ItemListView extends AbstractView {
 
   @Override
   public String getTitleLabelValue() {
-    return format("%s | %s", product.getName(), product.getProductId());
+    return format("%s | %s", product.getProductId(), product.getName());
   }
 }

@@ -22,6 +22,8 @@ import org.vaadin.viritin.fields.MTable;
 
 import java.math.BigDecimal;
 
+import static java.lang.String.format;
+
 /**
  * @author Igor Baiborodine
  */
@@ -97,8 +99,13 @@ public class CartItemListTable extends MTable<CartItem> {
     if (isReadOnly()) {
       productItemForm.getAddToCartButton().setEnabled(false);
     }
-    productItemForm.setEntity((Item) event.getButton().getData());
-    productItemForm.openInModalPopup().setCaption("View Details");
+    Item item = (Item) event.getButton().getData();
+    productItemForm.setEntity(item);
+    productItemForm.openInModalPopup().setCaption(getPopupCaption(item));
+  }
+
+  private String getPopupCaption(Item item) {
+    return format("%s | %s", item.getProductId(), item.getProduct().getName());
   }
 
   private String convertToCurrencyPresentation(BigDecimal value) {

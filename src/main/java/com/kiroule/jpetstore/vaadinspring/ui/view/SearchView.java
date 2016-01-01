@@ -1,17 +1,22 @@
 package com.kiroule.jpetstore.vaadinspring.ui.view;
 
-import static java.lang.String.format;
-
+import com.kiroule.jpetstore.vaadinspring.domain.Product;
 import com.kiroule.jpetstore.vaadinspring.service.CatalogService;
 import com.kiroule.jpetstore.vaadinspring.ui.component.ProductListTable;
+import com.kiroule.jpetstore.vaadinspring.ui.theme.JPetStoreTheme;
 import com.kiroule.jpetstore.vaadinspring.ui.util.ViewConfig;
 import com.kiroule.jpetstore.vaadinspring.ui.util.ViewConfigUtil;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
+import com.vaadin.ui.Label;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+
 import javax.annotation.PostConstruct;
+
+import static java.lang.String.format;
 
 /**
  * @author Igor Baiborodine
@@ -29,23 +34,37 @@ public class SearchView extends AbstractView {
   @Autowired
   private ProductListTable productListTable;
 
+  private Label noResultLabel;
   private String keyword;
+  private String noResultMessage = "Your search \"%s\" did not match any products.";
 
   @PostConstruct
   public void init() {
-    addComponents(initTitleLabel(), productListTable);
+    addComponents(initTitleLabel(), initNoResultLabel(), productListTable);
     setSizeFull();
-    expand(productListTable);
   }
 
   @Override
   public void executeOnEnter(ViewChangeListener.ViewChangeEvent event) {
+
     keyword = event.getParameters();
-    productListTable.setBeans(catalogService.searchProductList(keyword));
+    List<Product> products = catalogService.searchProductList(keyword);
+    noResultLabel.setValue(format(noResultMessage, keyword));
+    noResultLabel.setVisible(products.isEmpty());
+
+    productListTable.setBeans(products);
+    productListTable.setVisible(!products.isEmpty());
+    expand(products.isEmpty() ? noResultLabel : productListTable);
   }
 
   @Override
   public String getTitleLabelValue() {
     return format("%s | %s", ViewConfigUtil.getDisplayName(this.getClass()), keyword);
+  }
+
+  private Label initNoResultLabel() {
+    noResultLabel = new Label(noResultMessage);
+    noResultLabel.setStyleName(JPetStoreTheme.VIEW_LABEL_MEDIUM);
+    return noResultLabel;
   }
 }
