@@ -3,6 +3,9 @@ jpetstore-6-vaadin-spring-boot
 [![Build
 Status](https://travis-ci.org/igor-baiborodine/jpetstore-6-vaadin-spring-boot.svg?branch=master)](https://travis-ci.org/igor-baiborodine/jpetstore-6-vaadin-spring-boot)
 
+> UPDATES
+* 2017-03-01  Upgrade to Vaadin 7.7.7
+
 #####This project is an exercise to port the original [JPetStore-6](https://github.com/mybatis/jpetstore-6) to Vaadin and Spring Boot with JavaConfig.
 
 ######Deployment on the OpenShift PaaS: http://jpetstore-kiroule.rhcloud.com/
