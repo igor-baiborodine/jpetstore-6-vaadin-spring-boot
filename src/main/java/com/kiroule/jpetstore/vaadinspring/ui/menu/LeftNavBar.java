@@ -35,7 +35,7 @@ public class LeftNavBar extends CssLayout {
     addStyleName(JPetStoreTheme.MENU_ROOT);
     addStyleName(JPetStoreTheme.LEFT_MENU);
 
-    Label logo = new Label("<strong>JPetStore 6 Demo Vaadin</strong>", ContentMode.HTML);
+    Label logo = new Label("<strong>JPetStore Vaadin 7 Demo</strong>", ContentMode.HTML);
     logo.addStyleName(JPetStoreTheme.MENU_TITLE);
     addComponent(logo);
     addButton("BIRDS", "Birds");

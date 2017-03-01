@@ -26,7 +26,6 @@ import com.kiroule.jpetstore.vaadinspring.ui.view.HomeView;
 import com.kiroule.jpetstore.vaadinspring.ui.view.ItemListView;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
-import com.vaadin.annotations.Widgetset;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinSession;
@@ -47,9 +46,8 @@ import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.SHOPPIN
 /**
  * @author Igor Baiborodine
  */
-@Title("JPetStore 6 Demo Vaadin Spring")
+@Title("JPetStore Vaadin 7 Spring Demo")
 @Theme("jpetstoretheme")
-@Widgetset("JPetStore6Widgetset")
 @SpringUI
 public class MainUI extends UI {
 
