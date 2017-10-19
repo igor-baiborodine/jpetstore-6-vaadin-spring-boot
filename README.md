@@ -8,10 +8,6 @@ Status](https://travis-ci.org/igor-baiborodine/jpetstore-6-vaadin-spring-boot.sv
 
 #### This project is an exercise to port the original [JPetStore-6](https://github.com/mybatis/jpetstore-6) to Vaadin and Spring Boot with JavaConfig.
 
-#### Deployment on the OpenShift PaaS: http://jpetstore-kiroule.rhcloud.com/
-
-NOTE: Since an in-memory database is used, all accounts and orders data will be lost whenever the application is re-started or re-deployed.
-
 #### Run with Maven:
 ```bash
 git clone https://github.com/igor-baiborodine/jpetstore-6-vaadin-spring-boot.git
