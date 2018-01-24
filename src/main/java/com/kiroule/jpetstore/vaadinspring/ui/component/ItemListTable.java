@@ -12,7 +12,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.vaadin.viritin.fields.MTable;
+import org.vaadin.viritinv7.fields.MTable;
 
 import static java.lang.String.format;
 

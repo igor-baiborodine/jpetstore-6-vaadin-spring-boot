@@ -14,11 +14,15 @@ import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
+import com.vaadin.v7.data.Validator;
+import com.vaadin.v7.data.validator.RegexpValidator;
+import com.vaadin.v7.ui.TextField;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.vaadin.risto.stepper.IntStepper;
-import org.vaadin.viritin.fields.MTable;
+import org.vaadin.viritinv7.fields.MTable;
+import org.vaadin.viritinv7.fields.MTextField;
 
 import java.math.BigDecimal;
 
@@ -61,7 +65,7 @@ public class CartItemListTable extends MTable<CartItem> {
     withGeneratedColumn("productId", cartItem -> cartItem.getItem().getProductId());
     withGeneratedColumn("description",
         cartItem -> cartItem.getItem().getAttribute1() + " " + cartItem.getItem().getProduct().getName());
-    withGeneratedColumn("quantity", this::createQuantityStepper);
+    withGeneratedColumn("quantity", this::createQuantityField);
     withGeneratedColumn("removeFromCart",
         cartItem -> new Button("Remove", event -> {
           if (CurrentCart.isEmpty()) {
@@ -76,23 +80,50 @@ public class CartItemListTable extends MTable<CartItem> {
     withFullWidth();
   }
 
-  private IntStepper createQuantityStepper(CartItem cartItem) {
+  private TextField createQuantityField(CartItem cartItem) {
+    final TextField quantityField = new MTextField();
+    quantityField.setNullSettingAllowed(false);
+    quantityField.setWidth(60f, Unit.PIXELS);
+    quantityField.addStyleName("align-right");
+    quantityField.setValue(String.valueOf(cartItem.getQuantity()));
+    final RegexpValidator regexpValidator = new RegexpValidator("\\d+", "Numeric values only");
 
-    IntStepper quantityStepper = new IntStepper();
-    quantityStepper.setMinValue(1);
-    quantityStepper.setMaxValue(99);
-    quantityStepper.setWidth(60f, Unit.PIXELS);
-    quantityStepper.setManualInputAllowed(false);
-    quantityStepper.setValue(cartItem.getQuantity());
-    quantityStepper.addValueChangeListener(event -> {
-      if (CartItemListTable.this.isReadOnly()) {
-        event.getProperty().setValue(cartItem.getQuantity());
-        return;
-      }
-      Integer newQuantity = (Integer) event.getProperty().getValue();
-      UIEventBus.post(new UIChangeCartItemQuantityEvent(cartItem.getItem(), newQuantity - cartItem.getQuantity()));
+    quantityField.addValueChangeListener((ValueChangeListener) event -> {
+        if (((String) event.getProperty().getValue()).isEmpty()) {
+          Notification.show("Must not be empty", Notification.Type.ERROR_MESSAGE);
+          return;
+        }
+        boolean valid = true;
+        try {
+          regexpValidator.validate(event.getProperty().getValue());
+        } catch (Validator.InvalidValueException e) {
+          valid = false;
+        }
+        if (valid) {
+          Integer newQuantity = Integer.valueOf((String) event.getProperty().getValue());
+          UIEventBus.post(new UIChangeCartItemQuantityEvent(
+              cartItem.getItem(), newQuantity - cartItem.getQuantity()));
+        } else {
+          Notification.show("Numeric values only", Notification.Type.ERROR_MESSAGE);
+        }
     });
-    return quantityStepper;
+    return quantityField;
+// TODO: use stepper after migrating to v8 without v7 compatibility mode
+//    IntStepper quantityStepper = new IntStepper();
+//    quantityStepper.setMinValue(1);
+//    quantityStepper.setMaxValue(99);
+//    quantityStepper.setWidth(60f, Unit.PIXELS);
+//    quantityStepper.setManualInputAllowed(false);
+//    quantityStepper.setValue(cartItem.getQuantity());
+//    quantityStepper.addValueChangeListener(event -> {
+//      if (CartItemListTable.this.isReadOnly()) {
+//        event.getSource().setValue(cartItem.getQuantity());
+//        return;
+//      }
+//      Integer newQuantity = event.getSource().getValue();
+//      UIEventBus.post(new UIChangeCartItemQuantityEvent(cartItem.getItem(), newQuantity - cartItem.getQuantity()));
+//    });
+//    return quantityStepper;
   }
 
   private void viewDetails(Button.ClickEvent event) {

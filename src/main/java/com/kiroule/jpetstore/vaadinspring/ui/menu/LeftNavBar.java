@@ -5,12 +5,12 @@ import com.kiroule.jpetstore.vaadinspring.ui.event.UINavigationEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.theme.JPetStoreTheme;
 import com.kiroule.jpetstore.vaadinspring.ui.util.NavBarButtonUpdater;
 import com.kiroule.jpetstore.vaadinspring.ui.view.ProductListView;
-import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.v7.shared.ui.label.ContentMode;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.Label;
+import com.vaadin.v7.ui.Label;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -35,7 +35,7 @@ public class LeftNavBar extends CssLayout {
     addStyleName(JPetStoreTheme.MENU_ROOT);
     addStyleName(JPetStoreTheme.LEFT_MENU);
 
-    Label logo = new Label("<strong>JPetStore Vaadin 7 Demo</strong>", ContentMode.HTML);
+    Label logo = new Label("<strong>JPetStore Vaadin 8 Demo</strong>", ContentMode.HTML);
     logo.addStyleName(JPetStoreTheme.MENU_TITLE);
     addComponent(logo);
     addButton("BIRDS", "Birds");

@@ -2,23 +2,23 @@ package com.kiroule.jpetstore.vaadinspring.ui.form;
 
 import com.google.common.collect.Lists;
 
-import com.eijsink.vaadin.components.formcheckbox.FormCheckBox;
 import com.kiroule.jpetstore.vaadinspring.domain.BillingDetails;
 import com.kiroule.jpetstore.vaadinspring.ui.theme.JPetStoreTheme;
-import com.vaadin.data.Validator;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.ViewScope;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Field;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.TextField;
+import com.vaadin.v7.ui.CheckBox;
+import com.vaadin.v7.data.Validator;
+import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.v7.ui.Field;
+import com.vaadin.v7.ui.TextField;
 
-import org.vaadin.viritin.fields.MTextField;
-import org.vaadin.viritin.form.AbstractForm;
 import org.vaadin.viritin.layouts.MFormLayout;
 import org.vaadin.viritin.layouts.MVerticalLayout;
+import org.vaadin.viritinv7.fields.MTextField;
+import org.vaadin.viritinv7.form.AbstractForm;
 
 import javax.annotation.PostConstruct;
 
@@ -47,7 +47,7 @@ public class BillingDetailsForm extends AbstractForm<BillingDetails> {
   private TextField state = new MTextField("State").withNullRepresentation("");
   private TextField zip = new MTextField("ZIP Code").withNullRepresentation("");
   private TextField country = new MTextField("Country").withNullRepresentation("");
-  private FormCheckBox shipToDifferentAddress = new FormCheckBox("Ship to Different Address", false);
+  private CheckBox shipToDifferentAddress = new CheckBox("Ship to Different Address", false);
 
   @PostConstruct
   public void init() {

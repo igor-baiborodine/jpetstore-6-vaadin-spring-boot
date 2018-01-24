@@ -21,9 +21,9 @@ import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.Label;
+import com.vaadin.v7.ui.Label;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.TextField;
+import com.vaadin.v7.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
 
@@ -86,7 +86,8 @@ public class TopNavBar extends CssLayout {
       final Window popup = signinForm.openInModalWidow();
       signinForm.addLoginListener(loginEvent -> {
         try {
-          Account account = loginService.login(loginEvent.getUserName(), loginEvent.getPassword());
+          Account account = loginService.login(loginEvent.getLoginParameter("username"),
+              loginEvent.getLoginParameter("password"));
           UIEventBus.post(new UILoginEvent(account));
           UI.getCurrent().removeWindow(popup);
         } catch (LoginException e) {

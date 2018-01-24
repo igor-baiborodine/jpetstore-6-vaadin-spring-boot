@@ -26,14 +26,15 @@ import com.kiroule.jpetstore.vaadinspring.ui.view.HomeView;
 import com.kiroule.jpetstore.vaadinspring.ui.view.ItemListView;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
+import com.vaadin.annotations.Widgetset;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.spring.navigator.SpringViewProvider;
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.HorizontalLayout;
+import com.vaadin.v7.ui.VerticalLayout;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,8 +47,9 @@ import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.SHOPPIN
 /**
  * @author Igor Baiborodine
  */
-@Title("JPetStore Vaadin 7 Spring Demo")
+@Title("JPetStore Vaadin 8 Spring Demo")
 @Theme("jpetstoretheme")
+@Widgetset("com.vaadin.v7.Vaadin7WidgetSet")
 @SpringUI
 public class MainUI extends UI {
 

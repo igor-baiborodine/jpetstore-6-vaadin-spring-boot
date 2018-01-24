@@ -1,9 +1,5 @@
 package com.kiroule.jpetstore.vaadinspring.ui.form;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
-import static com.google.common.collect.Lists.newArrayList;
-import static com.vaadin.data.Validator.InvalidValueException;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -13,24 +9,24 @@ import com.kiroule.jpetstore.vaadinspring.domain.Banner;
 import com.kiroule.jpetstore.vaadinspring.domain.Category;
 import com.kiroule.jpetstore.vaadinspring.service.CatalogService;
 import com.kiroule.jpetstore.vaadinspring.ui.theme.JPetStoreTheme;
-import com.vaadin.data.Validator;
-import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.ViewScope;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Field;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.PasswordField;
+import com.vaadin.v7.data.Validator;
+import com.vaadin.v7.shared.ui.label.ContentMode;
+import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.v7.ui.Field;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.v7.ui.Label;
+import com.vaadin.v7.ui.PasswordField;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.vaadin.viritin.fields.MTextField;
-import org.vaadin.viritin.form.AbstractForm;
 import org.vaadin.viritin.layouts.MFormLayout;
 import org.vaadin.viritin.layouts.MVerticalLayout;
+import org.vaadin.viritinv7.fields.MTextField;
+import org.vaadin.viritinv7.form.AbstractForm;
 
 import java.util.Comparator;
 import java.util.List;
@@ -38,6 +34,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
+
+import static com.google.common.base.Strings.isNullOrEmpty;
+import static com.google.common.collect.Lists.newArrayList;
 
 /**
  * @author Igor Baiborodine
@@ -128,7 +127,7 @@ public class AccountForm extends AbstractForm<Account> {
         field.validate();
       });
       validatePasswordConfirmation();
-    } catch (InvalidValueException e) {
+    } catch (Validator.InvalidValueException e) {
       Notification.show(e.getMessage(), Notification.Type.ERROR_MESSAGE);
       return false;
     }
@@ -143,8 +142,9 @@ public class AccountForm extends AbstractForm<Account> {
     address1.setStyleName(JPetStoreTheme.WIDE_TEXT_FIELD);
     address2.setStyleName(JPetStoreTheme.WIDE_TEXT_FIELD);
 
-    listOption.setImmediate(true);
-    bannerOption.setImmediate(true);
+    // TODO: investigate if it's needed in v.8
+//    listOption.setImmediate(true);
+//    bannerOption.setImmediate(true);
 
     bannerImage.setCaption("Banner Image");
     bannerImage.setContentMode(ContentMode.HTML);

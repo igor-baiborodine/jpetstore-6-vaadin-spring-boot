@@ -8,7 +8,7 @@ import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.Button;
 
-import org.vaadin.viritin.fields.MTable;
+import org.vaadin.viritinv7.fields.MTable;
 
 /**
  * @author Igor Baiborodine

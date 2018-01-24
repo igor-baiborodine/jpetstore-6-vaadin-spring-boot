@@ -5,19 +5,19 @@ import com.kiroule.jpetstore.vaadinspring.ui.converter.CurrencyConverter;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UIAddItemToCartEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
 import com.kiroule.jpetstore.vaadinspring.ui.theme.JPetStoreTheme;
-import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.v7.shared.ui.label.ContentMode;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.TextField;
+import com.vaadin.v7.ui.Label;
+import com.vaadin.v7.ui.TextField;
 import com.vaadin.ui.UI;
 
-import org.vaadin.viritin.MBeanFieldGroup;
+import org.vaadin.viritinv7.MBeanFieldGroup;
 import org.vaadin.viritin.button.MButton;
-import org.vaadin.viritin.fields.MTextField;
-import org.vaadin.viritin.form.AbstractForm;
+import org.vaadin.viritinv7.fields.MTextField;
+import org.vaadin.viritinv7.form.AbstractForm;
 import org.vaadin.viritin.layouts.MFormLayout;
 import org.vaadin.viritin.layouts.MVerticalLayout;
 
@@ -71,7 +71,7 @@ public class ProductItemForm extends AbstractForm<Item> {
   @Override
   public void setReadOnly(boolean readOnly) {
 
-    super.setReadOnly(readOnly);
+    //super.setReadOnly(readOnly);
     itemId.setReadOnly(readOnly);
     itemDescription.setReadOnly(readOnly);
     productDescription.setReadOnly(readOnly);

@@ -1,6 +1,5 @@
 package com.kiroule.jpetstore.vaadinspring.ui.form;
 
-import com.ejt.vaadin.loginform.LoginForm;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UINavigationEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.theme.JPetStoreTheme;
@@ -11,6 +10,7 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.LoginForm;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
@@ -31,7 +31,7 @@ public class SigninForm extends LoginForm {
   private Window popup;
 
   @Override
-  protected Component createContent(TextField usernameField, PasswordField passwordField, Button loginButton) {
+  public Component createContent(TextField usernameField, PasswordField passwordField, Button loginButton) {
 
     MVerticalLayout layout = new MVerticalLayout(usernameField, passwordField, loginButton);
     usernameField.setWidth(100f, Unit.PERCENTAGE);
@@ -58,7 +58,7 @@ public class SigninForm extends LoginForm {
   }
 
   @Override
-  protected String getUserNameFieldCaption() {
+  public String getUsernameCaption() {
     return "Username";
   }
 

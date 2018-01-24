@@ -1,6 +1,6 @@
 package com.kiroule.jpetstore.vaadinspring.ui.converter;
 
-import com.vaadin.data.util.converter.Converter;
+import com.vaadin.v7.data.util.converter.Converter;
 
 import java.util.Locale;
 

@@ -1,12 +1,5 @@
 package com.kiroule.jpetstore.vaadinspring.ui.view;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
-import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key;
-import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.BILLING_DETAILS;
-import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.SHIPPING_DETAILS;
-import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.SHOPPING_CART;
-import static java.lang.String.format;
-
 import com.kiroule.jpetstore.vaadinspring.domain.Account;
 import com.kiroule.jpetstore.vaadinspring.domain.BillingDetails;
 import com.kiroule.jpetstore.vaadinspring.domain.Cart;
@@ -24,14 +17,14 @@ import com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart;
 import com.kiroule.jpetstore.vaadinspring.ui.util.ViewConfig;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.ThemeResource;
-import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Image;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
+import com.vaadin.v7.shared.ui.label.ContentMode;
+import com.vaadin.v7.ui.Label;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.viritin.button.MButton;
@@ -42,6 +35,13 @@ import org.vaadin.viritin.layouts.MVerticalLayout;
 import java.math.BigDecimal;
 
 import javax.annotation.PostConstruct;
+
+import static com.google.common.base.Strings.isNullOrEmpty;
+import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key;
+import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.BILLING_DETAILS;
+import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.SHIPPING_DETAILS;
+import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.SHOPPING_CART;
+import static java.lang.String.format;
 
 /**
  * @author Igor Baiborodine
@@ -67,6 +67,7 @@ public class ConfirmOrderView extends AbstractView {
   private MButton placeOrderButton = createPlaceOrderButton();
   private MButton viewOrdersButton = createViewOrdersButton();
   private Label subtotalLabel = createSubtotalLabel();
+
 
   @PostConstruct
   void init() {
