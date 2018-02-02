@@ -5,8 +5,8 @@ Status](https://travis-ci.org/igor-baiborodine/jpetstore-6-vaadin-spring-boot.sv
 
 > UPDATES
 * IN PROGRESS Refactor to vaadin-spring v2.1.0beta2
-* 2018-01-23 Upgrade to Vaadin v8.1.5 (v7 compatibility mode)
-* 2017-03-01 Update to Vaadin v7.7.7
+* 2018-01-23 Upgrade to Vaadin v8.1.5 (v7 compatibility mode) | [**b8dcad0**](https://github.com/igor-baiborodine/jpetstore-6-vaadin-spring-boot/commit/b8dcad0fa6ca1a8e921bbe0f59d4851d5c6d2ffa)
+* 2017-03-01 Update to Vaadin v7.7.7 | [**3bd973a**](https://github.com/igor-baiborodine/jpetstore-6-vaadin-spring-boot/commit/3bd973a979c983ee97ca882da7168eb7c4633f78)
 
 #### This project is an exercise to port the original [JPetStore-6](https://github.com/mybatis/jpetstore-6) to Vaadin and Spring Boot with JavaConfig.
 
