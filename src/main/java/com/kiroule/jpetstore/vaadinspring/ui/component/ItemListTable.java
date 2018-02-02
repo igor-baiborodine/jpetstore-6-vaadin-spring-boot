@@ -6,6 +6,7 @@ import com.kiroule.jpetstore.vaadinspring.ui.event.UIAddItemToCartEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
 import com.kiroule.jpetstore.vaadinspring.ui.form.ProductItemForm;
 import com.kiroule.jpetstore.vaadinspring.ui.theme.JPetStoreTheme;
+import com.kiroule.jpetstore.vaadinspring.ui.util.HasUIEventBus;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.Button;
@@ -21,12 +22,14 @@ import static java.lang.String.format;
  */
 @SpringComponent
 @ViewScope
-public class ItemListTable extends MTable<Item> {
+public class ItemListTable extends MTable<Item> implements HasUIEventBus {
 
   private static final long serialVersionUID = -2847546238729364925L;
 
   @Autowired
   private ProductItemForm productItemForm;
+  @Autowired
+  private UIEventBus uiEventBus;
 
   public ItemListTable() {
 
@@ -44,7 +47,7 @@ public class ItemListTable extends MTable<Item> {
     });
     withGeneratedColumn("description", item -> item.getAttribute1() + " " + item.getProduct().getName());
     withGeneratedColumn("addToCart",
-            item -> new Button("Add to Cart", event -> UIEventBus.post(new UIAddItemToCartEvent(item))));
+            item -> new Button("Add to Cart", event -> getUIEventBus().post(new UIAddItemToCartEvent(item))));
     setConverter("listPrice", new CurrencyConverter());
     withFullWidth();
   }

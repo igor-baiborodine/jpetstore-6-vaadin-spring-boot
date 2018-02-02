@@ -40,7 +40,7 @@ public class ShippingDetailsView extends AbstractView {
         return;
       }
       CurrentCart.set(SHIPPING_DETAILS, shippingDetails);
-      UIEventBus.post(new UINavigationEvent(ConfirmOrderView.VIEW_NAME));
+      getUIEventBus().post(new UINavigationEvent(ConfirmOrderView.VIEW_NAME));
     });
     shippingDetailsForm.setResetHandler(shippingDetails -> shippingDetailsForm.clear());
 
@@ -54,7 +54,7 @@ public class ShippingDetailsView extends AbstractView {
   public void executeOnEnter(ViewChangeListener.ViewChangeEvent event) {
 
     if (CurrentCart.isEmpty() || CurrentCart.get(BILLING_DETAILS) == null) {
-      UIEventBus.post(new UINavigationEvent(CartView.VIEW_NAME));
+      getUIEventBus().post(new UINavigationEvent(CartView.VIEW_NAME));
       return;
     }
     shippingDetailsForm.setEntity(new ShippingDetails());

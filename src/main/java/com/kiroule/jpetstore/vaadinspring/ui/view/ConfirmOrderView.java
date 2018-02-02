@@ -9,7 +9,6 @@ import com.kiroule.jpetstore.vaadinspring.domain.ShippingDetails;
 import com.kiroule.jpetstore.vaadinspring.service.OrderService;
 import com.kiroule.jpetstore.vaadinspring.ui.component.CartItemListTable;
 import com.kiroule.jpetstore.vaadinspring.ui.converter.CurrencyConverter;
-import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UINavigationEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.theme.JPetStoreTheme;
 import com.kiroule.jpetstore.vaadinspring.ui.util.CurrentAccount;
@@ -97,7 +96,7 @@ public class ConfirmOrderView extends AbstractView {
     if (CurrentCart.isEmpty()
         || CurrentCart.get(BILLING_DETAILS) == null
         || CurrentCart.get(SHIPPING_DETAILS) == null) {
-      UIEventBus.post(new UINavigationEvent(CartView.VIEW_NAME));
+      getUIEventBus().post(new UINavigationEvent(CartView.VIEW_NAME));
       return;
     }
     Cart cart = (Cart) CurrentCart.get(SHOPPING_CART);
@@ -138,7 +137,7 @@ public class ConfirmOrderView extends AbstractView {
 
   private MButton createViewOrdersButton() {
     return new MButton("View Your Orders")
-        .withListener(event -> UIEventBus.post(new UINavigationEvent(OrderListView.VIEW_NAME)));
+        .withListener(event -> getUIEventBus().post(new UINavigationEvent(OrderListView.VIEW_NAME)));
   }
 
   private String formatSubtotal(BigDecimal subtotal) {

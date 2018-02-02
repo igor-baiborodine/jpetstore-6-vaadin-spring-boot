@@ -1,8 +1,8 @@
 package com.kiroule.jpetstore.vaadinspring.ui.form;
 
-import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UINavigationEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.theme.JPetStoreTheme;
+import com.kiroule.jpetstore.vaadinspring.ui.util.HasUIEventBus;
 import com.kiroule.jpetstore.vaadinspring.ui.view.NewAccountView;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
@@ -24,7 +24,7 @@ import org.vaadin.viritin.layouts.MVerticalLayout;
  */
 @SpringComponent
 @UIScope
-public class SigninForm extends LoginForm {
+public class SigninForm extends LoginForm implements HasUIEventBus {
 
   private static final long serialVersionUID = 155111914696296557L;
 
@@ -46,7 +46,7 @@ public class SigninForm extends LoginForm {
     Button createAccountButton = new Button("Start Here!");
     createAccountButton.addStyleName(JPetStoreTheme.BUTTON_LINK);
     createAccountButton.addClickListener(event -> {
-      UIEventBus.post(new UINavigationEvent(NewAccountView.VIEW_NAME));
+      getUIEventBus().post(new UINavigationEvent(NewAccountView.VIEW_NAME));
       UI.getCurrent().removeWindow(popup);
     });
     newCustomerLayout.add(createAccountButton);

@@ -1,15 +1,15 @@
 package com.kiroule.jpetstore.vaadinspring.ui.menu;
 
-import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UINavigationEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.theme.JPetStoreTheme;
+import com.kiroule.jpetstore.vaadinspring.ui.util.HasUIEventBus;
 import com.kiroule.jpetstore.vaadinspring.ui.util.NavBarButtonUpdater;
 import com.kiroule.jpetstore.vaadinspring.ui.view.ProductListView;
-import com.vaadin.v7.shared.ui.label.ContentMode;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.v7.shared.ui.label.ContentMode;
 import com.vaadin.v7.ui.Label;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ import javax.annotation.PostConstruct;
  */
 @SpringComponent
 @UIScope
-public class LeftNavBar extends CssLayout {
+public class LeftNavBar extends CssLayout implements HasUIEventBus {
 
   private static final long serialVersionUID = 3267397700833804590L;
 
@@ -48,7 +48,7 @@ public class LeftNavBar extends CssLayout {
   private void addButton(String categoryId, String displayName) {
 
     String uri = ProductListView.VIEW_NAME + "/" + categoryId;
-    Button viewButton = new Button(displayName, click -> UIEventBus.post(new UINavigationEvent(uri)));
+    Button viewButton = new Button(displayName, click -> getUIEventBus().post(new UINavigationEvent(uri)));
     navBarButtonUpdater.mapButtonToUri(uri, viewButton);
 
     viewButton.addStyleName(JPetStoreTheme.MENU_ITEM);

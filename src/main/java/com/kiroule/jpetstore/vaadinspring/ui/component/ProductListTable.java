@@ -1,8 +1,8 @@
 package com.kiroule.jpetstore.vaadinspring.ui.component;
 
 import com.kiroule.jpetstore.vaadinspring.domain.Product;
-import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UINavigationEvent;
+import com.kiroule.jpetstore.vaadinspring.ui.util.HasUIEventBus;
 import com.kiroule.jpetstore.vaadinspring.ui.view.ItemListView;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.ViewScope;
@@ -15,7 +15,7 @@ import org.vaadin.viritinv7.fields.MTable;
  */
 @SpringComponent
 @ViewScope
-public class ProductListTable extends MTable<Product> {
+public class ProductListTable extends MTable<Product> implements HasUIEventBus {
 
   private static final long serialVersionUID = 2029031508462137840L;
 
@@ -27,7 +27,7 @@ public class ProductListTable extends MTable<Product> {
     withGeneratedColumn("productId", entity -> {
       String uri = ItemListView.VIEW_NAME + "/" + entity.getProductId();
       Button inventoryButton = new Button(entity.getProductId(),
-          event -> UIEventBus.post(new UINavigationEvent(uri)));
+          event -> getUIEventBus().post(new UINavigationEvent(uri)));
       inventoryButton.setData(entity.getProductId());
       inventoryButton.addStyleName("link");
       return inventoryButton;

@@ -1,6 +1,5 @@
 package com.kiroule.jpetstore.vaadinspring.ui;
 
-import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
 import com.kiroule.jpetstore.vaadinspring.domain.Account;
@@ -17,27 +16,20 @@ import com.kiroule.jpetstore.vaadinspring.ui.menu.LeftNavBar;
 import com.kiroule.jpetstore.vaadinspring.ui.menu.TopNavBar;
 import com.kiroule.jpetstore.vaadinspring.ui.util.CurrentAccount;
 import com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart;
+import com.kiroule.jpetstore.vaadinspring.ui.util.HasLogger;
+import com.kiroule.jpetstore.vaadinspring.ui.util.HasUIEventBus;
 import com.kiroule.jpetstore.vaadinspring.ui.util.NavBarButtonUpdater;
-import com.kiroule.jpetstore.vaadinspring.ui.util.PageTitleUpdater;
 import com.kiroule.jpetstore.vaadinspring.ui.view.AccountView;
 import com.kiroule.jpetstore.vaadinspring.ui.view.AuthRequiredView;
 import com.kiroule.jpetstore.vaadinspring.ui.view.CartView;
 import com.kiroule.jpetstore.vaadinspring.ui.view.HomeView;
 import com.kiroule.jpetstore.vaadinspring.ui.view.ItemListView;
-import com.vaadin.annotations.Theme;
-import com.vaadin.annotations.Title;
-import com.vaadin.annotations.Widgetset;
-import com.vaadin.navigator.Navigator;
-import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.spring.annotation.SpringUI;
-import com.vaadin.spring.navigator.SpringViewProvider;
-import com.vaadin.ui.UI;
+import com.vaadin.spring.annotation.SpringComponent;
+import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.v7.ui.HorizontalLayout;
 import com.vaadin.v7.ui.VerticalLayout;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static com.kiroule.jpetstore.vaadinspring.ui.menu.TopNavBar.SIGNIN_BUTTON_URI;
@@ -47,76 +39,44 @@ import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.SHOPPIN
 /**
  * @author Igor Baiborodine
  */
-@Title("JPetStore Vaadin 8 Spring Demo")
-@Theme("jpetstoretheme")
-@Widgetset("com.vaadin.v7.Vaadin7WidgetSet")
-@SpringUI
-public class MainUI extends UI {
+@SpringComponent
+@UIScope
+class MainView extends HorizontalLayout implements HasLogger, HasUIEventBus {
 
-  private static final long serialVersionUID = 4670701701584923650L;
-  private final static Logger logger = LoggerFactory.getLogger(MainUI.class);
+  private static final long serialVersionUID = 7419653252582861360L;
+
+  private final LeftNavBar leftNavBar;
+  private final TopNavBar topNavBar;
+  private final CatalogService catalogService;
+  private final NavBarButtonUpdater navBarButtonUpdater;
+  private final VerticalLayout viewLayout = new VerticalLayout();
+  private final VerticalLayout viewContainer = new VerticalLayout();
 
   @Autowired
-  private SpringViewProvider viewProvider;
-  @Autowired
-  private TopNavBar topNavBar;
-  @Autowired
-  private LeftNavBar leftNavBar;
-  @Autowired
-  private PageTitleUpdater pageTitleUpdater;
-  @Autowired
-  private NavBarButtonUpdater navBarButtonUpdater;
-  @Autowired
-  private CatalogService catalogService;
+  public MainView(LeftNavBar leftNavBar, TopNavBar topNavBar,
+                  CatalogService catalogService, NavBarButtonUpdater navBarButtonUpdater) {
+    super();
+    this.leftNavBar = leftNavBar;
+    this.topNavBar = topNavBar;
+    this.catalogService = catalogService;
+    this.navBarButtonUpdater = navBarButtonUpdater;
 
-  private EventBus eventBus;
+    setSizeFull();
+    addComponent(this.leftNavBar);
 
-  public static MainUI getCurrent() {
-    return (MainUI) UI.getCurrent();
-  }
-
-  public static EventBus getEventBus() {
-    return getCurrent().eventBus;
-  }
-
-  @Override
-  protected void init(VaadinRequest request) {
-    initEventBus();
-    initMainContent();
-    logger.info("Finished initialization of main UI");
-  }
-
-  private void initEventBus() {
-    eventBus = new EventBus((throwable, subscriberExceptionContext) -> {
-      logger.error("Subscriber event error: ", throwable);
-    });
-    eventBus.register(this);
-  }
-
-  private void initMainContent() {
-
-    HorizontalLayout contentLayout = new HorizontalLayout();
-    contentLayout.setSizeFull();
-    setContent(contentLayout);
-
-    contentLayout.addComponent(leftNavBar);
-
-    VerticalLayout viewLayout = new VerticalLayout();
     viewLayout.setSizeFull();
-    contentLayout.addComponent(viewLayout);
-    contentLayout.setExpandRatio(viewLayout, 1.0f);
+    addComponent(viewLayout);
+    setExpandRatio(viewLayout, 1.0f);
+    viewLayout.addComponent(this.topNavBar);
 
-    viewLayout.addComponent(topNavBar);
-
-    VerticalLayout viewContainer = new VerticalLayout();
     viewContainer.setSizeFull();
     viewLayout.addComponent(viewContainer);
     viewLayout.setExpandRatio(viewContainer, 1.0f);
+    getLogger().info("Main view initialized");
+  }
 
-    Navigator navigator = new Navigator(this, viewContainer);
-    navigator.addProvider(viewProvider);
-    navigator.addViewChangeListener(navBarButtonUpdater);
-    navigator.addViewChangeListener(pageTitleUpdater);
+  public VerticalLayout getViewContainer() {
+    return viewContainer;
   }
 
   @Subscribe
@@ -134,7 +94,7 @@ public class MainUI extends UI {
     navBarButtonUpdater.setButtonVisible(SIGNOUT_BUTTON_URI, true);
     navBarButtonUpdater.clear();
 
-    String state = getNavigator().getState();
+    String state = AppUI.getCurrent().getNavigator().getState();
     String viewName = state.equals(AuthRequiredView.VIEW_NAME) ? HomeView.VIEW_NAME : state;
     navigateTo(viewName); // reloading the current view to display the banner
   }
@@ -153,7 +113,7 @@ public class MainUI extends UI {
   public void logout(UILogoutEvent event) {
 
     // Don't invalidate the underlying HTTP session if you are using it for something else
-    getPage().setLocation("/"); // redirect to the Home page
+    AppUI.getCurrent().getPage().setLocation("/"); // redirect to the Home page
     VaadinSession.getCurrent().getSession().invalidate();
     VaadinSession.getCurrent().close();
   }
@@ -170,7 +130,7 @@ public class MainUI extends UI {
 
     // If an item added from the Item list view, redirect to the Cart view;
     // otherwise reload the current view which could be either Cart or Confirm Order
-    String state = getNavigator().getState();
+    String state = AppUI.getCurrent().getNavigator().getState();
     String viewName = state.contains(ItemListView.VIEW_NAME) ? CartView.VIEW_NAME : state;
     navigateTo(viewName);
   }
@@ -180,7 +140,7 @@ public class MainUI extends UI {
 
     Cart cart = (Cart) CurrentCart.get(SHOPPING_CART);
     cart.removeItemById(event.getItem().getItemId());
-    String viewName = CurrentCart.isEmpty() ? CartView.VIEW_NAME : getNavigator().getState();
+    String viewName = CurrentCart.isEmpty() ? CartView.VIEW_NAME : AppUI.getCurrent().getNavigator().getState();
     navigateTo(viewName);
   }
 
@@ -188,10 +148,10 @@ public class MainUI extends UI {
   public void changeCartItemQuantity(UIChangeCartItemQuantityEvent event) {
     Cart cart = (Cart) CurrentCart.get(SHOPPING_CART);
     cart.changeQuantityByItemId(event.getItem().getItemId(), event.getDiff());
-    navigateTo(getNavigator().getState());
+    navigateTo(AppUI.getCurrent().getNavigator().getState());
   }
 
   private void navigateTo(String viewName) {
-    getNavigator().navigateTo(viewName);
+    AppUI.getCurrent().getNavigator().navigateTo(viewName);
   }
 }

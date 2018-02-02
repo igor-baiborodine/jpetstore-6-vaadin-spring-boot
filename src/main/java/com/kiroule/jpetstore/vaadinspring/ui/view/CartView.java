@@ -3,7 +3,6 @@ package com.kiroule.jpetstore.vaadinspring.ui.view;
 import com.kiroule.jpetstore.vaadinspring.domain.Cart;
 import com.kiroule.jpetstore.vaadinspring.ui.component.CartItemListTable;
 import com.kiroule.jpetstore.vaadinspring.ui.converter.CurrencyConverter;
-import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UINavigationEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.theme.JPetStoreTheme;
 import com.kiroule.jpetstore.vaadinspring.ui.util.CurrentAccount;
@@ -12,8 +11,8 @@ import com.kiroule.jpetstore.vaadinspring.ui.util.ViewConfig;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Alignment;
-import com.vaadin.v7.ui.Label;
 import com.vaadin.ui.UI;
+import com.vaadin.v7.ui.Label;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.viritin.button.MButton;
@@ -56,7 +55,7 @@ public class CartView extends AbstractView {
         .withListener(event -> {
           String viewName = CurrentAccount.isLoggedIn()
               ? BillingDetailsView.VIEW_NAME : AuthRequiredView.VIEW_NAME;
-          UIEventBus.post(new UINavigationEvent(viewName));
+          getUIEventBus().post(new UINavigationEvent(viewName));
         });
     MHorizontalLayout subtotalLayout = new MHorizontalLayout(subtotalLabel, checkOutButton);
     subtotalLayout.setComponentAlignment(subtotalLabel, Alignment.MIDDLE_LEFT);

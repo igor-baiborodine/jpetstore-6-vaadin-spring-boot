@@ -5,6 +5,7 @@ import com.kiroule.jpetstore.vaadinspring.ui.converter.CurrencyConverter;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UIAddItemToCartEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
 import com.kiroule.jpetstore.vaadinspring.ui.theme.JPetStoreTheme;
+import com.kiroule.jpetstore.vaadinspring.ui.util.HasUIEventBus;
 import com.vaadin.v7.shared.ui.label.ContentMode;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.ViewScope;
@@ -14,6 +15,7 @@ import com.vaadin.v7.ui.Label;
 import com.vaadin.v7.ui.TextField;
 import com.vaadin.ui.UI;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.viritinv7.MBeanFieldGroup;
 import org.vaadin.viritin.button.MButton;
 import org.vaadin.viritinv7.fields.MTextField;
@@ -28,9 +30,12 @@ import javax.annotation.PostConstruct;
  */
 @SpringComponent
 @ViewScope
-public class ProductItemForm extends AbstractForm<Item> {
+public class ProductItemForm extends AbstractForm<Item> implements HasUIEventBus {
 
   private static final long serialVersionUID = -3035656440388295692L;
+
+  @Autowired
+  private UIEventBus uiEventBus;
 
   private Label image = new Label();
   private TextField itemId = new MTextField("ID");
@@ -47,7 +52,7 @@ public class ProductItemForm extends AbstractForm<Item> {
     listPrice.setConverter(new CurrencyConverter());
     addToCartButton.addClickListener(event -> {
           UI.getCurrent().removeWindow(getPopup());
-          UIEventBus.post(new UIAddItemToCartEvent(getEntity()));
+          getUIEventBus().post(new UIAddItemToCartEvent(getEntity()));
         }
     );
     addToCartButton.focus();

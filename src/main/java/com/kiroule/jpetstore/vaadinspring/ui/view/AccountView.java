@@ -2,7 +2,6 @@ package com.kiroule.jpetstore.vaadinspring.ui.view;
 
 import com.kiroule.jpetstore.vaadinspring.domain.Account;
 import com.kiroule.jpetstore.vaadinspring.service.AccountService;
-import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UINavigationEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UIUpdateAccountEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.form.AccountForm;
@@ -48,12 +47,12 @@ public class AccountView extends AbstractView {
         accountService.updateAccount(account);
         accountForm.clear();
         showConfirmation("Your account has been updated.");
-        UIEventBus.post(new UIUpdateAccountEvent(account));
+        getUIEventBus().post(new UIUpdateAccountEvent(account));
       } catch (Throwable t) {
         Notification.show("An error occurred while updating account: " + t.getMessage(), ERROR_MESSAGE);
       }
     });
-    accountForm.setResetHandler(account -> UIEventBus.post(new UINavigationEvent(OrderListView.VIEW_NAME)));
+    accountForm.setResetHandler(account -> getUIEventBus().post(new UINavigationEvent(OrderListView.VIEW_NAME)));
 
     Panel contentPanel = new Panel(accountForm);
     addComponents(initTitleLabel(), contentPanel, accountForm.getToolbar(EDIT));

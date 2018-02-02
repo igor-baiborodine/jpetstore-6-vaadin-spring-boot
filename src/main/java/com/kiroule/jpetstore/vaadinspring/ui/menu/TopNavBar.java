@@ -2,13 +2,13 @@ package com.kiroule.jpetstore.vaadinspring.ui.menu;
 
 import com.kiroule.jpetstore.vaadinspring.domain.Account;
 import com.kiroule.jpetstore.vaadinspring.service.LoginService;
-import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UILoginEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UILogoutEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UINavigationEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.form.SigninForm;
 import com.kiroule.jpetstore.vaadinspring.ui.theme.JPetStoreTheme;
 import com.kiroule.jpetstore.vaadinspring.ui.util.CurrentAccount;
+import com.kiroule.jpetstore.vaadinspring.ui.util.HasUIEventBus;
 import com.kiroule.jpetstore.vaadinspring.ui.util.NavBarButtonUpdater;
 import com.kiroule.jpetstore.vaadinspring.ui.view.AccountView;
 import com.kiroule.jpetstore.vaadinspring.ui.view.CartView;
@@ -21,11 +21,11 @@ import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.v7.ui.Label;
 import com.vaadin.ui.Notification;
-import com.vaadin.v7.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
+import com.vaadin.v7.ui.Label;
+import com.vaadin.v7.ui.TextField;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -40,7 +40,7 @@ import static java.lang.String.format;
  */
 @SpringComponent
 @UIScope
-public class TopNavBar extends CssLayout {
+public class TopNavBar extends CssLayout implements HasUIEventBus {
 
   private static final long serialVersionUID = -4572532480213767784L;
 
@@ -88,7 +88,7 @@ public class TopNavBar extends CssLayout {
         try {
           Account account = loginService.login(loginEvent.getLoginParameter("username"),
               loginEvent.getLoginParameter("password"));
-          UIEventBus.post(new UILoginEvent(account));
+          getUIEventBus().post(new UILoginEvent(account));
           UI.getCurrent().removeWindow(popup);
         } catch (LoginException e) {
           Notification.show(e.getMessage(), Notification.Type.WARNING_MESSAGE);
@@ -101,7 +101,7 @@ public class TopNavBar extends CssLayout {
     signoutButton = addButton(SIGNOUT_BUTTON_URI, "Sign out", event -> {
       signoutButton.setVisible(false);
       signinButton.setVisible(true);
-      UIEventBus.post(new UILogoutEvent());
+      getUIEventBus().post(new UILogoutEvent());
     });
     signoutButton.setVisible(CurrentAccount.isLoggedIn());
 
@@ -118,12 +118,12 @@ public class TopNavBar extends CssLayout {
           .show(Page.getCurrent());
     } else {
       String uri = SearchView.VIEW_NAME + "/" + keyword.trim().toLowerCase().replaceAll("%", "");
-      UIEventBus.post(new UINavigationEvent(uri));
+      getUIEventBus().post(new UINavigationEvent(uri));
     }
   }
 
   private Button addButton(String uri, String caption) {
-    return addButton(uri, caption, event -> UIEventBus.post(new UINavigationEvent(uri)));
+    return addButton(uri, caption, event -> getUIEventBus().post(new UINavigationEvent(uri)));
   }
 
   private Button addButton(String uri, String caption, Button.ClickListener listener) {

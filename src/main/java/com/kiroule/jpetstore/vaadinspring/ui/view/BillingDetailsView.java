@@ -2,7 +2,6 @@ package com.kiroule.jpetstore.vaadinspring.ui.view;
 
 import com.kiroule.jpetstore.vaadinspring.domain.BillingDetails;
 import com.kiroule.jpetstore.vaadinspring.domain.ShippingDetails;
-import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UINavigationEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.form.BillingDetailsForm;
 import com.kiroule.jpetstore.vaadinspring.ui.util.CurrentAccount;
@@ -43,10 +42,10 @@ public class BillingDetailsView extends AbstractView {
       CurrentCart.set(BILLING_DETAILS, billingDetails);
 
       if (billingDetailsForm.isShipToDifferentAddress()) {
-        UIEventBus.post(new UINavigationEvent(ShippingDetailsView.VIEW_NAME));
+        getUIEventBus().post(new UINavigationEvent(ShippingDetailsView.VIEW_NAME));
       } else {
         CurrentCart.set(CurrentCart.Key.SHIPPING_DETAILS, new ShippingDetails(billingDetails));
-        UIEventBus.post(new UINavigationEvent(ConfirmOrderView.VIEW_NAME));
+        getUIEventBus().post(new UINavigationEvent(ConfirmOrderView.VIEW_NAME));
       }
     });
     billingDetailsForm.setResetHandler(billingDetails -> billingDetailsForm.clear());
@@ -61,7 +60,7 @@ public class BillingDetailsView extends AbstractView {
   public void executeOnEnter(ViewChangeListener.ViewChangeEvent event) {
 
     if (CurrentCart.isEmpty()) {
-      UIEventBus.post(new UINavigationEvent(CartView.VIEW_NAME));
+      getUIEventBus().post(new UINavigationEvent(CartView.VIEW_NAME));
       return;
     }
     BillingDetails billingDetails = new BillingDetails(CurrentAccount.get());

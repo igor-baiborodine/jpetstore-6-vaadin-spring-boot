@@ -5,11 +5,11 @@ import com.kiroule.jpetstore.vaadinspring.domain.Item;
 import com.kiroule.jpetstore.vaadinspring.ui.converter.BooleanConverter;
 import com.kiroule.jpetstore.vaadinspring.ui.converter.CurrencyConverter;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UIChangeCartItemQuantityEvent;
-import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UIRemoveItemFromCartEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.form.ProductItemForm;
 import com.kiroule.jpetstore.vaadinspring.ui.theme.JPetStoreTheme;
 import com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart;
+import com.kiroule.jpetstore.vaadinspring.ui.util.HasUIEventBus;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.Button;
@@ -33,7 +33,7 @@ import static java.lang.String.format;
  */
 @SpringComponent
 @ViewScope
-public class CartItemListTable extends MTable<CartItem> {
+public class CartItemListTable extends MTable<CartItem> implements HasUIEventBus {
 
   private static final long serialVersionUID = 6841591708524361792L;
 
@@ -71,7 +71,7 @@ public class CartItemListTable extends MTable<CartItem> {
           if (CurrentCart.isEmpty()) {
             return;
           }
-          UIEventBus.post(new UIRemoveItemFromCartEvent(cartItem.getItem()));
+          getUIEventBus().post(new UIRemoveItemFromCartEvent(cartItem.getItem()));
         }
     ));
 
@@ -101,7 +101,7 @@ public class CartItemListTable extends MTable<CartItem> {
         }
         if (valid) {
           Integer newQuantity = Integer.valueOf((String) event.getProperty().getValue());
-          UIEventBus.post(new UIChangeCartItemQuantityEvent(
+          getUIEventBus().post(new UIChangeCartItemQuantityEvent(
               cartItem.getItem(), newQuantity - cartItem.getQuantity()));
         } else {
           Notification.show("Numeric values only", Notification.Type.ERROR_MESSAGE);
@@ -121,7 +121,7 @@ public class CartItemListTable extends MTable<CartItem> {
 //        return;
 //      }
 //      Integer newQuantity = event.getSource().getValue();
-//      UIEventBus.post(new UIChangeCartItemQuantityEvent(cartItem.getItem(), newQuantity - cartItem.getQuantity()));
+//      getUIEventBus().post(new UIChangeCartItemQuantityEvent(cartItem.getItem(), newQuantity - cartItem.getQuantity()));
 //    });
 //    return quantityStepper;
   }

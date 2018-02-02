@@ -2,7 +2,6 @@ package com.kiroule.jpetstore.vaadinspring.ui.view;
 
 import com.kiroule.jpetstore.vaadinspring.domain.Account;
 import com.kiroule.jpetstore.vaadinspring.service.AccountService;
-import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UINavigationEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.form.AccountForm;
 import com.kiroule.jpetstore.vaadinspring.ui.util.CurrentAccount;
@@ -45,7 +44,7 @@ public class NewAccountView extends AbstractView {
         }
         accountService.insertAccount(account);
         showConfirmation("New account has been created.");
-        UIEventBus.post(new UINavigationEvent(HomeView.VIEW_NAME));
+        getUIEventBus().post(new UINavigationEvent(HomeView.VIEW_NAME));
       } catch (Throwable t) {
         Notification.show("An error occurred while creating new account: " + t.getMessage(), ERROR_MESSAGE);
       }
@@ -62,7 +61,7 @@ public class NewAccountView extends AbstractView {
   public void executeOnEnter(ViewChangeListener.ViewChangeEvent event) {
 
     if (CurrentAccount.isLoggedIn()) {
-      UIEventBus.post(new UINavigationEvent(HomeView.VIEW_NAME));
+      getUIEventBus().post(new UINavigationEvent(HomeView.VIEW_NAME));
     }
     accountForm.setEntity(new Account());
     accountForm.setReadOnlyFields(INSERT);
