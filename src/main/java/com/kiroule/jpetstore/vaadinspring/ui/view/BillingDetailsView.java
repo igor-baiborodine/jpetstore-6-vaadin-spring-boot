@@ -42,10 +42,10 @@ public class BillingDetailsView extends AbstractView {
       CurrentCart.set(BILLING_DETAILS, billingDetails);
 
       if (billingDetailsForm.isShipToDifferentAddress()) {
-        getUIEventBus().post(new UINavigationEvent(ShippingDetailsView.VIEW_NAME));
+        getUIEventBus().publish(this, new UINavigationEvent(ShippingDetailsView.VIEW_NAME));
       } else {
         CurrentCart.set(CurrentCart.Key.SHIPPING_DETAILS, new ShippingDetails(billingDetails));
-        getUIEventBus().post(new UINavigationEvent(ConfirmOrderView.VIEW_NAME));
+        getUIEventBus().publish(this, new UINavigationEvent(ConfirmOrderView.VIEW_NAME));
       }
     });
     billingDetailsForm.setResetHandler(billingDetails -> billingDetailsForm.clear());
@@ -60,7 +60,7 @@ public class BillingDetailsView extends AbstractView {
   public void executeOnEnter(ViewChangeListener.ViewChangeEvent event) {
 
     if (CurrentCart.isEmpty()) {
-      getUIEventBus().post(new UINavigationEvent(CartView.VIEW_NAME));
+      getUIEventBus().publish(this, new UINavigationEvent(CartView.VIEW_NAME));
       return;
     }
     BillingDetails billingDetails = new BillingDetails(CurrentAccount.get());

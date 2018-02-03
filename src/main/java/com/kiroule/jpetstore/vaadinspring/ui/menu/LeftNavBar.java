@@ -48,7 +48,7 @@ public class LeftNavBar extends CssLayout implements HasUIEventBus {
   private void addButton(String categoryId, String displayName) {
 
     String uri = ProductListView.VIEW_NAME + "/" + categoryId;
-    Button viewButton = new Button(displayName, click -> getUIEventBus().post(new UINavigationEvent(uri)));
+    Button viewButton = new Button(displayName, click -> getUIEventBus().publish(LeftNavBar.this, new UINavigationEvent(uri)));
     navBarButtonUpdater.mapButtonToUri(uri, viewButton);
 
     viewButton.addStyleName(JPetStoreTheme.MENU_ITEM);

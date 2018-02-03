@@ -1,7 +1,6 @@
 package com.kiroule.jpetstore.vaadinspring.ui.view;
 
 import com.kiroule.jpetstore.vaadinspring.domain.ShippingDetails;
-import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UINavigationEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.form.ShippingDetailsForm;
 import com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart;
@@ -40,7 +39,7 @@ public class ShippingDetailsView extends AbstractView {
         return;
       }
       CurrentCart.set(SHIPPING_DETAILS, shippingDetails);
-      getUIEventBus().post(new UINavigationEvent(ConfirmOrderView.VIEW_NAME));
+      getUIEventBus().publish(this, new UINavigationEvent(ConfirmOrderView.VIEW_NAME));
     });
     shippingDetailsForm.setResetHandler(shippingDetails -> shippingDetailsForm.clear());
 
@@ -54,7 +53,7 @@ public class ShippingDetailsView extends AbstractView {
   public void executeOnEnter(ViewChangeListener.ViewChangeEvent event) {
 
     if (CurrentCart.isEmpty() || CurrentCart.get(BILLING_DETAILS) == null) {
-      getUIEventBus().post(new UINavigationEvent(CartView.VIEW_NAME));
+      getUIEventBus().publish(this, new UINavigationEvent(CartView.VIEW_NAME));
       return;
     }
     shippingDetailsForm.setEntity(new ShippingDetails());

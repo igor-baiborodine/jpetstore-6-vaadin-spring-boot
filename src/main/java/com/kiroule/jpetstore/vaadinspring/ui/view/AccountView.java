@@ -47,12 +47,12 @@ public class AccountView extends AbstractView {
         accountService.updateAccount(account);
         accountForm.clear();
         showConfirmation("Your account has been updated.");
-        getUIEventBus().post(new UIUpdateAccountEvent(account));
+        getUIEventBus().publish(AccountView.this, new UIUpdateAccountEvent(account));
       } catch (Throwable t) {
         Notification.show("An error occurred while updating account: " + t.getMessage(), ERROR_MESSAGE);
       }
     });
-    accountForm.setResetHandler(account -> getUIEventBus().post(new UINavigationEvent(OrderListView.VIEW_NAME)));
+    accountForm.setResetHandler(account -> getUIEventBus().publish(this, new UINavigationEvent(OrderListView.VIEW_NAME)));
 
     Panel contentPanel = new Panel(accountForm);
     addComponents(initTitleLabel(), contentPanel, accountForm.getToolbar(EDIT));

@@ -35,7 +35,7 @@ public abstract class AbstractView extends MVerticalLayout implements View, HasU
   public void enter(ViewChangeListener.ViewChangeEvent event) {
 
     if (ViewConfigUtil.isAuthRequired(this.getClass()) && !CurrentAccount.isLoggedIn()) {
-      getUIEventBus().post(new UINavigationEvent(AuthRequiredView.VIEW_NAME));
+      getUIEventBus().publish(this, new UINavigationEvent(AuthRequiredView.VIEW_NAME));
       return;
     }
     executeOnEnter(event);

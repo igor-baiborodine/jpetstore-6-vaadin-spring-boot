@@ -46,7 +46,7 @@ public class SigninForm extends LoginForm implements HasUIEventBus {
     Button createAccountButton = new Button("Start Here!");
     createAccountButton.addStyleName(JPetStoreTheme.BUTTON_LINK);
     createAccountButton.addClickListener(event -> {
-      getUIEventBus().post(new UINavigationEvent(NewAccountView.VIEW_NAME));
+      getUIEventBus().publish(this, new UINavigationEvent(NewAccountView.VIEW_NAME));
       UI.getCurrent().removeWindow(popup);
     });
     newCustomerLayout.add(createAccountButton);

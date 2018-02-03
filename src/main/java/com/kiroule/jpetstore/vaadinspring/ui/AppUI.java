@@ -1,6 +1,5 @@
 package com.kiroule.jpetstore.vaadinspring.ui;
 
-import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
 import com.kiroule.jpetstore.vaadinspring.ui.util.HasLogger;
 import com.kiroule.jpetstore.vaadinspring.ui.util.NavBarButtonUpdater;
 import com.kiroule.jpetstore.vaadinspring.ui.util.PageTitleUpdater;
@@ -14,6 +13,9 @@ import com.vaadin.spring.navigator.SpringViewProvider;
 import com.vaadin.ui.UI;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.vaadin.spring.events.EventBus;
+
+import javax.annotation.PreDestroy;
 
 /**
  * @author Igor Baiborodine
@@ -28,12 +30,12 @@ public class AppUI extends UI implements HasLogger {
 
   private final SpringViewProvider viewProvider;
   private final MainView mainView;
-  private final UIEventBus uiEventBus;
+  private final EventBus.UIEventBus uiEventBus;
   private final PageTitleUpdater pageTitleUpdater;
   private final NavBarButtonUpdater navBarButtonUpdater;
 
   @Autowired
-  public AppUI(SpringViewProvider viewProvider, MainView mainView, UIEventBus uiEventBus,
+  public AppUI(SpringViewProvider viewProvider, MainView mainView, EventBus.UIEventBus uiEventBus,
                PageTitleUpdater pageTitleUpdater, NavBarButtonUpdater navBarButtonUpdater) {
     this.viewProvider = viewProvider;
     this.mainView = mainView;
@@ -46,7 +48,7 @@ public class AppUI extends UI implements HasLogger {
     return (AppUI) UI.getCurrent();
   }
 
-  public static UIEventBus getUiEventBus() {
+  public static EventBus.UIEventBus getUiEventBus() {
     return getCurrent().uiEventBus;
   }
 
@@ -59,7 +61,7 @@ public class AppUI extends UI implements HasLogger {
     navigator.addViewChangeListener(navBarButtonUpdater);
     navigator.addViewChangeListener(pageTitleUpdater);
 
-    uiEventBus.register(mainView);
+    uiEventBus.subscribe(mainView);
     getLogger().info("App UI initialized");
   }
 }

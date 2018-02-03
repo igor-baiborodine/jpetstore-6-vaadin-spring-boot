@@ -27,7 +27,7 @@ public class ProductListTable extends MTable<Product> implements HasUIEventBus {
     withGeneratedColumn("productId", entity -> {
       String uri = ItemListView.VIEW_NAME + "/" + entity.getProductId();
       Button inventoryButton = new Button(entity.getProductId(),
-          event -> getUIEventBus().post(new UINavigationEvent(uri)));
+          event -> getUIEventBus().publish(this, new UINavigationEvent(uri)));
       inventoryButton.setData(entity.getProductId());
       inventoryButton.addStyleName("link");
       return inventoryButton;

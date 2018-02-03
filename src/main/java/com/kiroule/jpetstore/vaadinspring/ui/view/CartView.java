@@ -55,7 +55,7 @@ public class CartView extends AbstractView {
         .withListener(event -> {
           String viewName = CurrentAccount.isLoggedIn()
               ? BillingDetailsView.VIEW_NAME : AuthRequiredView.VIEW_NAME;
-          getUIEventBus().post(new UINavigationEvent(viewName));
+          getUIEventBus().publish(this, new UINavigationEvent(viewName));
         });
     MHorizontalLayout subtotalLayout = new MHorizontalLayout(subtotalLabel, checkOutButton);
     subtotalLayout.setComponentAlignment(subtotalLabel, Alignment.MIDDLE_LEFT);

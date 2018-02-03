@@ -88,7 +88,7 @@ public class TopNavBar extends CssLayout implements HasUIEventBus {
         try {
           Account account = loginService.login(loginEvent.getLoginParameter("username"),
               loginEvent.getLoginParameter("password"));
-          getUIEventBus().post(new UILoginEvent(account));
+          getUIEventBus().publish(this, new UILoginEvent(account));
           UI.getCurrent().removeWindow(popup);
         } catch (LoginException e) {
           Notification.show(e.getMessage(), Notification.Type.WARNING_MESSAGE);
@@ -101,7 +101,7 @@ public class TopNavBar extends CssLayout implements HasUIEventBus {
     signoutButton = addButton(SIGNOUT_BUTTON_URI, "Sign out", event -> {
       signoutButton.setVisible(false);
       signinButton.setVisible(true);
-      getUIEventBus().post(new UILogoutEvent());
+      getUIEventBus().publish(this, new UILogoutEvent());
     });
     signoutButton.setVisible(CurrentAccount.isLoggedIn());
 
@@ -118,12 +118,12 @@ public class TopNavBar extends CssLayout implements HasUIEventBus {
           .show(Page.getCurrent());
     } else {
       String uri = SearchView.VIEW_NAME + "/" + keyword.trim().toLowerCase().replaceAll("%", "");
-      getUIEventBus().post(new UINavigationEvent(uri));
+      getUIEventBus().publish(this, new UINavigationEvent(uri));
     }
   }
 
   private Button addButton(String uri, String caption) {
-    return addButton(uri, caption, event -> getUIEventBus().post(new UINavigationEvent(uri)));
+    return addButton(uri, caption, event -> getUIEventBus().publish(TopNavBar.this, new UINavigationEvent(uri)));
   }
 
   private Button addButton(String uri, String caption, Button.ClickListener listener) {

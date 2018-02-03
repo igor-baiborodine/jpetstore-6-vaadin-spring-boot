@@ -44,7 +44,7 @@ public class NewAccountView extends AbstractView {
         }
         accountService.insertAccount(account);
         showConfirmation("New account has been created.");
-        getUIEventBus().post(new UINavigationEvent(HomeView.VIEW_NAME));
+        getUIEventBus().publish(this, new UINavigationEvent(HomeView.VIEW_NAME));
       } catch (Throwable t) {
         Notification.show("An error occurred while creating new account: " + t.getMessage(), ERROR_MESSAGE);
       }
@@ -61,7 +61,7 @@ public class NewAccountView extends AbstractView {
   public void executeOnEnter(ViewChangeListener.ViewChangeEvent event) {
 
     if (CurrentAccount.isLoggedIn()) {
-      getUIEventBus().post(new UINavigationEvent(HomeView.VIEW_NAME));
+      getUIEventBus().publish(this, new UINavigationEvent(HomeView.VIEW_NAME));
     }
     accountForm.setEntity(new Account());
     accountForm.setReadOnlyFields(INSERT);

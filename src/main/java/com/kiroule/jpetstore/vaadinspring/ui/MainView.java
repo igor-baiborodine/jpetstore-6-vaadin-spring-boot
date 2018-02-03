@@ -1,7 +1,5 @@
 package com.kiroule.jpetstore.vaadinspring.ui;
 
-import com.google.common.eventbus.Subscribe;
-
 import com.kiroule.jpetstore.vaadinspring.domain.Account;
 import com.kiroule.jpetstore.vaadinspring.domain.Cart;
 import com.kiroule.jpetstore.vaadinspring.service.CatalogService;
@@ -31,6 +29,7 @@ import com.vaadin.v7.ui.HorizontalLayout;
 import com.vaadin.v7.ui.VerticalLayout;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.vaadin.spring.events.annotation.EventBusListenerMethod;
 
 import static com.kiroule.jpetstore.vaadinspring.ui.menu.TopNavBar.SIGNIN_BUTTON_URI;
 import static com.kiroule.jpetstore.vaadinspring.ui.menu.TopNavBar.SIGNOUT_BUTTON_URI;
@@ -79,12 +78,12 @@ class MainView extends HorizontalLayout implements HasLogger, HasUIEventBus {
     return viewContainer;
   }
 
-  @Subscribe
+  @EventBusListenerMethod
   public void navigateTo(UINavigationEvent event) {
     navigateTo(event.getViewName());
   }
 
-  @Subscribe
+  @EventBusListenerMethod
   public void userLoggedIn(UILoginEvent event) {
 
     CurrentAccount.set(event.getAccount());
@@ -99,7 +98,7 @@ class MainView extends HorizontalLayout implements HasLogger, HasUIEventBus {
     navigateTo(viewName); // reloading the current view to display the banner
   }
 
-  @Subscribe
+  @EventBusListenerMethod
   public void updateAccount(UIUpdateAccountEvent event) {
 
     Account account = event.getAccount();
@@ -109,7 +108,7 @@ class MainView extends HorizontalLayout implements HasLogger, HasUIEventBus {
     navigateTo(AccountView.VIEW_NAME);
   }
 
-  @Subscribe
+  @EventBusListenerMethod
   public void logout(UILogoutEvent event) {
 
     // Don't invalidate the underlying HTTP session if you are using it for something else
@@ -118,7 +117,7 @@ class MainView extends HorizontalLayout implements HasLogger, HasUIEventBus {
     VaadinSession.getCurrent().close();
   }
 
-  @Subscribe
+  @EventBusListenerMethod
   public void addItemToCart(UIAddItemToCartEvent event) {
 
     if (CurrentCart.isEmpty()) {
@@ -135,7 +134,7 @@ class MainView extends HorizontalLayout implements HasLogger, HasUIEventBus {
     navigateTo(viewName);
   }
 
-  @Subscribe
+  @EventBusListenerMethod
   public void removeItemFromCart(UIRemoveItemFromCartEvent event) {
 
     Cart cart = (Cart) CurrentCart.get(SHOPPING_CART);
@@ -144,7 +143,7 @@ class MainView extends HorizontalLayout implements HasLogger, HasUIEventBus {
     navigateTo(viewName);
   }
 
-  @Subscribe
+  @EventBusListenerMethod
   public void changeCartItemQuantity(UIChangeCartItemQuantityEvent event) {
     Cart cart = (Cart) CurrentCart.get(SHOPPING_CART);
     cart.changeQuantityByItemId(event.getItem().getItemId(), event.getDiff());

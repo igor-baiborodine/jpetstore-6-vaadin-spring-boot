@@ -3,25 +3,23 @@ package com.kiroule.jpetstore.vaadinspring.ui.form;
 import com.kiroule.jpetstore.vaadinspring.domain.Item;
 import com.kiroule.jpetstore.vaadinspring.ui.converter.CurrencyConverter;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UIAddItemToCartEvent;
-import com.kiroule.jpetstore.vaadinspring.ui.event.UIEventBus;
 import com.kiroule.jpetstore.vaadinspring.ui.theme.JPetStoreTheme;
 import com.kiroule.jpetstore.vaadinspring.ui.util.HasUIEventBus;
-import com.vaadin.v7.shared.ui.label.ContentMode;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.UI;
+import com.vaadin.v7.shared.ui.label.ContentMode;
 import com.vaadin.v7.ui.Label;
 import com.vaadin.v7.ui.TextField;
-import com.vaadin.ui.UI;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.vaadin.viritinv7.MBeanFieldGroup;
 import org.vaadin.viritin.button.MButton;
-import org.vaadin.viritinv7.fields.MTextField;
-import org.vaadin.viritinv7.form.AbstractForm;
 import org.vaadin.viritin.layouts.MFormLayout;
 import org.vaadin.viritin.layouts.MVerticalLayout;
+import org.vaadin.viritinv7.MBeanFieldGroup;
+import org.vaadin.viritinv7.fields.MTextField;
+import org.vaadin.viritinv7.form.AbstractForm;
 
 import javax.annotation.PostConstruct;
 
@@ -33,9 +31,6 @@ import javax.annotation.PostConstruct;
 public class ProductItemForm extends AbstractForm<Item> implements HasUIEventBus {
 
   private static final long serialVersionUID = -3035656440388295692L;
-
-  @Autowired
-  private UIEventBus uiEventBus;
 
   private Label image = new Label();
   private TextField itemId = new MTextField("ID");
@@ -52,7 +47,7 @@ public class ProductItemForm extends AbstractForm<Item> implements HasUIEventBus
     listPrice.setConverter(new CurrencyConverter());
     addToCartButton.addClickListener(event -> {
           UI.getCurrent().removeWindow(getPopup());
-          getUIEventBus().post(new UIAddItemToCartEvent(getEntity()));
+          getUIEventBus().publish(this, new UIAddItemToCartEvent(getEntity()));
         }
     );
     addToCartButton.focus();

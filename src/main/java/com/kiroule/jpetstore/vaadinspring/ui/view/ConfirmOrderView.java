@@ -96,7 +96,7 @@ public class ConfirmOrderView extends AbstractView {
     if (CurrentCart.isEmpty()
         || CurrentCart.get(BILLING_DETAILS) == null
         || CurrentCart.get(SHIPPING_DETAILS) == null) {
-      getUIEventBus().post(new UINavigationEvent(CartView.VIEW_NAME));
+      getUIEventBus().publish(this, new UINavigationEvent(CartView.VIEW_NAME));
       return;
     }
     Cart cart = (Cart) CurrentCart.get(SHOPPING_CART);
@@ -137,7 +137,7 @@ public class ConfirmOrderView extends AbstractView {
 
   private MButton createViewOrdersButton() {
     return new MButton("View Your Orders")
-        .withListener(event -> getUIEventBus().post(new UINavigationEvent(OrderListView.VIEW_NAME)));
+        .withListener(event -> getUIEventBus().publish(this, new UINavigationEvent(OrderListView.VIEW_NAME)));
   }
 
   private String formatSubtotal(BigDecimal subtotal) {

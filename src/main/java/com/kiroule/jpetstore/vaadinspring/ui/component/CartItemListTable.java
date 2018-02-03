@@ -71,7 +71,7 @@ public class CartItemListTable extends MTable<CartItem> implements HasUIEventBus
           if (CurrentCart.isEmpty()) {
             return;
           }
-          getUIEventBus().post(new UIRemoveItemFromCartEvent(cartItem.getItem()));
+          getUIEventBus().publish(this, new UIRemoveItemFromCartEvent(cartItem.getItem()));
         }
     ));
 
@@ -101,7 +101,7 @@ public class CartItemListTable extends MTable<CartItem> implements HasUIEventBus
         }
         if (valid) {
           Integer newQuantity = Integer.valueOf((String) event.getProperty().getValue());
-          getUIEventBus().post(new UIChangeCartItemQuantityEvent(
+          getUIEventBus().publish(this, new UIChangeCartItemQuantityEvent(
               cartItem.getItem(), newQuantity - cartItem.getQuantity()));
         } else {
           Notification.show("Numeric values only", Notification.Type.ERROR_MESSAGE);
@@ -121,7 +121,7 @@ public class CartItemListTable extends MTable<CartItem> implements HasUIEventBus
 //        return;
 //      }
 //      Integer newQuantity = event.getSource().getValue();
-//      getUIEventBus().post(new UIChangeCartItemQuantityEvent(cartItem.getItem(), newQuantity - cartItem.getQuantity()));
+//      getUIEventBus().publish(this, new UIChangeCartItemQuantityEvent(cartItem.getItem(), newQuantity - cartItem.getQuantity()));
 //    });
 //    return quantityStepper;
   }
