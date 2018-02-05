@@ -1,4 +1,4 @@
-package com.kiroule.jpetstore.vaadinspring.ui.menu;
+package com.kiroule.jpetstore.vaadinspring.ui.component;
 
 import com.kiroule.jpetstore.vaadinspring.domain.Account;
 import com.kiroule.jpetstore.vaadinspring.service.LoginService;
@@ -27,8 +27,6 @@ import com.vaadin.ui.Window;
 import com.vaadin.v7.ui.Label;
 import com.vaadin.v7.ui.TextField;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import javax.annotation.PostConstruct;
 import javax.security.auth.login.LoginException;
 
@@ -47,16 +45,19 @@ public class TopNavBar extends CssLayout implements HasUIEventBus {
   public static final String SIGNIN_BUTTON_URI = "sign-in";
   public static final String SIGNOUT_BUTTON_URI = "sign-out";
 
-  @Autowired
-  private NavBarButtonUpdater navBarButtonUpdater;
-  @Autowired
-  private SigninForm signinForm;
-  @Autowired
-  private LoginService loginService;
+  private final NavBarButtonUpdater navBarButtonUpdater;
+  private final SigninForm signinForm;
+  private final LoginService loginService;
 
   private Button signinButton;
   private Button signoutButton;
   private Label userLabel;
+
+  public TopNavBar(NavBarButtonUpdater navBarButtonUpdater, SigninForm signinForm, LoginService loginService) {
+    this.navBarButtonUpdater = navBarButtonUpdater;
+    this.signinForm = signinForm;
+    this.loginService = loginService;
+  }
 
   @PostConstruct
   void init() {

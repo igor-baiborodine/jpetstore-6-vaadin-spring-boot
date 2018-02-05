@@ -3,6 +3,8 @@ package com.kiroule.jpetstore.vaadinspring.ui;
 import com.kiroule.jpetstore.vaadinspring.domain.Account;
 import com.kiroule.jpetstore.vaadinspring.domain.Cart;
 import com.kiroule.jpetstore.vaadinspring.service.CatalogService;
+import com.kiroule.jpetstore.vaadinspring.ui.component.LeftNavBar;
+import com.kiroule.jpetstore.vaadinspring.ui.component.TopNavBar;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UIAddItemToCartEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UIChangeCartItemQuantityEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UILoginEvent;
@@ -10,8 +12,7 @@ import com.kiroule.jpetstore.vaadinspring.ui.event.UILogoutEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UINavigationEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UIRemoveItemFromCartEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UIUpdateAccountEvent;
-import com.kiroule.jpetstore.vaadinspring.ui.menu.LeftNavBar;
-import com.kiroule.jpetstore.vaadinspring.ui.menu.TopNavBar;
+import com.kiroule.jpetstore.vaadinspring.ui.navigation.NavigationManager;
 import com.kiroule.jpetstore.vaadinspring.ui.util.CurrentAccount;
 import com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart;
 import com.kiroule.jpetstore.vaadinspring.ui.util.HasLogger;
@@ -22,8 +23,10 @@ import com.kiroule.jpetstore.vaadinspring.ui.view.AuthRequiredView;
 import com.kiroule.jpetstore.vaadinspring.ui.view.CartView;
 import com.kiroule.jpetstore.vaadinspring.ui.view.HomeView;
 import com.kiroule.jpetstore.vaadinspring.ui.view.ItemListView;
+import com.vaadin.navigator.View;
+import com.vaadin.navigator.ViewDisplay;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.spring.annotation.SpringComponent;
+import com.vaadin.spring.annotation.SpringViewDisplay;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.v7.ui.HorizontalLayout;
 import com.vaadin.v7.ui.VerticalLayout;
@@ -31,19 +34,20 @@ import com.vaadin.v7.ui.VerticalLayout;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.spring.events.annotation.EventBusListenerMethod;
 
-import static com.kiroule.jpetstore.vaadinspring.ui.menu.TopNavBar.SIGNIN_BUTTON_URI;
-import static com.kiroule.jpetstore.vaadinspring.ui.menu.TopNavBar.SIGNOUT_BUTTON_URI;
+import static com.kiroule.jpetstore.vaadinspring.ui.component.TopNavBar.SIGNIN_BUTTON_URI;
+import static com.kiroule.jpetstore.vaadinspring.ui.component.TopNavBar.SIGNOUT_BUTTON_URI;
 import static com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart.Key.SHOPPING_CART;
 
 /**
  * @author Igor Baiborodine
  */
-@SpringComponent
+@SpringViewDisplay
 @UIScope
-class MainView extends HorizontalLayout implements HasLogger, HasUIEventBus {
+class MainView extends HorizontalLayout implements HasLogger, HasUIEventBus, ViewDisplay {
 
   private static final long serialVersionUID = 7419653252582861360L;
 
+  private final NavigationManager navigationManager;
   private final LeftNavBar leftNavBar;
   private final TopNavBar topNavBar;
   private final CatalogService catalogService;
@@ -52,9 +56,10 @@ class MainView extends HorizontalLayout implements HasLogger, HasUIEventBus {
   private final VerticalLayout viewContainer = new VerticalLayout();
 
   @Autowired
-  public MainView(LeftNavBar leftNavBar, TopNavBar topNavBar,
+  public MainView(NavigationManager navigationManager, LeftNavBar leftNavBar, TopNavBar topNavBar,
                   CatalogService catalogService, NavBarButtonUpdater navBarButtonUpdater) {
     super();
+    this.navigationManager = navigationManager;
     this.leftNavBar = leftNavBar;
     this.topNavBar = topNavBar;
     this.catalogService = catalogService;
@@ -74,8 +79,10 @@ class MainView extends HorizontalLayout implements HasLogger, HasUIEventBus {
     getLogger().info("Main view initialized");
   }
 
-  public VerticalLayout getViewContainer() {
-    return viewContainer;
+  @Override
+  public void showView(View view) {
+    viewContainer.removeAllComponents();
+    viewContainer.addComponent(view.getViewComponent());
   }
 
   @EventBusListenerMethod
@@ -151,6 +158,6 @@ class MainView extends HorizontalLayout implements HasLogger, HasUIEventBus {
   }
 
   private void navigateTo(String viewName) {
-    AppUI.getCurrent().getNavigator().navigateTo(viewName);
+    navigationManager.navigateTo(viewName);
   }
 }
