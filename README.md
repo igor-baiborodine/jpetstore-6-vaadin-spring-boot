@@ -26,7 +26,7 @@ mvn clean package spring-boot:run
 
 #### Software and technologies used:
 * [Java SE 8](http://www.oracle.com/technetwork/java/javase/downloads/index-jsp-138363.html)
-* [Vaadin 8](https://vaadin.com/home) with add-ons: [Viritin](https://vaadin.com/directory#!addon/viritin), [LoginForm](https://vaadin.com/directory#!addon/loginform), [FormCheckBox](https://vaadin.com/directory#!addon/formcheckbox), [Stepper](https://vaadin.com/directory#!addon/stepper)
+* [Vaadin 8](https://vaadin.com/home) with [Viritin](https://vaadin.com/directory#!addon/viritin) add-on
 * [Spring 4](http://projects.spring.io/spring-framework/#quick-start)
 * [Spring Boot](http://projects.spring.io/spring-boot/)
 * [MyBatis 3](http://mybatis.org/mybatis-3/)
