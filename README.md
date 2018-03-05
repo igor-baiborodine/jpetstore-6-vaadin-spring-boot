@@ -11,7 +11,7 @@ Status](https://travis-ci.org/igor-baiborodine/jpetstore-6-vaadin-spring-boot.sv
 * **vaadin-v7** - Vaadin v7.7.7 (legacy)
 
 > UPDATES
-* 2018-03-05 Upgrade to Vaadin v8.3.0 (**without** v7 compatibility) | [79eb5f4](https://github.com/igor-baiborodine/jpetstore-6-vaadin-spring-boot/commit/79eb5f4aff676eba8c299025d0d5d6285543aee9) 
+* 2018-03-05 Upgrade to Vaadin v8.3.0 (**without** v7 compatibility) | [9671b83](https://github.com/igor-baiborodine/jpetstore-6-vaadin-spring-boot/commit/9671b8353b09c38f1b54ec9a113e0e792984070b) 
 * 2018-02-04 Refactor to vaadin-spring v2.1.0 | [217109d](https://github.com/igor-baiborodine/jpetstore-6-vaadin-spring-boot/commit/217109d9a6e98c2f8c7913565d85acd97f0d0826), [4e4750a](https://github.com/igor-baiborodine/jpetstore-6-vaadin-spring-boot/commit/4e4750ad445fcde0e99cbad2f4346c03c5913622), [557d70d](https://github.com/igor-baiborodine/jpetstore-6-vaadin-spring-boot/commit/557d70d8d9fd77ec78043bb9b77439f6d1bfc5f6)
 * 2018-01-23 Upgrade to Vaadin v8.1.5 (v7 compatibility) | [b8dcad0](https://github.com/igor-baiborodine/jpetstore-6-vaadin-spring-boot/commit/b8dcad0fa6ca1a8e921bbe0f59d4851d5c6d2ffa)
 * 2017-03-01 Update to Vaadin v7.7.7 | [3bd973a](https://github.com/igor-baiborodine/jpetstore-6-vaadin-spring-boot/commit/3bd973a979c983ee97ca882da7168eb7c4633f78)
