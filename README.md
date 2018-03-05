@@ -40,4 +40,3 @@ mvn clean package spring-boot:run
 * [Vaadin Tutorial](https://vaadin.com/docs/framework/tutorial.html)
 * [Vaadin & Spring](https://vaadin.com/framework/spring)
 * [Vaadin's Starter Pack](https://vaadin.com/start)
-* [Building "Bootiful" Vaadin Applications with Spring Boot](https://github.com/joshlong/vaadin-and-spring-talk)
