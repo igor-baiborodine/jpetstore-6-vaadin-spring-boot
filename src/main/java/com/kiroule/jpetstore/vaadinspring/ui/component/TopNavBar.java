@@ -24,8 +24,10 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
-import com.vaadin.v7.ui.Label;
-import com.vaadin.v7.ui.TextField;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.TextField;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
 import javax.security.auth.login.LoginException;
@@ -53,6 +55,7 @@ public class TopNavBar extends CssLayout implements HasUIEventBus {
   private Button signoutButton;
   private Label userLabel;
 
+  @Autowired
   public TopNavBar(NavBarButtonUpdater navBarButtonUpdater, SigninForm signinForm, LoginService loginService) {
     this.navBarButtonUpdater = navBarButtonUpdater;
     this.signinForm = signinForm;
@@ -67,7 +70,6 @@ public class TopNavBar extends CssLayout implements HasUIEventBus {
 
     final TextField searchTextField = new TextField();
     searchTextField.setDescription("Product's name contains");
-    searchTextField.setImmediate(true);
     searchTextField.addShortcutListener(new ShortcutListener("enter-shortcut", ShortcutAction.KeyCode.ENTER, null) {
       private static final long serialVersionUID = 4638926023595229738L;
       @Override

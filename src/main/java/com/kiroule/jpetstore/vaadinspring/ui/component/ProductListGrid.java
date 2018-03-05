@@ -8,30 +8,33 @@ import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.Button;
 
-import org.vaadin.viritinv7.fields.MTable;
+import org.vaadin.viritin.grid.MGrid;
 
 /**
  * @author Igor Baiborodine
  */
 @SpringComponent
 @ViewScope
-public class ProductListTable extends MTable<Product> implements HasUIEventBus {
+public class ProductListGrid extends MGrid<Product> implements HasUIEventBus {
 
   private static final long serialVersionUID = 2029031508462137840L;
 
-  public ProductListTable() {
+  public ProductListGrid() {
+    withFullWidth();
 
-    withProperties("productId", "name");
-    withColumnHeaders("Product ID", "Name");
-    setSortableProperties("productId", "name");
-    withGeneratedColumn("productId", entity -> {
-      String uri = ItemListView.VIEW_NAME + "/" + entity.getProductId();
-      Button inventoryButton = new Button(entity.getProductId(),
+    addComponentColumn(product -> {
+      String uri = ItemListView.VIEW_NAME + "/" + product.getProductId();
+      Button inventoryButton = new GridButton(product.getProductId(),
           event -> getUIEventBus().publish(this, new UINavigationEvent(uri)));
-      inventoryButton.setData(entity.getProductId());
+      inventoryButton.setData(product.getProductId());
       inventoryButton.addStyleName("link");
       return inventoryButton;
-    });
-    withFullWidth();
+    })
+        .setId("productId")
+        .setCaption("Product ID");
+
+    addColumn(Product::getName)
+        .setId("name")
+        .setCaption("Name");
   }
 }

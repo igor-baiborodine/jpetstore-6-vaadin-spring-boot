@@ -16,6 +16,10 @@
 
 package com.kiroule.jpetstore.vaadinspring.domain;
 
+import com.google.common.base.MoreObjects;
+
+import org.hibernate.validator.constraints.NotEmpty;
+
 /**
  * @author Igor Baiborodine
  *
@@ -25,8 +29,11 @@ public class BillingDetails extends OrderDetails {
   private static final long serialVersionUID = 4974454158308328436L;
 
   // Payment method
+  @NotEmpty
   private String cardType;
+  @NotEmpty
   private String cardNumber;
+  @NotEmpty
   private String expiryDate;
 
   public BillingDetails() {}
@@ -57,5 +64,14 @@ public class BillingDetails extends OrderDetails {
 
   public void setExpiryDate(String expiryDate) {
     this.expiryDate = expiryDate;
+  }
+
+  @Override
+  public String toString() {
+    return MoreObjects.toStringHelper(this)
+        .add("cardType", cardType)
+        .add("cardNumber", cardNumber)
+        .add("expiryDate", expiryDate)
+        .toString();
   }
 }

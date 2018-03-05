@@ -27,17 +27,17 @@ public class ShippingDetailsView extends AbstractView {
 
   public static final String VIEW_NAME = "shipping-details";
 
+  private final ShippingDetailsForm shippingDetailsForm;
+
   @Autowired
-  private ShippingDetailsForm shippingDetailsForm;
+  public ShippingDetailsView(ShippingDetailsForm shippingDetailsForm) {
+    this.shippingDetailsForm = shippingDetailsForm;
+  }
 
   @PostConstruct
   void init() {
 
     shippingDetailsForm.setSavedHandler(shippingDetails -> {
-
-      if (!shippingDetailsForm.validate()) {
-        return;
-      }
       CurrentCart.set(SHIPPING_DETAILS, shippingDetails);
       getUIEventBus().publish(this, new UINavigationEvent(ConfirmOrderView.VIEW_NAME));
     });

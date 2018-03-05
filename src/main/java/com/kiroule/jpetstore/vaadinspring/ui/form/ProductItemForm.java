@@ -5,21 +5,22 @@ import com.kiroule.jpetstore.vaadinspring.ui.converter.CurrencyConverter;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UIAddItemToCartEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.theme.JPetStoreTheme;
 import com.kiroule.jpetstore.vaadinspring.ui.util.HasUIEventBus;
+import com.vaadin.data.Binder;
+import com.vaadin.data.converter.StringToIntegerConverter;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
-import com.vaadin.v7.shared.ui.label.ContentMode;
-import com.vaadin.v7.ui.Label;
-import com.vaadin.v7.ui.TextField;
 
 import org.vaadin.viritin.button.MButton;
+import org.vaadin.viritin.fields.MTextField;
+import org.vaadin.viritin.form.AbstractForm;
 import org.vaadin.viritin.layouts.MFormLayout;
 import org.vaadin.viritin.layouts.MVerticalLayout;
-import org.vaadin.viritinv7.MBeanFieldGroup;
-import org.vaadin.viritinv7.fields.MTextField;
-import org.vaadin.viritinv7.form.AbstractForm;
 
 import javax.annotation.PostConstruct;
 
@@ -40,45 +41,49 @@ public class ProductItemForm extends AbstractForm<Item> implements HasUIEventBus
   private TextField quantity = new MTextField("Stock Quantity");
   private Button addToCartButton = new MButton("Add to Cart");
 
+  public ProductItemForm() {
+    super(Item.class);
+    // Override binder initialized in the parent class
+    setBinder(new Binder<>(Item.class));
+  }
+
   @PostConstruct
   public void init() {
-
+    setStyleName(JPetStoreTheme.BASE_FORM);
+    setSizeUndefined();
     image.setContentMode(ContentMode.HTML);
-    listPrice.setConverter(new CurrencyConverter());
+
+    // bind will null setter to set read-only mode
+    getBinder()
+        .forField(itemId)
+        .bind(Item::getItemId, null);
+    getBinder()
+        .forField(itemDescription)
+        .bind(Item::getDescription, null);
+    getBinder()
+        .forField(productDescription)
+        .bind(Item::getProductDescription, null);
+    getBinder()
+        .forField(listPrice)
+        .withConverter(new CurrencyConverter())
+        .bind(Item::getListPrice, null);
+    getBinder()
+        .forField(quantity)
+        .withConverter(new StringToIntegerConverter(0, null))
+        .bind(Item::getQuantity, null);
     addToCartButton.addClickListener(event -> {
           UI.getCurrent().removeWindow(getPopup());
-          getUIEventBus().publish(this, new UIAddItemToCartEvent(getEntity()));
+          getUIEventBus().publish(this, new UIAddItemToCartEvent(getBinder().getBean()));
         }
     );
     addToCartButton.focus();
-    setStyleName(JPetStoreTheme.BASE_FORM);
-    setSizeUndefined();
   }
 
   @Override
-  public MBeanFieldGroup<Item> setEntity(Item entity) {
-
-    setReadOnly(false);
-    MBeanFieldGroup<Item> fieldGroup = super.setEntity(entity);
-    image.setValue(entity.getProduct().getDescription());
-    itemDescription.setValue(entity.getAttribute1() + " " + entity.getProduct().getName());
-    productDescription.setValue(entity.getProduct().getName());
-    setReadOnly(true);
-
-    return fieldGroup;
+  public void setEntity(Item item) {
+    image.setValue(item.getProduct().getDescription());
+    getBinder().setBean(item);
   }
-
-  @Override
-  public void setReadOnly(boolean readOnly) {
-
-    //super.setReadOnly(readOnly);
-    itemId.setReadOnly(readOnly);
-    itemDescription.setReadOnly(readOnly);
-    productDescription.setReadOnly(readOnly);
-    listPrice.setReadOnly(readOnly);
-    quantity.setReadOnly(readOnly);
-  }
-
 
   public Button getAddToCartButton() {
     return addToCartButton;

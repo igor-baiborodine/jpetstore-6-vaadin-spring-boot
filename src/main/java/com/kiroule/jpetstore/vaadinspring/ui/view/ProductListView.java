@@ -1,13 +1,16 @@
 package com.kiroule.jpetstore.vaadinspring.ui.view;
 
 import com.kiroule.jpetstore.vaadinspring.domain.Category;
+import com.kiroule.jpetstore.vaadinspring.domain.Product;
 import com.kiroule.jpetstore.vaadinspring.service.CatalogService;
-import com.kiroule.jpetstore.vaadinspring.ui.component.ProductListTable;
+import com.kiroule.jpetstore.vaadinspring.ui.component.ProductListGrid;
 import com.kiroule.jpetstore.vaadinspring.ui.util.ViewConfig;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 
@@ -22,16 +25,19 @@ public class ProductListView extends AbstractView {
 
   public static final String VIEW_NAME = "product-list";
 
-  @Autowired
-  private CatalogService catalogService;
-  @Autowired
-  private ProductListTable productList;
+  private final CatalogService catalogService;
+  private final ProductListGrid productList;
 
   private Category category;
 
+  @Autowired
+  public ProductListView(CatalogService catalogService, ProductListGrid productList) {
+    this.catalogService = catalogService;
+    this.productList = productList;
+  }
+
   @PostConstruct
   public void init() {
-
     addComponents(initTitleLabel(), productList);
     setSizeFull();
     expand(productList);
@@ -40,7 +46,8 @@ public class ProductListView extends AbstractView {
   @Override
   public void executeOnEnter(ViewChangeListener.ViewChangeEvent event) {
     category = catalogService.getCategory(event.getParameters());
-    productList.setBeans(catalogService.getProductListByCategory(category.getCategoryId()));
+    List<Product> products = catalogService.getProductListByCategory(category.getCategoryId());
+    productList.setItems(products);
   }
 
   @Override

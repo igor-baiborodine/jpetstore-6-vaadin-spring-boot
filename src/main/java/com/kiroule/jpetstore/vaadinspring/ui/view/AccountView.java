@@ -31,28 +31,30 @@ public class AccountView extends AbstractView {
 
   public static final String VIEW_NAME = "account";
 
+  private final AccountForm accountForm;
+  private final AccountService accountService;
+
   @Autowired
-  private AccountForm accountForm;
-  @Autowired
-  private AccountService accountService;
+  public AccountView(AccountForm accountForm, AccountService accountService) {
+    this.accountForm = accountForm;
+    this.accountService = accountService;
+  }
 
   @PostConstruct
   void init() {
 
     accountForm.setSavedHandler(account -> {
       try {
-        if (!accountForm.validate()) {
-          return;
-        }
         accountService.updateAccount(account);
         accountForm.clear();
         showConfirmation("Your account has been updated.");
         getUIEventBus().publish(AccountView.this, new UIUpdateAccountEvent(account));
-      } catch (Throwable t) {
-        Notification.show("An error occurred while updating account: " + t.getMessage(), ERROR_MESSAGE);
+      } catch (Exception e) {
+        Notification.show("An error occurred while updating account: " + e.getMessage(), ERROR_MESSAGE);
       }
     });
-    accountForm.setResetHandler(account -> getUIEventBus().publish(this, new UINavigationEvent(OrderListView.VIEW_NAME)));
+    accountForm.setResetHandler(account ->
+        getUIEventBus().publish(this, new UINavigationEvent(OrderListView.VIEW_NAME)));
 
     Panel contentPanel = new Panel(accountForm);
     addComponents(initTitleLabel(), contentPanel, accountForm.getToolbar(EDIT));

@@ -1,32 +1,28 @@
 package com.kiroule.jpetstore.vaadinspring.ui.form;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-import com.eijsink.vaadin.components.formcheckbox.FormCheckBox;
 import com.kiroule.jpetstore.vaadinspring.domain.Account;
 import com.kiroule.jpetstore.vaadinspring.domain.Banner;
 import com.kiroule.jpetstore.vaadinspring.domain.Category;
 import com.kiroule.jpetstore.vaadinspring.service.CatalogService;
 import com.kiroule.jpetstore.vaadinspring.ui.theme.JPetStoreTheme;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.ViewScope;
+import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.Panel;
-import com.vaadin.v7.data.Validator;
-import com.vaadin.v7.shared.ui.label.ContentMode;
-import com.vaadin.v7.ui.ComboBox;
-import com.vaadin.v7.ui.Field;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.v7.ui.Label;
-import com.vaadin.v7.ui.PasswordField;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.Panel;
+import com.vaadin.ui.PasswordField;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.vaadin.viritin.fields.MTextField;
+import org.vaadin.viritin.form.AbstractForm;
 import org.vaadin.viritin.layouts.MFormLayout;
 import org.vaadin.viritin.layouts.MVerticalLayout;
-import org.vaadin.viritinv7.fields.MTextField;
-import org.vaadin.viritinv7.form.AbstractForm;
 
 import java.util.Comparator;
 import java.util.List;
@@ -35,7 +31,6 @@ import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.collect.Lists.newArrayList;
 
 /**
@@ -47,8 +42,7 @@ public class AccountForm extends AbstractForm<Account> {
 
   private static final long serialVersionUID = 3039694090615398389L;
 
-  @Autowired
-  private CatalogService catalogService;
+  private final CatalogService catalogService;
 
   // Sign on
   private MTextField username = new MTextField("Username");
@@ -56,10 +50,10 @@ public class AccountForm extends AbstractForm<Account> {
   private PasswordField passwordConfirmation = new PasswordField("Password Confirmation");
 
   // Profile
-  private ComboBox languagePreference = new ComboBox("Language Preference");
-  private ComboBox favouriteCategoryId = new ComboBox("Favourite Category");
-  private FormCheckBox listOption = new FormCheckBox("Wish List");
-  private FormCheckBox bannerOption = new FormCheckBox("Show Banner");
+  private ComboBox languagePreference = createLanguagePreferenceComboBox();
+  private ComboBox favouriteCategoryId = createFavoriteCategoryComboBox();
+  private CheckBox listOption = new CheckBox("Wish List");
+  private CheckBox bannerOption = new CheckBox("Show Banner");
   private Label bannerImage = new Label();
 
   // User
@@ -75,19 +69,45 @@ public class AccountForm extends AbstractForm<Account> {
   private MTextField country = new MTextField("Country");
 
   private Map<String, String> categoryIdToBannerNameMap = Maps.newHashMap();
+  private Map<String, String> categoryIdToNameMap = Maps.newHashMap();
   private List<Category> categories = newArrayList();
+
+  public enum Mode {
+    ADD, EDIT
+  }
+
+  @Autowired
+  public AccountForm(CatalogService catalogService) {
+    super(Account.class);
+    this.catalogService = catalogService;
+  }
 
   @PostConstruct
   public void init() {
+    setHeightUndefined();
+
+    setStyleName(JPetStoreTheme.BASE_FORM);
+    email.setStyleName(JPetStoreTheme.WIDE_TEXT_FIELD);
+    address1.setStyleName(JPetStoreTheme.WIDE_TEXT_FIELD);
+    address2.setStyleName(JPetStoreTheme.WIDE_TEXT_FIELD);
+
+    bannerImage.setCaption("Banner Image");
+    bannerImage.setContentMode(ContentMode.HTML);
+    bannerImage.setWidth(300, Unit.PIXELS);
+    bannerImage.setStyleName(JPetStoreTheme.BANNER);
 
     categoryIdToBannerNameMap = catalogService.getBannerList().stream()
         .collect(Collectors.toMap(Banner::getFavouriteCategoryId, Banner::getBannerName));
     categories = catalogService.getCategoryList();
     categories.sort(Comparator.comparing(Category::getName));
+    categoryIdToNameMap = categories.stream()
+        .collect(Collectors.toMap(Category::getCategoryId, Category::getName));
 
-    setStyleName(JPetStoreTheme.BASE_FORM);
-    setEagerValidation(false);
-    setHeightUndefined();
+    initBindings();
+    setListeners();
+
+    favouriteCategoryId.setItems(categoryIdToNameMap.keySet());
+    favouriteCategoryId.setItemCaptionGenerator(categoryIdToNameMap::get);
   }
 
   public void setReadOnlyFields(Mode mode) {
@@ -101,7 +121,7 @@ public class AccountForm extends AbstractForm<Account> {
     getSaveButton().setVisible(true);
     getResetButton().setVisible(true);
 
-    if (Mode.INSERT.equals(mode)) {
+    if (Mode.ADD.equals(mode)) {
       getResetButton().setCaption("Clear");
     }
     if (Mode.EDIT.equals(mode)) {
@@ -115,47 +135,8 @@ public class AccountForm extends AbstractForm<Account> {
     passwordConfirmation.clear();
   }
 
-  public enum Mode {
-    INSERT, EDIT
-  }
-
-  public boolean validate() {
-
-    try {
-      getFieldGroup().getFields().forEach(field -> {
-        field.focus();
-        field.validate();
-      });
-      validatePasswordConfirmation();
-    } catch (Validator.InvalidValueException e) {
-      Notification.show(e.getMessage(), Notification.Type.ERROR_MESSAGE);
-      return false;
-    }
-    return true;
-  }
-
   @Override
   protected Component createContent() {
-
-    password.setNullRepresentation("");
-    email.setStyleName(JPetStoreTheme.WIDE_TEXT_FIELD);
-    address1.setStyleName(JPetStoreTheme.WIDE_TEXT_FIELD);
-    address2.setStyleName(JPetStoreTheme.WIDE_TEXT_FIELD);
-
-    // TODO: investigate if it's needed in v.8
-//    listOption.setImmediate(true);
-//    bannerOption.setImmediate(true);
-
-    bannerImage.setCaption("Banner Image");
-    bannerImage.setContentMode(ContentMode.HTML);
-    bannerImage.setWidth(300, Unit.PIXELS);
-    bannerImage.setStyleName(JPetStoreTheme.BANNER);
-
-    setLanguagePreferenceCombo();
-    setFavouriteCategoryCombo();
-    setRequiredFields(username, password, languagePreference, firstName, lastName, email, phone,
-        address1, city, state, zip, country);
-    setListeners();
 
     MFormLayout signonFormLayout = new MFormLayout(username, password, passwordConfirmation).withWidth("-1px");
     MFormLayout accountFormLayout = new MFormLayout(firstName, lastName, email, phone, address1, address2, city,
@@ -185,42 +166,42 @@ public class AccountForm extends AbstractForm<Account> {
     });
   }
 
-  private void setLanguagePreferenceCombo() {
-    languagePreference.addItem("English");
-    languagePreference.addItem("Komi");
-    languagePreference.addItem("Russian");
+  private ComboBox<Category> createFavoriteCategoryComboBox() {
+    return new ComboBox<>("Favourite Category");
   }
 
-  private void setFavouriteCategoryCombo() {
-
-    categories.forEach(category -> {
-      favouriteCategoryId.addItem(category.getCategoryId());
-      favouriteCategoryId.setItemCaption(category.getCategoryId(), category.getName());
-    });
-    favouriteCategoryId.setNullSelectionAllowed(false);
+  private ComboBox<String> createLanguagePreferenceComboBox() {
+    ComboBox<String> comboBox = new ComboBox<>("Language Preference");
+    comboBox.setEmptySelectionAllowed(false);
+    comboBox.setItems("English", "Komi", "Russian");
+    return comboBox;
   }
 
-  private void setRequiredFields(Field<?>... fields) {
+  private void initBindings() {
+    // explicit binding for combo boxes and password field
+    getBinder()
+        .forField(languagePreference)
+        .bind("languagePreference");
 
-    Lists.newArrayList(fields).forEach(field -> {
-      field.setRequired(true);
-      field.setRequiredError(field.getCaption() + " is required");
-    });
-    passwordConfirmation.setRequired(true);
-  }
+    getBinder()
+        .forField(favouriteCategoryId)
+        .bind("favouriteCategoryId");
 
-  private void validatePasswordConfirmation() {
+    getBinder()
+        .forField(password)
+        .bind("password");
 
-    passwordConfirmation.focus();
-    if (isNullOrEmpty(passwordConfirmation.getValue())) {
-      throw new Validator.InvalidValueException("Password Confirmation is required");
-    }
-    if (!passwordConfirmation.getValue().equals(getEntity().getPassword())) {
-      throw new Validator.InvalidValueException("Confirmation Password is not identical");
-    }
+    getBinder()
+        .forField(passwordConfirmation)
+        .withValidator(value -> value.equals(password.getValue()), "Confirmation Password is not identical")
+        .bind("password");
   }
 
   private String getBannerStyleName(String bannerName) {
-    return bannerName.contains("reptiles") ? JPetStoreTheme.BANNER_2 : JPetStoreTheme.BANNER;
+    String bannerTheme = JPetStoreTheme.BANNER;
+    if (bannerName.contains("reptiles")) {
+      bannerTheme = JPetStoreTheme.BANNER_2;
+    }
+    return bannerTheme;
   }
 }

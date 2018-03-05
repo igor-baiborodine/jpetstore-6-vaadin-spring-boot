@@ -2,7 +2,7 @@ package com.kiroule.jpetstore.vaadinspring.ui.view;
 
 import com.kiroule.jpetstore.vaadinspring.domain.Product;
 import com.kiroule.jpetstore.vaadinspring.service.CatalogService;
-import com.kiroule.jpetstore.vaadinspring.ui.component.ItemListTable;
+import com.kiroule.jpetstore.vaadinspring.ui.component.ProductItemListGrid;
 import com.kiroule.jpetstore.vaadinspring.ui.util.ViewConfig;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
@@ -24,12 +24,15 @@ public class ItemListView extends AbstractView {
 
   public static final String VIEW_NAME = "item-list";
 
-  @Autowired
-  private CatalogService catalogService;
-  @Autowired
-  private ItemListTable itemList;
-
+  private final CatalogService catalogService;
+  private final ProductItemListGrid itemList;
   private Product product;
+
+  @Autowired
+  public ItemListView(CatalogService catalogService, ProductItemListGrid itemList) {
+    this.catalogService = catalogService;
+    this.itemList = itemList;
+  }
 
   @PostConstruct
   public void init() {
@@ -41,7 +44,7 @@ public class ItemListView extends AbstractView {
   @Override
   public void executeOnEnter(ViewChangeListener.ViewChangeEvent event) {
     product = catalogService.getProduct(event.getParameters());
-    itemList.setBeans(catalogService.getItemListByProduct(product.getProductId()));
+    itemList.setItems(catalogService.getItemListByProduct(product.getProductId()));
   }
 
   @Override

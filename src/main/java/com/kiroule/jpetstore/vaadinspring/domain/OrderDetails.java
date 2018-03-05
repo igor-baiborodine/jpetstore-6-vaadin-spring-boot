@@ -16,6 +16,7 @@
 
 package com.kiroule.jpetstore.vaadinspring.domain;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.BeanUtils;
 
 import java.io.Serializable;
@@ -26,18 +27,31 @@ import java.io.Serializable;
  */
 public abstract class OrderDetails implements Serializable {
 
+  @NotEmpty
   protected String username;
+  @NotEmpty
   protected String password;
+  @NotEmpty
   protected String email;
+  @NotEmpty
   protected String firstName;
+  @NotEmpty
   protected String lastName;
+  @NotEmpty
   protected String status;
+  @NotEmpty
   protected String address1;
+
   protected String address2;
+  @NotEmpty
   protected String city;
+  @NotEmpty
   protected String state;
+  @NotEmpty
   protected String zip;
+  @NotEmpty
   protected String country;
+  @NotEmpty
   protected String phone;
 
   public OrderDetails() {}

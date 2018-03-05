@@ -16,6 +16,8 @@
 
 package com.kiroule.jpetstore.vaadinspring.domain;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import java.io.Serializable;
 
 /**
@@ -26,20 +28,32 @@ public class Account implements Serializable {
 
   private static final long serialVersionUID = 8751282105532159742L;
 
+  @NotEmpty
   private String username;
+  @NotEmpty
   private String password;
+  @NotEmpty
   private String email;
+  @NotEmpty
   private String firstName;
+  @NotEmpty
   private String lastName;
   private String status;
+  @NotEmpty
   private String address1;
   private String address2;
+  @NotEmpty
   private String city;
+  @NotEmpty
   private String state;
+  @NotEmpty
   private String zip;
+  @NotEmpty
   private String country;
+  @NotEmpty
   private String phone;
   private String favouriteCategoryId;
+  @NotEmpty
   private String languagePreference;
   private boolean listOption;
   private boolean bannerOption;

@@ -28,8 +28,8 @@ import com.vaadin.navigator.ViewDisplay;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.spring.annotation.SpringViewDisplay;
 import com.vaadin.spring.annotation.UIScope;
-import com.vaadin.v7.ui.HorizontalLayout;
-import com.vaadin.v7.ui.VerticalLayout;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.VerticalLayout;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.spring.events.annotation.EventBusListenerMethod;
@@ -66,8 +66,11 @@ class MainView extends HorizontalLayout implements HasLogger, HasUIEventBus, Vie
     this.navBarButtonUpdater = navBarButtonUpdater;
 
     setSizeFull();
+    setSpacing(false);
     addComponent(this.leftNavBar);
 
+    viewLayout.setMargin(false);
+    viewLayout.setSpacing(false);
     viewLayout.setSizeFull();
     addComponent(viewLayout);
     setExpandRatio(viewLayout, 1.0f);

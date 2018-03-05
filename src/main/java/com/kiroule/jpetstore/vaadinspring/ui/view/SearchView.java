@@ -2,13 +2,13 @@ package com.kiroule.jpetstore.vaadinspring.ui.view;
 
 import com.kiroule.jpetstore.vaadinspring.domain.Product;
 import com.kiroule.jpetstore.vaadinspring.service.CatalogService;
-import com.kiroule.jpetstore.vaadinspring.ui.component.ProductListTable;
+import com.kiroule.jpetstore.vaadinspring.ui.component.ProductListGrid;
 import com.kiroule.jpetstore.vaadinspring.ui.theme.JPetStoreTheme;
 import com.kiroule.jpetstore.vaadinspring.ui.util.ViewConfig;
 import com.kiroule.jpetstore.vaadinspring.ui.util.ViewConfigUtil;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
-import com.vaadin.v7.ui.Label;
+import com.vaadin.ui.Label;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -29,18 +29,22 @@ public class SearchView extends AbstractView {
 
   public static final String VIEW_NAME = "search";
 
-  @Autowired
-  private CatalogService catalogService;
-  @Autowired
-  private ProductListTable productListTable;
+  private final CatalogService catalogService;
+  private final ProductListGrid productListGrid;
 
   private Label noResultLabel;
   private String keyword;
   private String noResultMessage = "Your search \"%s\" did not match any products.";
 
+  @Autowired
+  public SearchView(CatalogService catalogService, ProductListGrid productListGrid) {
+    this.catalogService = catalogService;
+    this.productListGrid = productListGrid;
+  }
+
   @PostConstruct
   public void init() {
-    addComponents(initTitleLabel(), initNoResultLabel(), productListTable);
+    addComponents(initTitleLabel(), initNoResultLabel(), productListGrid);
     setSizeFull();
   }
 
@@ -52,9 +56,9 @@ public class SearchView extends AbstractView {
     noResultLabel.setValue(format(noResultMessage, keyword));
     noResultLabel.setVisible(products.isEmpty());
 
-    productListTable.setBeans(products);
-    productListTable.setVisible(!products.isEmpty());
-    expand(products.isEmpty() ? noResultLabel : productListTable);
+    productListGrid.setItems(products);
+    productListGrid.setVisible(!products.isEmpty());
+    expand(products.isEmpty() ? noResultLabel : productListGrid);
   }
 
   @Override

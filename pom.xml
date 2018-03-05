@@ -19,8 +19,8 @@
   <description>JPetStore Vaadin 8 with Spring Boot</description>
 
   <properties>
-    <vaadin.version>8.1.5</vaadin.version>
-    <vaadin-spring.version>2.1.0.beta2</vaadin-spring.version>
+    <vaadin.version>8.3.0</vaadin.version>
+    <vaadin-spring.version>3.0.0</vaadin-spring.version>
     <vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
     <org.vaadin.spring.version>0.0.7.RELEASE</org.vaadin.spring.version>
 
@@ -60,15 +60,15 @@
   <dependencies>
     <dependency>
       <groupId>com.vaadin</groupId>
-      <artifactId>vaadin-compatibility-server</artifactId>
+      <artifactId>vaadin-server</artifactId>
     </dependency>
     <dependency>
       <groupId>com.vaadin</groupId>
-      <artifactId>vaadin-compatibility-client-compiled</artifactId>
+      <artifactId>vaadin-client-compiled</artifactId>
     </dependency>
     <dependency>
       <groupId>com.vaadin</groupId>
-      <artifactId>vaadin-compatibility-themes</artifactId>
+      <artifactId>vaadin-themes</artifactId>
     </dependency>
     <dependency>
       <groupId>com.vaadin</groupId>
@@ -107,18 +107,8 @@
     </dependency>
     <dependency>
       <groupId>org.vaadin</groupId>
-      <artifactId>viritin-v7-compatibility</artifactId>
-      <version>1.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.vaadin.addons</groupId>
-      <artifactId>formcheckbox</artifactId>
-      <version>1.0.2</version>
-    </dependency>
-    <dependency>
-      <groupId>org.vaadin.addons</groupId>
-      <artifactId>stepper</artifactId>
-      <version>2.4.0</version>
+      <artifactId>viritin</artifactId>
+      <version>2.3</version>
     </dependency>
 
     <!-- Spring -->
@@ -181,105 +171,71 @@
       <artifactId>guava</artifactId>
       <version>23.0</version>
     </dependency>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-validator</artifactId>
+      <version>5.4.0.Final</version>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish.web</groupId>
+      <artifactId>javax.el</artifactId>
+      <version>2.2.6</version>
+    </dependency>
   </dependencies>
 
   <build>
     <plugins>
       <plugin>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-clean-plugin</artifactId>
-        <version>3.0.0</version>
-        <configuration>
-          <filesets>
-            <fileset>
-              <directory>
-                ${basedir}/src/main/webapp/VAADIN/
-              </directory>
-              <includes>
-                <include>widgetsets/**/*</include>
-                <include>themes/styles.css</include>
-                <include>themes/styles.scss.cache</include>
-              </includes>
-            </fileset>
-          </filesets>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.7.0</version>
-        <configuration>
-          <encoding>${project.build.sourceEncoding}</encoding>
-          <source>${maven.compiler.source}</source>
-          <target>${maven.compiler.source}</target>
-        </configuration>
-      </plugin>
-      <plugin>
         <groupId>com.vaadin</groupId>
         <artifactId>vaadin-maven-plugin</artifactId>
-        <version>${vaadin.version}</version>
+        <version>${vaadin.plugin.version}</version>
+        <dependencies>
+          <!-- For Travis -->
+          <dependency>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
+            <version>1.4.01</version>
+          </dependency>
+        </dependencies>
         <configuration>
-          <widgetsetMode>${vaadin.widgetset.mode}</widgetsetMode>
-          <extraJvmArgs>-Xmx2g -Xss1024k</extraJvmArgs>
-          <webappDirectory>
-            ${basedir}/src/main/resources/VAADIN/widgetsets
-          </webappDirectory>
-          <!--<hostedWebapp>-->
-          <!--${basedir}/src/main/resources/VAADIN/widgetsets-->
-          <!--</hostedWebapp>-->
-          <persistentunitcachedir>
-            ${project.build.directory}
-          </persistentunitcachedir>
-          <deploy>${project.build.directory}/gwt-deploy</deploy>
-          <compileReport>false</compileReport>
-          <noServer>true</noServer>
-          <!-- Remove draftCompile when project is ready -->
-          <draftCompile>true</draftCompile>
-          <style>OBF</style>
-          <!--<strict>true</strict>-->
+          <extraJvmArgs>-Xmx1G</extraJvmArgs>
         </configuration>
         <executions>
           <execution>
-            <configuration>
-              <!-- if you don't specify any modules, the plugin will find them -->
-              <!-- <modules> <module>com.vaadin.demo.mobilemail.gwt.ColorPickerWidgetSet</module>
-              </modules> -->
-            </configuration>
             <goals>
-              <goal>resources</goal>
               <goal>update-theme</goal>
               <goal>update-widgetset</goal>
-              <goal>compile-theme</goal>
               <goal>compile</goal>
+              <goal>compile-theme</goal>
             </goals>
           </execution>
         </executions>
       </plugin>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>3.0.2</version>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
-          <encoding>${project.build.sourceEncoding}</encoding>
+          <jvmArguments>
+              <!-- -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005-->
+          </jvmArguments>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
         <executions>
           <execution>
-            <id>copy-resources</id>
-            <phase>prepare-package</phase>
+            <id>enforce-no-snapshots</id>
             <goals>
-              <goal>copy-resources</goal>
+              <goal>enforce</goal>
             </goals>
             <configuration>
-              <outputDirectory>${basedir}/target/classes/VAADIN</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>${basedir}/src/main/resources/VAADIN</directory>
-                </resource>
-              </resources>
+              <rules>
+                <requireReleaseDeps>
+                  <message>No Snapshots Allowed!</message>
+                </requireReleaseDeps>
+              </rules>
+              <fail>true</fail>
             </configuration>
           </execution>
         </executions>

@@ -274,6 +274,10 @@ public class Order implements Serializable {
     return lineItems;
   }
 
+  public String getShipToFullName() {
+    return this.shipToFirstName + " " + this.shipToLastName;
+  }
+
   public void initOrder(String username, BillingDetails billingDetails, ShippingDetails shippingDetails, Cart cart) {
 
     this.username = username;

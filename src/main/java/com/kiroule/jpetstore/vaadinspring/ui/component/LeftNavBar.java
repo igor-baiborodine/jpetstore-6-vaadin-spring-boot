@@ -9,8 +9,10 @@ import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.v7.shared.ui.label.ContentMode;
-import com.vaadin.v7.ui.Label;
+import com.vaadin.shared.ui.ContentMode;
+import com.vaadin.ui.Label;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
 
@@ -25,6 +27,7 @@ public class LeftNavBar extends CssLayout implements HasUIEventBus {
 
   private final NavBarButtonUpdater navBarButtonUpdater;
 
+  @Autowired
   public LeftNavBar(NavBarButtonUpdater navBarButtonUpdater) {
     this.navBarButtonUpdater = navBarButtonUpdater;
   }

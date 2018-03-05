@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
 
-import static com.kiroule.jpetstore.vaadinspring.ui.form.AccountForm.Mode.INSERT;
+import static com.kiroule.jpetstore.vaadinspring.ui.form.AccountForm.Mode.ADD;
 import static com.vaadin.ui.Notification.Type.ERROR_MESSAGE;
 
 /**
@@ -29,30 +29,31 @@ public class NewAccountView extends AbstractView {
 
   public static final String VIEW_NAME = "new-account";
 
+  private final AccountForm accountForm;
+  private final AccountService accountService;
+
   @Autowired
-  private AccountForm accountForm;
-  @Autowired
-  private AccountService accountService;
+  public NewAccountView(AccountForm accountForm, AccountService accountService) {
+    this.accountForm = accountForm;
+    this.accountService = accountService;
+  }
 
   @PostConstruct
   void init() {
 
     accountForm.setSavedHandler(account -> {
       try {
-        if (!accountForm.validate()) {
-          return;
-        }
         accountService.insertAccount(account);
         showConfirmation("New account has been created.");
         getUIEventBus().publish(this, new UINavigationEvent(HomeView.VIEW_NAME));
-      } catch (Throwable t) {
-        Notification.show("An error occurred while creating new account: " + t.getMessage(), ERROR_MESSAGE);
+      } catch (Exception e) {
+        Notification.show("An error occurred while creating new account: " + e.getMessage(), ERROR_MESSAGE);
       }
     });
     accountForm.setResetHandler(account -> accountForm.clear());
 
     Panel contentPanel = new Panel(accountForm);
-    addComponents(initTitleLabel(), contentPanel, accountForm.getToolbar(INSERT));
+    addComponents(initTitleLabel(), contentPanel, accountForm.getToolbar(ADD));
     setSizeFull();
     expand(contentPanel);
   }
@@ -64,6 +65,6 @@ public class NewAccountView extends AbstractView {
       getUIEventBus().publish(this, new UINavigationEvent(HomeView.VIEW_NAME));
     }
     accountForm.setEntity(new Account());
-    accountForm.setReadOnlyFields(INSERT);
+    accountForm.setReadOnlyFields(ADD);
   }
 }

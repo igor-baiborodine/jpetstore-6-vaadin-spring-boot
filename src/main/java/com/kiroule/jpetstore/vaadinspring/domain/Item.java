@@ -42,7 +42,7 @@ public class Item implements Serializable {
   private String attribute4;
   private String attribute5;
   private Product product;
-  private int quantity;
+  private Integer quantity;
 
   public String getItemId() {
     return itemId;
@@ -52,11 +52,11 @@ public class Item implements Serializable {
     this.itemId = itemId.trim();
   }
 
-  public int getQuantity() {
+  public Integer getQuantity() {
     return quantity;
   }
 
-  public void setQuantity(int quantity) {
+  public void setQuantity(Integer quantity) {
     this.quantity = quantity;
   }
 
@@ -146,6 +146,14 @@ public class Item implements Serializable {
 
   public void setAttribute5(String attribute5) {
     this.attribute5 = attribute5;
+  }
+
+  public String getDescription() {
+    return this.attribute1 + " " + this.getProduct().getName();
+  }
+
+  public String getProductDescription() {
+    return this.getProduct().getName();
   }
 
   @Override

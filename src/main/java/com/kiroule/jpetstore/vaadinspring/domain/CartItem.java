@@ -70,6 +70,18 @@ public class CartItem implements Serializable {
     calculateTotal();
   }
 
+  public String getDescription() {
+    return this.item.getDescription();
+  }
+
+  public String getProductId() {
+    return this.item.getProductId();
+  }
+
+  public BigDecimal getListPrice() {
+    return this.getItem().getListPrice();
+  }
+
   private void calculateTotal() {
     if (item != null && item.getListPrice() != null) {
       total = item.getListPrice().multiply(new BigDecimal(quantity));

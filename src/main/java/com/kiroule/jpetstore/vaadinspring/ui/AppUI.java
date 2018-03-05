@@ -4,10 +4,8 @@ import com.kiroule.jpetstore.vaadinspring.ui.navigation.NavigationManager;
 import com.kiroule.jpetstore.vaadinspring.ui.util.HasLogger;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
-import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
-import com.vaadin.spring.navigator.SpringViewProvider;
 import com.vaadin.ui.UI;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,22 +16,18 @@ import org.vaadin.spring.events.EventBus;
  */
 @Title("JPetStore Vaadin 8 Spring Demo")
 @Theme("jpetstoretheme")
-@Widgetset("com.vaadin.v7.Vaadin7WidgetSet")
 @SpringUI
 public class AppUI extends UI implements HasLogger {
 
   private static final long serialVersionUID = 4670701701584923650L;
 
   private final NavigationManager navigationManager;
-  private final SpringViewProvider viewProvider;
   private final MainView mainView;
   private final EventBus.UIEventBus uiEventBus;
 
   @Autowired
-  public AppUI(NavigationManager navigationManager, SpringViewProvider viewProvider, MainView mainView,
-               EventBus.UIEventBus uiEventBus) {
+  public AppUI(NavigationManager navigationManager, MainView mainView, EventBus.UIEventBus uiEventBus) {
     this.navigationManager = navigationManager;
-    this.viewProvider = viewProvider;
     this.mainView = mainView;
     this.uiEventBus = uiEventBus;
   }

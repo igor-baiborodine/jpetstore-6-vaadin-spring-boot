@@ -1,8 +1,7 @@
 package com.kiroule.jpetstore.vaadinspring.ui.view;
 
 import com.kiroule.jpetstore.vaadinspring.domain.Cart;
-import com.kiroule.jpetstore.vaadinspring.ui.component.CartItemListTable;
-import com.kiroule.jpetstore.vaadinspring.ui.converter.CurrencyConverter;
+import com.kiroule.jpetstore.vaadinspring.ui.component.CartItemListGrid;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UINavigationEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.theme.JPetStoreTheme;
 import com.kiroule.jpetstore.vaadinspring.ui.util.CurrentAccount;
@@ -11,8 +10,8 @@ import com.kiroule.jpetstore.vaadinspring.ui.util.ViewConfig;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
-import com.vaadin.v7.ui.Label;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.viritin.button.MButton;
@@ -20,6 +19,7 @@ import org.vaadin.viritin.layouts.MHorizontalLayout;
 import org.vaadin.viritin.layouts.MVerticalLayout;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 
 import javax.annotation.PostConstruct;
 
@@ -38,12 +38,16 @@ public class CartView extends AbstractView {
   public static final String VIEW_NAME = "cart";
   public static final String SUBTOTAL_LABEL_PATTERN = "Subtotal: %s";
 
-  @Autowired
-  private CartItemListTable cartItemList;
+  private final CartItemListGrid cartItemList;
 
   private Label emptyCartLabel;
   private MVerticalLayout cartItemListLayout;
   private Label subtotalLabel;
+
+  @Autowired
+  public CartView(CartItemListGrid cartItemList) {
+    this.cartItemList = cartItemList;
+  }
 
   @PostConstruct
   void init() {
@@ -75,7 +79,7 @@ public class CartView extends AbstractView {
     
     if (!CurrentCart.isEmpty()) {
       Cart cart = (Cart) CurrentCart.get(SHOPPING_CART);
-      cartItemList.setBeans(cart.getCartItemList());
+      cartItemList.setItems(cart.getCartItemList());
       subtotalLabel.setValue(format(SUBTOTAL_LABEL_PATTERN, formatSubtotal(cart.getSubTotal())));
     }
     expand(CurrentCart.isEmpty() ? emptyCartLabel : cartItemListLayout);
@@ -94,6 +98,6 @@ public class CartView extends AbstractView {
   }
 
   private String formatSubtotal(BigDecimal subtotal) {
-    return new CurrencyConverter().convertToPresentation(subtotal, String.class, UI.getCurrent().getLocale());
+    return NumberFormat.getCurrencyInstance(UI.getCurrent().getLocale()).format(subtotal);
   }
 }

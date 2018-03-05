@@ -5,16 +5,16 @@
   @include valo;
 
   .v-margin-left {
-    padding-left: 20px;
+    padding-left: 10px;
   }
   .v-margin-bottom {
-    padding-bottom: 20px;
+    padding-bottom: 10px;
   }
   .v-margin-right {
-    padding-right: 20px;
+    padding-right: 10px;
   }
   .v-margin-top {
-    padding-top: 20px;
+    padding-top: 10px;
   }
   .v-panel-caption {
     font-weight: 500;
@@ -114,5 +114,10 @@
 
   .banner-2 {
     background-color: #8b9a93;
+  }
+
+  .grid-button,
+  .grid-textfield {
+    height: 30px;
   }
 }

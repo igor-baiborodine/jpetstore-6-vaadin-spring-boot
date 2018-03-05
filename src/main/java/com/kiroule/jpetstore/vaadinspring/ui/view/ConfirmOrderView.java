@@ -7,8 +7,7 @@ import com.kiroule.jpetstore.vaadinspring.domain.Order;
 import com.kiroule.jpetstore.vaadinspring.domain.OrderDetails;
 import com.kiroule.jpetstore.vaadinspring.domain.ShippingDetails;
 import com.kiroule.jpetstore.vaadinspring.service.OrderService;
-import com.kiroule.jpetstore.vaadinspring.ui.component.CartItemListTable;
-import com.kiroule.jpetstore.vaadinspring.ui.converter.CurrencyConverter;
+import com.kiroule.jpetstore.vaadinspring.ui.component.CartItemListGrid;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UINavigationEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.theme.JPetStoreTheme;
 import com.kiroule.jpetstore.vaadinspring.ui.util.CurrentAccount;
@@ -16,14 +15,14 @@ import com.kiroule.jpetstore.vaadinspring.ui.util.CurrentCart;
 import com.kiroule.jpetstore.vaadinspring.ui.util.ViewConfig;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.ThemeResource;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Image;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
-import com.vaadin.v7.shared.ui.label.ContentMode;
-import com.vaadin.v7.ui.Label;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.viritin.button.MButton;
@@ -32,6 +31,7 @@ import org.vaadin.viritin.layouts.MHorizontalLayout;
 import org.vaadin.viritin.layouts.MVerticalLayout;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 
 import javax.annotation.PostConstruct;
 
@@ -54,10 +54,8 @@ public class ConfirmOrderView extends AbstractView {
   public static final String VIEW_NAME = "confirm-order";
   public static final String SUBTOTAL_LABEL_PATTERN = "Subtotal: %s";
 
-  @Autowired
-  private OrderService orderService;
-  @Autowired
-  private CartItemListTable cartItemList;
+  private final OrderService orderService;
+  private final CartItemListGrid cartItemList;
 
   private MHorizontalLayout orderDetailsLayout = new MHorizontalLayout().withMargin(false);
   private PaymentMethodFormLayout paymentMethodFormLayout = new PaymentMethodFormLayout();
@@ -66,6 +64,12 @@ public class ConfirmOrderView extends AbstractView {
   private MButton placeOrderButton = createPlaceOrderButton();
   private MButton viewOrdersButton = createViewOrdersButton();
   private Label subtotalLabel = createSubtotalLabel();
+
+  @Autowired
+  public ConfirmOrderView(OrderService orderService, CartItemListGrid cartItemList) {
+    this.orderService = orderService;
+    this.cartItemList = cartItemList;
+  }
 
 
   @PostConstruct
@@ -80,8 +84,7 @@ public class ConfirmOrderView extends AbstractView {
     orderDetailsLayout.setExpandRatio(shippingDetailsPanel, 1.0f);
     orderDetailsLayout.setSizeFull();
     viewOrdersButton.setVisible(false);
-    int actualRowCount = cartItemList.getContainerDataSource().size();
-    cartItemList.setPageLength(Math.min(actualRowCount, 5));
+    cartItemList.setHeightByRows(Math.min(CurrentCart.getItemCount(), 5));
 
     MVerticalLayout content = new MVerticalLayout(cartItemList, subtotalLabel, orderDetailsLayout);
     Panel contentPanel = new Panel(content);
@@ -100,7 +103,7 @@ public class ConfirmOrderView extends AbstractView {
       return;
     }
     Cart cart = (Cart) CurrentCart.get(SHOPPING_CART);
-    cartItemList.setBeans(cart.getCartItemList());
+    cartItemList.setItems(cart.getCartItemList());
     subtotalLabel.setValue(format(SUBTOTAL_LABEL_PATTERN, formatSubtotal(cart.getSubTotal())));
 
     paymentMethodFormLayout.setEntity((BillingDetails) CurrentCart.get(BILLING_DETAILS));
@@ -126,7 +129,6 @@ public class ConfirmOrderView extends AbstractView {
         CurrentCart.clear();
         event.getButton().setVisible(false);
         viewOrdersButton.setVisible(true);
-        cartItemList.setReadOnly(true);
 
         showConfirmation("Thank you, your order has been submitted.");
       } catch (Exception e) {
@@ -141,7 +143,7 @@ public class ConfirmOrderView extends AbstractView {
   }
 
   private String formatSubtotal(BigDecimal subtotal) {
-    return new CurrencyConverter().convertToPresentation(subtotal, String.class, UI.getCurrent().getLocale());
+    return NumberFormat.getCurrencyInstance(UI.getCurrent().getLocale()).format(subtotal);
   }
 
   @Override

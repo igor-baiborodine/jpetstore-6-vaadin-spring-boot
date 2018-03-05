@@ -2,13 +2,13 @@ package com.kiroule.jpetstore.vaadinspring.ui.view;
 
 import com.kiroule.jpetstore.vaadinspring.domain.Order;
 import com.kiroule.jpetstore.vaadinspring.service.OrderService;
-import com.kiroule.jpetstore.vaadinspring.ui.component.OrderListTable;
+import com.kiroule.jpetstore.vaadinspring.ui.component.OrderListGrid;
 import com.kiroule.jpetstore.vaadinspring.ui.theme.JPetStoreTheme;
 import com.kiroule.jpetstore.vaadinspring.ui.util.CurrentAccount;
 import com.kiroule.jpetstore.vaadinspring.ui.util.ViewConfig;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
-import com.vaadin.v7.ui.Label;
+import com.vaadin.ui.Label;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -27,12 +27,16 @@ public class OrderListView extends AbstractView {
 
   public static final String VIEW_NAME = "order-list";
 
-  @Autowired
-  private OrderService orderService;
-  @Autowired
-  private OrderListTable orderList;
+  private final OrderService orderService;
+  private final OrderListGrid orderList;
 
   private Label noOrdersLabel;
+
+  @Autowired
+  public OrderListView(OrderService orderService, OrderListGrid orderList) {
+    this.orderService = orderService;
+    this.orderList = orderList;
+  }
 
   @PostConstruct
   void init() {
@@ -44,7 +48,7 @@ public class OrderListView extends AbstractView {
   public void executeOnEnter(ViewChangeListener.ViewChangeEvent event) {
 
     List<Order> orders = orderService.getOrdersByUsername(CurrentAccount.get().getUsername());
-    orderList.setBeans(orders);
+    orderList.setItems(orders);
     orderList.setVisible(!orders.isEmpty());
     noOrdersLabel.setVisible(orders.isEmpty());
     expand(orders.isEmpty() ? noOrdersLabel : orderList);

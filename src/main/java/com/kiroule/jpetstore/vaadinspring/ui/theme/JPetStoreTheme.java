@@ -18,4 +18,6 @@ public class JPetStoreTheme extends ValoTheme {
   public static final String VIEW_LABEL_MEDIUM = "view-label-medium";
   public static final String VIEW_LABEL_SMALL = "view-label-small";
   public static final String BASE_FORM = "base-form";
+  public static final String GRID_BUTTON = "grid-button";
+  public static final String GRID_TEXTFIELD = "grid-textfield";
 }
