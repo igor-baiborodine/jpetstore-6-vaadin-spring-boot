@@ -22,6 +22,8 @@ git clone https://github.com/igor-baiborodine/jpetstore-6-vaadin-spring-boot.git
 cd jpetstore-6-vaadin-spring-boot
 mvn clean package spring-boot:run
 # Access in your browser at http://localhost:8080
+# Username: ACID
+# Password: ACID
 ```
 
 #### Software and technologies used:

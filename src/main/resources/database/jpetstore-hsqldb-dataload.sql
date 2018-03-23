@@ -23,7 +23,7 @@ INSERT INTO account VALUES('guest','yourname@yourdomain.com','Guest', 'Guest', '
 INSERT INTO account VALUES('ACID','acid@yourdomain.com','ABC', 'XYX', 'OK', '901 San Antonio Road', 'MS UCUP02-206', 'Palo Alto', 'CA', '94303', 'USA',  '555-555-5555');
 
 INSERT INTO profile VALUES('guest','English','DOGS',1,1);
-INSERT INTO profile VALUES('ACID','English','CATS',1,1);
+INSERT INTO profile VALUES('ACID','English','REPTILES',1,1);
 
 INSERT INTO bannerdata VALUES ('FISH','<image src="../VAADIN/themes/jpetstoretheme/img/banner_fish.gif">');
 INSERT INTO bannerdata VALUES ('CATS','<image src="../VAADIN/themes/jpetstoretheme/img/banner_cats.gif">');
