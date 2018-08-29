@@ -69,7 +69,7 @@ public class ProductItemForm extends AbstractForm<Item> implements HasUIEventBus
         .bind(Item::getListPrice, null);
     getBinder()
         .forField(quantity)
-        .withConverter(new StringToIntegerConverter(0, null))
+        .withConverter(new StringToIntegerConverter(0, "Cannot convert quantity!"))
         .bind(Item::getQuantity, null);
     addToCartButton.addClickListener(event -> {
           UI.getCurrent().removeWindow(getPopup());

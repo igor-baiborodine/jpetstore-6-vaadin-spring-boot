@@ -1017,10 +1017,6 @@
  */
 
 /**
- *
- */
-
-/**
  * @group window
  */
 
@@ -1081,7 +1077,7 @@
  */
 
 .v-vaadin-version:after {
-	content: "8.3.0";
+	content: "8.5.1";
 }
 
 .v-widget {
@@ -12614,6 +12610,7 @@ div.v-layout.v-horizontal.v-widget {
 	width: 100% !important;
 	height: auto !important;
 	padding: 9px;
+	display: inline-flex;
 }
 
 .jpetstoretheme .v-colorpicker-preview-textfield {
