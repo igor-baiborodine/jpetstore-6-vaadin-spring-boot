@@ -11,7 +11,7 @@ import javax.security.auth.login.LoginException;
  * @author Igor Baiborodine
  */
 @Component
-public class LoginService {
+public class SigninService {
 
   @Autowired
   private AccountService accountService;

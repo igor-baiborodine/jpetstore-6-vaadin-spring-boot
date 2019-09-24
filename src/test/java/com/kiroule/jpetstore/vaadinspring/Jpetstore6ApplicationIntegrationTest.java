@@ -2,7 +2,7 @@ package com.kiroule.jpetstore.vaadinspring;
 
 import com.kiroule.jpetstore.vaadinspring.persistence.ProductMapper;
 import com.kiroule.jpetstore.vaadinspring.service.CatalogService;
-import com.kiroule.jpetstore.vaadinspring.service.LoginService;
+import com.kiroule.jpetstore.vaadinspring.service.SigninService;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,12 +23,12 @@ public class Jpetstore6ApplicationIntegrationTest {
   @Autowired
   private CatalogService catalogService;
   @Autowired
-  private LoginService loginService;
+  private SigninService signinService;
 
   @Test
   public void loadContext_shouldLoadApplicationContext() {
 
-    assertThat(loginService, notNullValue());
+    assertThat(signinService, notNullValue());
     assertThat(productMapper, notNullValue());
     assertThat(catalogService, notNullValue());
     assertThat(getField(catalogService, "productMapper"), notNullValue());

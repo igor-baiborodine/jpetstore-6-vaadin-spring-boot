@@ -2,7 +2,7 @@ package com.kiroule.jpetstore.vaadinspring.config;
 
 import com.kiroule.jpetstore.vaadinspring.service.AccountService;
 import com.kiroule.jpetstore.vaadinspring.service.CatalogService;
-import com.kiroule.jpetstore.vaadinspring.service.LoginService;
+import com.kiroule.jpetstore.vaadinspring.service.SigninService;
 import com.kiroule.jpetstore.vaadinspring.service.OrderService;
 
 import org.springframework.context.annotation.Bean;
@@ -35,8 +35,8 @@ public class ServiceConfig {
   }
 
   @Bean
-  public LoginService loginService() {
-    return new LoginService();
+  public SigninService loginService() {
+    return new SigninService();
   }
 
   @Bean

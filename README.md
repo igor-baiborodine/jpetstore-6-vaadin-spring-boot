@@ -6,7 +6,7 @@ Status](https://travis-ci.org/igor-baiborodine/jpetstore-6-vaadin-spring-boot.sv
 #### This project is an exercise to port the original [JPetStore-6](https://github.com/mybatis/jpetstore-6) to Vaadin and Spring Boot.
 
 ### Branches
-* **master** - Java 10, Vaadin 8.5.1 (active)
+* **master** - Java 11, Vaadin 8.9.0 (active)
 * **vaadin-v8-java-v8** - Java 8, Vaadin 8.3.0 (legacy)
 * **vaadin-v8-with-v7-compatibility** - Vaadin 8.1.5 with Vaadin 7 compatibility (legacy)
 * **vaadin-v7** - Vaadin 7.7.7 (legacy)
@@ -29,7 +29,7 @@ mvn clean package spring-boot:run
 ```
 
 ### Software and technologies used:
-* [Java 10](http://www.oracle.com/technetwork/java/javase/downloads/jdk10-downloads-4416644.html)
+* [Java 11](https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655.html)
 * [Vaadin 8](https://vaadin.com/home) with [Viritin](https://vaadin.com/directory#!addon/viritin) add-on
 * [Spring 5](http://projects.spring.io/spring-framework/#quick-start)
 * [Spring Boot 2](http://projects.spring.io/spring-boot/)

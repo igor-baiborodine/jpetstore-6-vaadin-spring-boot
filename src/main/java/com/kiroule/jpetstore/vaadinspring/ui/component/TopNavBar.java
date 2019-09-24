@@ -1,7 +1,7 @@
 package com.kiroule.jpetstore.vaadinspring.ui.component;
 
 import com.kiroule.jpetstore.vaadinspring.domain.Account;
-import com.kiroule.jpetstore.vaadinspring.service.LoginService;
+import com.kiroule.jpetstore.vaadinspring.service.SigninService;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UILoginEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UILogoutEvent;
 import com.kiroule.jpetstore.vaadinspring.ui.event.UINavigationEvent;
@@ -49,17 +49,17 @@ public class TopNavBar extends CssLayout implements HasUIEventBus {
 
   private final NavBarButtonUpdater navBarButtonUpdater;
   private final SigninForm signinForm;
-  private final LoginService loginService;
+  private final SigninService signinService;
 
   private Button signinButton;
   private Button signoutButton;
   private Label userLabel;
 
   @Autowired
-  public TopNavBar(NavBarButtonUpdater navBarButtonUpdater, SigninForm signinForm, LoginService loginService) {
+  public TopNavBar(NavBarButtonUpdater navBarButtonUpdater, SigninForm signinForm, SigninService signinService) {
     this.navBarButtonUpdater = navBarButtonUpdater;
     this.signinForm = signinForm;
-    this.loginService = loginService;
+    this.signinService = signinService;
   }
 
   @PostConstruct
@@ -89,7 +89,7 @@ public class TopNavBar extends CssLayout implements HasUIEventBus {
       final Window popup = signinForm.openInModalWidow();
       signinForm.addLoginListener(loginEvent -> {
         try {
-          Account account = loginService.login(loginEvent.getLoginParameter("username"),
+          Account account = signinService.login(loginEvent.getLoginParameter("username"),
               loginEvent.getLoginParameter("password"));
           getUIEventBus().publish(this, new UILoginEvent(account));
           UI.getCurrent().removeWindow(popup);
