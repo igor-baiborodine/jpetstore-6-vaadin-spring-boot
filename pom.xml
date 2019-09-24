@@ -20,7 +20,6 @@
 
   <properties>
     <vaadin.version>8.9.0</vaadin.version>
-<!--    <vaadin-spring.java.version>11.0.4</vaadin-spring.java.version>-->
     <vaadin-spring.version>3.2.1</vaadin-spring.version>
     <vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
     <org.vaadin.spring.version>2.0.0.RELEASE</org.vaadin.spring.version>
