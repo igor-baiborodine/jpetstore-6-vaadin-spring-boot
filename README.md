@@ -3,6 +3,8 @@ jpetstore-6-vaadin-spring-boot
 [![Build
 Status](https://travis-ci.org/igor-baiborodine/jpetstore-6-vaadin-spring-boot.svg?branch=master)](https://travis-ci.org/igor-baiborodine/jpetstore-6-vaadin-spring-boot)
 
+## This project is no longer maintained.
+
 #### This project is an exercise to port the original [JPetStore-6](https://github.com/mybatis/jpetstore-6) to Vaadin and Spring Boot.
 
 ### Branches
